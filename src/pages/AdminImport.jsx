@@ -13,6 +13,8 @@ export default function AdminImport() {
   const [importMode, setImportMode] = useState('form');
   const [jsonData, setJsonData] = useState('');
   const [status, setStatus] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [isProcessingPdf, setIsProcessingPdf] = useState(false);
   
   // Form fields
   const [formData, setFormData] = useState({
@@ -80,6 +82,69 @@ export default function AdminImport() {
     }
   };
 
+  const handlePdfImport = async () => {
+    if (!pdfFile) return;
+    
+    setIsProcessingPdf(true);
+    setStatus(null);
+    
+    try {
+      // Upload the PDF file
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: pdfFile });
+      
+      // Extract tour data from PDF
+      const result = await base44.integrations.Core.ExtractDataFromUploadedFile({
+        file_url,
+        json_schema: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            subtitle: { type: "string" },
+            description: { type: "string" },
+            duration: { type: "string" },
+            category: { type: "string" },
+            image_url: { type: "string" },
+            practical_notes: { type: "array", items: { type: "string" } },
+            days: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  day_number: { type: "integer" },
+                  title: { type: "string" },
+                  focus: { type: "string" },
+                  locations: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        time: { type: "string" },
+                        name: { type: "string" },
+                        address: { type: "string" },
+                        description: { type: "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      if (result.status === 'success' && result.output) {
+        createTourMutation.mutate(result.output);
+        setPdfFile(null);
+      } else {
+        setStatus({ type: 'error', message: result.details || 'Failed to extract data from PDF' });
+      }
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Failed to process PDF' });
+    } finally {
+      setIsProcessingPdf(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
@@ -104,6 +169,13 @@ export default function AdminImport() {
             <Upload className="w-4 h-4 mr-2" />
             JSON Import
           </Button>
+          <Button
+            variant={importMode === 'pdf' ? 'default' : 'outline'}
+            onClick={() => setImportMode('pdf')}
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            PDF Import
+          </Button>
         </div>
 
         {/* Status Messages */}
@@ -118,6 +190,50 @@ export default function AdminImport() {
             )}
             <span>{status.message}</span>
           </div>
+        )}
+
+        {/* PDF Import Mode */}
+        {importMode === 'pdf' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Upload PDF Tour Document</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                <Upload className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                <Label htmlFor="pdf-upload" className="cursor-pointer">
+                  <div className="text-lg font-medium text-gray-700 mb-2">
+                    {pdfFile ? pdfFile.name : 'Click to upload PDF'}
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    Upload a PDF document with tour information
+                  </p>
+                </Label>
+                <Input
+                  id="pdf-upload"
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => setPdfFile(e.target.files[0])}
+                  className="hidden"
+                />
+              </div>
+              
+              {pdfFile && (
+                <div className="bg-blue-50 p-4 rounded-lg text-sm text-blue-900">
+                  <p className="font-semibold mb-1">File selected: {pdfFile.name}</p>
+                  <p className="text-xs">The AI will extract tour information from this PDF</p>
+                </div>
+              )}
+              
+              <Button 
+                onClick={handlePdfImport}
+                disabled={!pdfFile || isProcessingPdf || createTourMutation.isPending}
+                className="w-full"
+              >
+                {isProcessingPdf ? 'Processing PDF...' : createTourMutation.isPending ? 'Creating Tour...' : 'Extract & Import Tour'}
+              </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* JSON Import Mode */}
