@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Pencil, Image as ImageIcon } from 'lucide-react';
+import { Pencil, Image as ImageIcon, Trash2 } from 'lucide-react';
 
 export default function AdminTours() {
   const [editingTour, setEditingTour] = useState(null);
@@ -29,6 +29,13 @@ export default function AdminTours() {
     }
   });
 
+  const deleteTourMutation = useMutation({
+    mutationFn: (id) => base44.entities.Tour.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tours'] });
+    }
+  });
+
   const handleEdit = (tour) => {
     setEditingTour(tour);
     setImageUrl(tour.image_url || '');
@@ -40,6 +47,12 @@ export default function AdminTours() {
         id: editingTour.id,
         data: { image_url: imageUrl }
       });
+    }
+  };
+
+  const handleDelete = (tourId) => {
+    if (confirm('Are you sure you want to delete this tour?')) {
+      deleteTourMutation.mutate(tourId);
     }
   };
 
@@ -81,7 +94,7 @@ export default function AdminTours() {
                 <p className="text-sm text-gray-500">{tour.duration}</p>
               </CardHeader>
               
-              <CardContent>
+              <CardContent className="space-y-2">
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button 
@@ -148,6 +161,16 @@ export default function AdminTours() {
                     </div>
                   </DialogContent>
                 </Dialog>
+                
+                <Button 
+                  onClick={() => handleDelete(tour.id)}
+                  className="w-full"
+                  variant="destructive"
+                  disabled={deleteTourMutation.isPending}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Tour
+                </Button>
               </CardContent>
             </Card>
           ))}
