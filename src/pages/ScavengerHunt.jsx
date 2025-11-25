@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import StopCard from '../components/scavenger/StopCard';
 import LocationChecker from '../components/scavenger/LocationChecker';
 import ProgressMap from '../components/scavenger/ProgressMap';
+import WaiverForm from '../components/scavenger/WaiverForm';
 
 export default function ScavengerHunt() {
   const [user, setUser] = useState(null);
@@ -17,9 +18,13 @@ export default function ScavengerHunt() {
   const [locationError, setLocationError] = useState(null);
   const [huntStarted, setHuntStarted] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [waiverSigned, setWaiverSigned] = useState(false);
 
   const queryClient = useQueryClient();
-  const huntName = "Masonic Philadelphia: Secrets in the Stone";
+  
+  // Get hunt name from URL or default
+  const urlParams = new URLSearchParams(window.location.search);
+  const huntName = urlParams.get('hunt') || "Masonic Philadelphia: Secrets in the Stone";
 
   // Fetch user
   useEffect(() => {
@@ -59,7 +64,7 @@ export default function ScavengerHunt() {
 
   // Fetch user progress
   const { data: progressList } = useQuery({
-    queryKey: ['huntProgress', user?.email],
+    queryKey: ['huntProgress', user?.email, huntName],
     queryFn: () => base44.entities.UserHuntProgress.filter({ 
       hunt_name: huntName, 
       user_email: user?.email 
@@ -68,7 +73,19 @@ export default function ScavengerHunt() {
     initialData: []
   });
 
+  // Check for signed waiver
+  const { data: waiverList } = useQuery({
+    queryKey: ['waiver', user?.email, huntName],
+    queryFn: () => base44.entities.HuntWaiver.filter({
+      hunt_name: huntName,
+      user_email: user?.email
+    }),
+    enabled: !!user,
+    initialData: []
+  });
+
   const progress = progressList?.[0];
+  const hasSignedWaiver = waiverList?.length > 0 || waiverSigned;
 
   // Create/update progress
   const startHuntMutation = useMutation({
@@ -118,6 +135,19 @@ export default function ScavengerHunt() {
   const totalStops = stops.filter(s => !s.is_bonus).length;
   const progressPercent = totalStops > 0 ? (completedCount / totalStops) * 100 : 0;
   const isComplete = completedCount === totalStops;
+
+  // Show waiver form after first stop if not signed
+  const needsWaiver = progress && completedCount >= 1 && !hasSignedWaiver;
+
+  if (needsWaiver) {
+    return (
+      <WaiverForm 
+        huntName={huntName} 
+        userEmail={user?.email}
+        onComplete={() => setWaiverSigned(true)}
+      />
+    );
+  }
 
   if (stopsLoading) {
     return (
