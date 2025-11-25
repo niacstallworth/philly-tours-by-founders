@@ -4,6 +4,7 @@ import AdminTours from './pages/AdminTours';
 import AdminImport from './pages/AdminImport';
 import ScavengerHunt from './pages/ScavengerHunt';
 import AdminScavengerHunts from './pages/AdminScavengerHunts';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -18,4 +19,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "Home",
     Pages: PAGES,
+    Layout: __Layout,
 };
