@@ -24,7 +24,7 @@ export default function ScavengerHunt() {
   
   // Get hunt name from URL or default
   const urlParams = new URLSearchParams(window.location.search);
-  const huntName = urlParams.get('hunt') || "Masonic Philadelphia: Secrets in the Stone";
+  const huntName = urlParams.get('hunt') || "Philadelphia Music History Scavenger Hunt";
 
   // Fetch user
   useEffect(() => {
@@ -180,10 +180,10 @@ export default function ScavengerHunt() {
               </div>
               
               <h1 className="text-5xl md:text-6xl font-bold mb-4">
-                Secrets in the Stone
+                {huntName}
               </h1>
               <p className="text-2xl text-amber-200 mb-8">
-                Masonic Philadelphia Scavenger Hunt
+                Discover the sounds that shaped a city
               </p>
               
               <div className="flex flex-wrap gap-4 justify-center mb-12">
@@ -289,8 +289,8 @@ export default function ScavengerHunt() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold">Secrets in the Stone</h1>
-              <p className="text-amber-200 text-sm">Masonic Philadelphia Hunt</p>
+              <h1 className="text-2xl font-bold">{huntName}</h1>
+              <p className="text-amber-200 text-sm">Philadelphia Adventure</p>
             </div>
             <Button
               onClick={() => setShowMap(!showMap)}
