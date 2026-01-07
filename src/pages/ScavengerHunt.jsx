@@ -260,7 +260,7 @@ export default function ScavengerHunt() {
             {/* The 15 Stops Preview */}
             <Card className="mt-12 bg-white/10 backdrop-blur-sm border-white/20">
               <CardHeader>
-                <CardTitle className="text-white text-2xl">The 15 Secret Stops</CardTitle>
+                <CardTitle className="text-white text-2xl">The {totalStops} Secret Stops</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-3">
