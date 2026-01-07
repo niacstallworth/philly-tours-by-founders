@@ -89,9 +89,17 @@ export default function TourDetail() {
         <Card className="p-8 mb-12 bg-white shadow-lg border-none">
           <div className="flex items-start gap-3 mb-4">
             <Info className="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" />
-            <div>
+            <div className="w-full">
               <h2 className="text-2xl font-bold text-gray-900 mb-3">Tour Overview</h2>
-              <p className="text-gray-700 leading-relaxed">{tour.description}</p>
+              <p className="text-gray-700 leading-relaxed mb-4">{tour.description}</p>
+              <a 
+                href="https://foundersthreads.org" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium underline"
+              >
+                Purchase tour or inquire via email →
+              </a>
             </div>
           </div>
         </Card>

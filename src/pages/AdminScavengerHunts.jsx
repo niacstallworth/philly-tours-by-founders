@@ -7,19 +7,31 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, Trash2, Plus, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, Trash2, Plus, MapPin, CheckCircle, AlertCircle, Edit, Palette } from 'lucide-react';
+import ScavengerHuntEditor from '../components/admin/ScavengerHuntEditor';
+import HuntThemeEditor from '../components/admin/HuntThemeEditor';
 
 export default function AdminScavengerHunts() {
   const [pdfFile, setPdfFile] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [status, setStatus] = useState(null);
   const [huntName, setHuntName] = useState('');
+  const [editingStop, setEditingStop] = useState(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [editingTheme, setEditingTheme] = useState(null);
+  const [isThemeEditorOpen, setIsThemeEditorOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
   const { data: stops, isLoading } = useQuery({
     queryKey: ['allScavengerStops'],
     queryFn: () => base44.entities.ScavengerHuntStop.list('stop_number'),
+    initialData: []
+  });
+
+  const { data: themes } = useQuery({
+    queryKey: ['huntThemes'],
+    queryFn: () => base44.entities.HuntTheme.list(),
     initialData: []
   });
 
@@ -58,6 +70,29 @@ export default function AdminScavengerHunts() {
       setStatus({ type: 'success', message: 'Scavenger hunt imported successfully!' });
       setPdfFile(null);
       setHuntName('');
+    }
+  });
+
+  const updateStopMutation = useMutation({
+    mutationFn: ({ id, data }) => 
+      id ? base44.entities.ScavengerHuntStop.update(id, data) : base44.entities.ScavengerHuntStop.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allScavengerStops'] });
+      setStatus({ type: 'success', message: 'Stop saved successfully!' });
+    }
+  });
+
+  const saveThemeMutation = useMutation({
+    mutationFn: async (themeData) => {
+      const existing = themes.find(t => t.hunt_name === themeData.hunt_name);
+      if (existing) {
+        return base44.entities.HuntTheme.update(existing.id, themeData);
+      }
+      return base44.entities.HuntTheme.create(themeData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['huntThemes'] });
+      setStatus({ type: 'success', message: 'Theme saved successfully!' });
     }
   });
 
@@ -210,18 +245,43 @@ export default function AdminScavengerHunts() {
                         <CardTitle>{name}</CardTitle>
                         <p className="text-sm text-gray-500 mt-1">{huntStops.length} stops</p>
                       </div>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => {
-                          if (confirm(`Delete entire hunt "${name}" and all its stops?`)) {
-                            deleteHuntMutation.mutate(name);
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete Hunt
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const theme = themes.find(t => t.hunt_name === name);
+                            setEditingTheme({ hunt_name: name, ...theme });
+                            setIsThemeEditorOpen(true);
+                          }}
+                        >
+                          <Palette className="w-4 h-4 mr-2" />
+                          Theme
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditingStop({ hunt_name: name, stop_number: huntStops.length + 1 });
+                            setIsEditorOpen(true);
+                          }}
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Stop
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => {
+                            if (confirm(`Delete entire hunt "${name}" and all its stops?`)) {
+                              deleteHuntMutation.mutate(name);
+                            }
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete Hunt
+                        </Button>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -236,14 +296,27 @@ export default function AdminScavengerHunts() {
                                 <p className="text-xs text-gray-500">{stop.location?.address}</p>
                               </div>
                             </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => deleteStopMutation.mutate(stop.id)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setEditingStop(stop);
+                                  setIsEditorOpen(true);
+                                }}
+                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => deleteStopMutation.mutate(stop.id)}
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -254,6 +327,33 @@ export default function AdminScavengerHunts() {
             )}
           </TabsContent>
         </Tabs>
+
+        <ScavengerHuntEditor
+          stop={editingStop}
+          isOpen={isEditorOpen}
+          onClose={() => {
+            setIsEditorOpen(false);
+            setEditingStop(null);
+          }}
+          onSave={(stopData) => {
+            updateStopMutation.mutate({
+              id: editingStop?.id,
+              data: stopData
+            });
+          }}
+        />
+
+        <HuntThemeEditor
+          hunt={editingTheme}
+          isOpen={isThemeEditorOpen}
+          onClose={() => {
+            setIsThemeEditorOpen(false);
+            setEditingTheme(null);
+          }}
+          onSave={(themeData) => {
+            saveThemeMutation.mutate(themeData);
+          }}
+        />
       </div>
     </div>
   );
