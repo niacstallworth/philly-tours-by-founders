@@ -197,7 +197,7 @@ export default function ScavengerHunt() {
                 </Badge>
                 <Badge className="bg-white/20 text-white px-4 py-2 text-lg">
                   <Trophy className="w-4 h-4 mr-2" />
-                  15 Stops
+                  {totalStops} Stops
                 </Badge>
               </div>
 
