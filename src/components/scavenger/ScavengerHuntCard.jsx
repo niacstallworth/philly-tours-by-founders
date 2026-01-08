@@ -18,7 +18,12 @@ export default function ScavengerHuntCard({ hunt }) {
       >
         <Card className="overflow-hidden bg-white border-none shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group">
           <div className="relative h-64 overflow-hidden bg-gradient-to-br from-amber-600 via-orange-500 to-red-600">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800')] bg-cover bg-center opacity-30" />
+            {hunt.hero_image_url && (
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-40" 
+                style={{ backgroundImage: `url(${hunt.hero_image_url})` }}
+              />
+            )}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center text-white">
                 <MapPin className="w-16 h-16 mx-auto mb-3" />

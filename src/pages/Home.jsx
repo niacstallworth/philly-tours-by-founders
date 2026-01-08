@@ -20,11 +20,22 @@ export default function Home() {
     initialData: []
   });
 
+  const { data: huntThemes } = useQuery({
+    queryKey: ['huntThemes'],
+    queryFn: () => base44.entities.HuntTheme.list(),
+    initialData: []
+  });
+
   // Group stops by hunt name to get unique hunts
   const scavengerHunts = Object.entries(
     scavengerStops.reduce((acc, stop) => {
       if (!acc[stop.hunt_name]) {
-        acc[stop.hunt_name] = { name: stop.hunt_name, stops: [] };
+        const theme = huntThemes.find(t => t.hunt_name === stop.hunt_name);
+        acc[stop.hunt_name] = { 
+          name: stop.hunt_name, 
+          stops: [],
+          hero_image_url: theme?.hero_image_url
+        };
       }
       acc[stop.hunt_name].stops.push(stop);
       return acc;
