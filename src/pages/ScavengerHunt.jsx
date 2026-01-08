@@ -165,8 +165,6 @@ export default function ScavengerHunt() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-900 via-orange-800 to-red-900">
         <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600')] bg-cover bg-center opacity-20" />
-          
           <div className="relative max-w-5xl mx-auto px-6 py-16">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
