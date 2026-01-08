@@ -301,6 +301,20 @@ export default function ScavengerHunt() {
               {showMap ? 'Hide Map' : 'Show Map'}
             </Button>
           </div>
+
+          {/* Welcome Back Message */}
+          {completedCount > 0 && !isComplete && huntStarted && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 bg-blue-500/20 backdrop-blur-sm rounded-lg p-3 border border-blue-300/30"
+            >
+              <p className="text-sm font-medium">
+                👋 Welcome back! You've completed {completedCount} stop{completedCount !== 1 ? 's' : ''}. 
+                {progress?.current_stop <= totalStops && ` Continue to Stop ${progress.current_stop}.`}
+              </p>
+            </motion.div>
+          )}
           
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
