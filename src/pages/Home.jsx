@@ -27,20 +27,22 @@ export default function Home() {
   });
 
   // Group stops by hunt name to get unique hunts
-  const scavengerHunts = Object.entries(
-    scavengerStops.reduce((acc, stop) => {
-      if (!acc[stop.hunt_name]) {
-        const theme = huntThemes.find(t => t.hunt_name === stop.hunt_name);
-        acc[stop.hunt_name] = { 
-          name: stop.hunt_name, 
-          stops: [],
-          hero_image_url: theme?.hero_image_url
-        };
-      }
-      acc[stop.hunt_name].stops.push(stop);
-      return acc;
-    }, {})
-  ).map(([name, data]) => data);
+  const scavengerHunts = React.useMemo(() => {
+    return Object.entries(
+      scavengerStops.reduce((acc, stop) => {
+        if (!acc[stop.hunt_name]) {
+          const theme = huntThemes.find(t => t.hunt_name === stop.hunt_name);
+          acc[stop.hunt_name] = { 
+            name: stop.hunt_name, 
+            stops: [],
+            hero_image_url: theme?.hero_image_url
+          };
+        }
+        acc[stop.hunt_name].stops.push(stop);
+        return acc;
+      }, {})
+    ).map(([name, data]) => data);
+  }, [scavengerStops, huntThemes]);
 
   const isLoading = toursLoading || stopsLoading;
 
