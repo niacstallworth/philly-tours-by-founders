@@ -114,7 +114,7 @@ export default function TourDetail() {
 
         {/* Practical Notes */}
         {tour.practical_notes && tour.practical_notes.length > 0 && (
-          <Card className="p-8 bg-gradient-to-br from-amber-50 to-orange-50 border-none shadow-lg">
+          <Card className="p-8 bg-gradient-to-br from-amber-50 to-orange-50 border-none shadow-lg mb-12">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Practical Notes</h3>
             <ul className="space-y-2">
               {tour.practical_notes.map((note, idx) => (
@@ -125,6 +125,21 @@ export default function TourDetail() {
               ))}
             </ul>
           </Card>
+        )}
+
+        {/* Purchase Button */}
+        {tour.purchase_url && (
+          <div className="text-center">
+            <a 
+              href={tour.purchase_url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6 text-lg">
+                Purchase Here
+              </Button>
+            </a>
+          </div>
         )}
       </div>
     </div>

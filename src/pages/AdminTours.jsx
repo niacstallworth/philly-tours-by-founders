@@ -11,6 +11,7 @@ import { Pencil, Image as ImageIcon, Trash2 } from 'lucide-react';
 export default function AdminTours() {
   const [editingTour, setEditingTour] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
+  const [purchaseUrl, setPurchaseUrl] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -26,6 +27,7 @@ export default function AdminTours() {
       queryClient.invalidateQueries({ queryKey: ['tours'] });
       setEditingTour(null);
       setImageUrl('');
+      setPurchaseUrl('');
     }
   });
 
@@ -39,13 +41,17 @@ export default function AdminTours() {
   const handleEdit = (tour) => {
     setEditingTour(tour);
     setImageUrl(tour.image_url || '');
+    setPurchaseUrl(tour.purchase_url || '');
   };
 
   const handleSave = () => {
     if (editingTour) {
       updateTourMutation.mutate({
         id: editingTour.id,
-        data: { image_url: imageUrl }
+        data: { 
+          image_url: imageUrl,
+          purchase_url: purchaseUrl 
+        }
       });
     }
   };
@@ -103,13 +109,13 @@ export default function AdminTours() {
                       variant="outline"
                     >
                       <Pencil className="w-4 h-4 mr-2" />
-                      Edit Image
+                      Edit Tour
                     </Button>
                   </DialogTrigger>
                   
                   <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                      <DialogTitle>Edit Tour Image</DialogTitle>
+                      <DialogTitle>Edit Tour</DialogTitle>
                     </DialogHeader>
                     
                     <div className="space-y-4 mt-4">
@@ -144,6 +150,19 @@ export default function AdminTours() {
                           Tip: Use Unsplash for high-quality images. Search on unsplash.com and copy the image URL.
                         </p>
                       </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="purchaseUrl">Purchase Link</Label>
+                        <Input
+                          id="purchaseUrl"
+                          value={purchaseUrl}
+                          onChange={(e) => setPurchaseUrl(e.target.value)}
+                          placeholder="https://foundersthreads.org/..."
+                        />
+                        <p className="text-xs text-gray-500">
+                          Link where users can purchase or inquire about this tour.
+                        </p>
+                      </div>
                       
                       <div className="flex justify-end gap-3 pt-4">
                         <DialogTrigger asChild>
@@ -155,7 +174,7 @@ export default function AdminTours() {
                           onClick={handleSave}
                           disabled={updateTourMutation.isPending}
                         >
-                          {updateTourMutation.isPending ? 'Saving...' : 'Save Image'}
+                          {updateTourMutation.isPending ? 'Saving...' : 'Save Changes'}
                         </Button>
                       </div>
                     </div>
