@@ -93,7 +93,7 @@ export default function TourDetail() {
               <h2 className="text-2xl font-bold text-gray-900 mb-3">Tour Overview</h2>
               <p className="text-gray-700 leading-relaxed mb-4">{tour.description}</p>
               <a 
-                href="https://foundersthreads.org" 
+                href="https://book.squareup.com/appointments/4l5p1y4tx8ni0p/location/LAQNH4PPWSX4N/services" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium underline"
@@ -128,19 +128,17 @@ export default function TourDetail() {
         )}
 
         {/* Purchase Button */}
-        {tour.purchase_url && (
-          <div className="text-center">
-            <a 
-              href={tour.purchase_url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6 text-lg">
-                Purchase Here
-              </Button>
-            </a>
-          </div>
-        )}
+        <div className="text-center">
+          <a 
+            href="https://book.squareup.com/appointments/4l5p1y4tx8ni0p/location/LAQNH4PPWSX4N/services" 
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6 text-lg">
+              Purchase Here
+            </Button>
+          </a>
+        </div>
       </div>
     </div>
   );
