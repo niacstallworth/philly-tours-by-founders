@@ -10,8 +10,8 @@ export default function ScavengerHuntCard({ hunt, theme }) {
   const stopCount = hunt.stops?.filter(s => !s.is_bonus).length || 0;
   const bonusCount = hunt.stops?.filter(s => s.is_bonus).length || 0;
 
-  const gradientFrom = theme?.hero_gradient_from || '#d97706';
-  const gradientTo = theme?.hero_gradient_to || '#ea580c';
+  const gradientFrom = theme?.hero_gradient_from || '#1a1a1a';
+  const gradientTo = theme?.hero_gradient_to || '#2d2d2d';
 
   return (
     <Link to={createPageUrl('ScavengerHunt') + `?hunt=${encodeURIComponent(hunt.name)}`}>
@@ -43,11 +43,8 @@ export default function ScavengerHuntCard({ hunt, theme }) {
               </div>
             </div>
             <Badge 
-              className="absolute top-4 right-4 border-none px-4 py-1.5 font-medium"
-              style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                color: theme?.primary_color || '#92400e'
-              }}
+              className="absolute top-4 right-4 border-none px-4 py-1.5 font-medium text-white"
+              style={{ backgroundColor: theme?.primary_color || '#D4AF37' }}
             >
               Interactive
             </Badge>

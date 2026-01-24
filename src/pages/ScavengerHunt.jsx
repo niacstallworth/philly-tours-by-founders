@@ -171,8 +171,8 @@ export default function ScavengerHunt() {
 
   // Hero / Welcome Screen
   if (!progress || !huntStarted) {
-    const heroGradientFrom = theme?.hero_gradient_from || '#92400e';
-    const heroGradientTo = theme?.hero_gradient_to || '#991b1b';
+    const heroGradientFrom = theme?.hero_gradient_from || '#1a1a1a';
+    const heroGradientTo = theme?.hero_gradient_to || '#2d2d2d';
     
     return (
       <div 
@@ -201,20 +201,29 @@ export default function ScavengerHunt() {
               <h1 className="text-5xl md:text-6xl font-bold mb-4">
                 {theme?.display_title || huntName}
               </h1>
-              <p className="text-2xl text-amber-200 mb-8">
+              <p className="text-2xl text-gray-300 mb-8">
                 {theme?.tagline || 'Discover the sounds that shaped a city'}
               </p>
               
               <div className="flex flex-wrap gap-4 justify-center mb-12">
-                <Badge className="bg-white/20 text-white px-4 py-2 text-lg">
+                <Badge 
+                  className="text-white px-4 py-2 text-lg"
+                  style={{ backgroundColor: theme?.primary_color || '#D4AF37' }}
+                >
                   <Navigation className="w-4 h-4 mr-2" />
                   4.8 Miles
                 </Badge>
-                <Badge className="bg-white/20 text-white px-4 py-2 text-lg">
+                <Badge 
+                  className="text-white px-4 py-2 text-lg"
+                  style={{ backgroundColor: theme?.primary_color || '#D4AF37' }}
+                >
                   <Clock className="w-4 h-4 mr-2" />
                   2.5 - 4 Hours
                 </Badge>
-                <Badge className="bg-white/20 text-white px-4 py-2 text-lg">
+                <Badge 
+                  className="text-white px-4 py-2 text-lg"
+                  style={{ backgroundColor: theme?.primary_color || '#D4AF37' }}
+                >
                   <Trophy className="w-4 h-4 mr-2" />
                   {totalStops} Stops
                 </Badge>
@@ -254,7 +263,7 @@ export default function ScavengerHunt() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-amber-100">Clues unlock automatically as you reach each location</p>
+                  <p className="text-gray-300">Clues unlock automatically as you reach each location</p>
                 </CardContent>
               </Card>
 
@@ -269,7 +278,7 @@ export default function ScavengerHunt() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-amber-100">Capture your journey with geo-verified selfies</p>
+                  <p className="text-gray-300">Capture your journey with geo-verified selfies</p>
                 </CardContent>
               </Card>
 
@@ -284,7 +293,7 @@ export default function ScavengerHunt() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-amber-100">Unlock bonus locations and exclusive digital content</p>
+                  <p className="text-gray-300">Unlock bonus locations and exclusive digital content</p>
                 </CardContent>
               </Card>
             </div>
@@ -297,12 +306,10 @@ export default function ScavengerHunt() {
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-3">
                   {stops.filter(s => !s.is_bonus).map((stop) => (
-                    <div key={stop.id} className="flex items-center gap-3 text-amber-100">
+                    <div key={stop.id} className="flex items-center gap-3 text-gray-200">
                       <span 
-                        className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                        style={theme?.primary_color ? {
-                          backgroundColor: `${theme.primary_color}50`
-                        } : { backgroundColor: 'rgba(245, 158, 11, 0.3)' }}
+                        className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white"
+                        style={{ backgroundColor: theme?.primary_color || '#D4AF37' }}
                       >
                         {stop.stop_number}
                       </span>
@@ -319,9 +326,9 @@ export default function ScavengerHunt() {
   }
 
   // Active Hunt View
-  const bgColor = theme?.background_color || '#fef3c7';
-  const headerFrom = theme?.header_gradient_from || '#92400e';
-  const headerTo = theme?.header_gradient_to || '#c2410c';
+  const bgColor = theme?.background_color || '#f8f8f8';
+  const headerFrom = theme?.header_gradient_from || '#1a1a1a';
+  const headerTo = theme?.header_gradient_to || '#2d2d2d';
   
   return (
     <div className="min-h-screen pb-20" style={{ backgroundColor: bgColor }}>
@@ -334,7 +341,7 @@ export default function ScavengerHunt() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-bold">{theme?.display_title || huntName}</h1>
-              <p className="text-amber-200 text-sm">{theme?.tagline || 'Philadelphia Adventure'}</p>
+              <p className="text-gray-300 text-sm">{theme?.tagline || 'Philadelphia Adventure'}</p>
             </div>
             <Button
               onClick={() => setShowMap(!showMap)}
@@ -377,7 +384,7 @@ export default function ScavengerHunt() {
               <Trophy className="w-6 h-6" />
               <div>
                 <p className="font-bold">Quest Complete!</p>
-                <p className="text-sm text-amber-100">You've unlocked the secret 16th location!</p>
+                <p className="text-sm text-gray-200">You've unlocked the secret 16th location!</p>
               </div>
             </motion.div>
           )}
