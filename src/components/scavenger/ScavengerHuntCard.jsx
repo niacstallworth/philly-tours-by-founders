@@ -6,9 +6,12 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
-export default function ScavengerHuntCard({ hunt }) {
+export default function ScavengerHuntCard({ hunt, theme }) {
   const stopCount = hunt.stops?.filter(s => !s.is_bonus).length || 0;
   const bonusCount = hunt.stops?.filter(s => s.is_bonus).length || 0;
+
+  const gradientFrom = theme?.hero_gradient_from || '#d97706';
+  const gradientTo = theme?.hero_gradient_to || '#ea580c';
 
   return (
     <Link to={createPageUrl('ScavengerHunt') + `?hunt=${encodeURIComponent(hunt.name)}`}>
@@ -17,20 +20,35 @@ export default function ScavengerHuntCard({ hunt }) {
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         <Card className="overflow-hidden bg-white border-none shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-          <div className="relative h-64 overflow-hidden bg-gradient-to-br from-amber-600 via-orange-500 to-red-600">
-            {hunt.hero_image_url && (
+          <div 
+            className="relative h-64 overflow-hidden"
+            style={{ background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` }}
+          >
+            {theme?.card_image_url ? (
+              <img 
+                src={theme.card_image_url} 
+                alt={hunt.name}
+                className="absolute inset-0 w-full h-full object-cover opacity-50"
+              />
+            ) : hunt.hero_image_url ? (
               <div 
                 className="absolute inset-0 bg-cover bg-center opacity-40" 
                 style={{ backgroundImage: `url(${hunt.hero_image_url})` }}
               />
-            )}
+            ) : null}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center text-white">
                 <MapPin className="w-16 h-16 mx-auto mb-3" />
                 <p className="text-lg font-medium">GPS Adventure</p>
               </div>
             </div>
-            <Badge className="absolute top-4 right-4 bg-white/90 text-amber-900 border-none px-4 py-1.5 font-medium">
+            <Badge 
+              className="absolute top-4 right-4 border-none px-4 py-1.5 font-medium"
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                color: theme?.primary_color || '#92400e'
+              }}
+            >
               Interactive
             </Badge>
           </div>

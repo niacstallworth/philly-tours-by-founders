@@ -62,6 +62,15 @@ export default function ScavengerHunt() {
     initialData: []
   });
 
+  // Fetch hunt theme
+  const { data: themeList } = useQuery({
+    queryKey: ['huntTheme', huntName],
+    queryFn: () => base44.entities.HuntTheme.filter({ hunt_name: huntName }),
+    initialData: []
+  });
+
+  const theme = themeList?.[0];
+
   // Fetch user progress
   const { data: progressList } = useQuery({
     queryKey: ['huntProgress', user?.email, huntName],
@@ -162,9 +171,21 @@ export default function ScavengerHunt() {
 
   // Hero / Welcome Screen
   if (!progress || !huntStarted) {
+    const heroGradientFrom = theme?.hero_gradient_from || '#92400e';
+    const heroGradientTo = theme?.hero_gradient_to || '#991b1b';
+    
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-orange-800 to-red-900">
+      <div 
+        className="min-h-screen"
+        style={{ background: `linear-gradient(135deg, ${heroGradientFrom}, ${heroGradientTo})` }}
+      >
         <div className="relative overflow-hidden">
+          {theme?.hero_image_url && (
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-20"
+              style={{ backgroundImage: `url(${theme.hero_image_url})` }}
+            />
+          )}
           <div className="relative max-w-5xl mx-auto px-6 py-16">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -178,10 +199,10 @@ export default function ScavengerHunt() {
               </div>
               
               <h1 className="text-5xl md:text-6xl font-bold mb-4">
-                {huntName}
+                {theme?.display_title || huntName}
               </h1>
               <p className="text-2xl text-amber-200 mb-8">
-                Discover the sounds that shaped a city
+                {theme?.tagline || 'Discover the sounds that shaped a city'}
               </p>
               
               <div className="flex flex-wrap gap-4 justify-center mb-12">
@@ -280,15 +301,22 @@ export default function ScavengerHunt() {
   }
 
   // Active Hunt View
+  const bgColor = theme?.background_color || '#fef3c7';
+  const headerFrom = theme?.header_gradient_from || '#92400e';
+  const headerTo = theme?.header_gradient_to || '#c2410c';
+  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 pb-20">
+    <div className="min-h-screen pb-20" style={{ backgroundColor: bgColor }}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-amber-900 to-orange-800 text-white p-6 sticky top-0 z-10 shadow-lg">
+      <div 
+        className="text-white p-6 sticky top-0 z-10 shadow-lg"
+        style={{ background: `linear-gradient(to right, ${headerFrom}, ${headerTo})` }}
+      >
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold">{huntName}</h1>
-              <p className="text-amber-200 text-sm">Philadelphia Adventure</p>
+              <h1 className="text-2xl font-bold">{theme?.display_title || huntName}</h1>
+              <p className="text-amber-200 text-sm">{theme?.tagline || 'Philadelphia Adventure'}</p>
             </div>
             <Button
               onClick={() => setShowMap(!showMap)}

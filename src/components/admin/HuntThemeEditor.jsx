@@ -16,7 +16,11 @@ export default function HuntThemeEditor({ hunt, isOpen, onClose, onSave }) {
     card_background: hunt?.card_background || '#ffffff',
     primary_color: hunt?.primary_color || '#d97706',
     text_color: hunt?.text_color || '#111827',
-    hero_image_url: hunt?.hero_image_url || ''
+    hero_image_url: hunt?.hero_image_url || '',
+    card_image_url: hunt?.card_image_url || '',
+    header_gradient_from: hunt?.header_gradient_from || '#92400e',
+    header_gradient_to: hunt?.header_gradient_to || '#c2410c',
+    stop_card_accent: hunt?.stop_card_accent || '#f59e0b'
   });
 
   const handleSave = () => {
@@ -53,12 +57,22 @@ export default function HuntThemeEditor({ hunt, isOpen, onClose, onSave }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hero_image_url">Hero Image URL</Label>
+            <Label htmlFor="hero_image_url">Hero Image URL (Welcome Screen)</Label>
             <Input
               id="hero_image_url"
               value={theme.hero_image_url}
               onChange={(e) => setTheme({...theme, hero_image_url: e.target.value})}
               placeholder="https://example.com/hero-image.jpg"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="card_image_url">Card Image URL (Home Page Box)</Label>
+            <Input
+              id="card_image_url"
+              value={theme.card_image_url}
+              onChange={(e) => setTheme({...theme, card_image_url: e.target.value})}
+              placeholder="https://example.com/card-image.jpg"
             />
           </div>
 

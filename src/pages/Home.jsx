@@ -166,9 +166,10 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {scavengerHunts.map((hunt) => (
-                  <ScavengerHuntCard key={hunt.name} hunt={hunt} />
-                ))}
+                {scavengerHunts.map((hunt) => {
+                  const theme = huntThemes.find(t => t.hunt_name === hunt.name);
+                  return <ScavengerHuntCard key={hunt.name} hunt={hunt} theme={theme} />;
+                })}
               </div>
             )}
             
