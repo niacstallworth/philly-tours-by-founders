@@ -230,7 +230,11 @@ export default function ScavengerHunt() {
               <Button
                 onClick={handleStartHunt}
                 disabled={!currentLocation || startHuntMutation.isPending}
-                className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-6 text-xl"
+                className="px-8 py-6 text-xl"
+                style={theme?.primary_color ? {
+                  backgroundColor: theme.primary_color,
+                  color: 'white'
+                } : {}}
                 size="lg"
               >
                 {startHuntMutation.isPending ? 'Starting...' : 'Begin Your Quest'}
@@ -239,7 +243,10 @@ export default function ScavengerHunt() {
 
             {/* Features */}
             <div className="grid md:grid-cols-3 gap-6 mt-16">
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
+              <Card 
+                className="backdrop-blur-sm border-white/20 text-white"
+                style={{ backgroundColor: theme?.card_background ? `${theme.card_background}20` : 'rgba(255,255,255,0.1)' }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MapPin className="w-5 h-5" />
@@ -251,7 +258,10 @@ export default function ScavengerHunt() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
+              <Card 
+                className="backdrop-blur-sm border-white/20 text-white"
+                style={{ backgroundColor: theme?.card_background ? `${theme.card_background}20` : 'rgba(255,255,255,0.1)' }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Camera className="w-5 h-5" />
@@ -263,7 +273,10 @@ export default function ScavengerHunt() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
+              <Card 
+                className="backdrop-blur-sm border-white/20 text-white"
+                style={{ backgroundColor: theme?.card_background ? `${theme.card_background}20` : 'rgba(255,255,255,0.1)' }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Trophy className="w-5 h-5" />
@@ -285,7 +298,12 @@ export default function ScavengerHunt() {
                 <div className="grid md:grid-cols-2 gap-3">
                   {stops.filter(s => !s.is_bonus).map((stop) => (
                     <div key={stop.id} className="flex items-center gap-3 text-amber-100">
-                      <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/30 flex items-center justify-center text-sm font-bold">
+                      <span 
+                        className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                        style={theme?.primary_color ? {
+                          backgroundColor: `${theme.primary_color}50`
+                        } : { backgroundColor: 'rgba(245, 158, 11, 0.3)' }}
+                      >
                         {stop.stop_number}
                       </span>
                       <span className="text-sm">{stop.title}</span>
