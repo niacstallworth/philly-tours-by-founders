@@ -6,7 +6,7 @@ import { Lock, CheckCircle, MapPin, Navigation, Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 import LocationChecker from './LocationChecker';
 
-export default function StopCard({ stop, isCompleted, isCurrent, isLocked, currentLocation, onComplete }) {
+export default function StopCard({ stop, isCompleted, isCurrent, isLocked, currentLocation, onComplete, accentColor }) {
   const [showChecker, setShowChecker] = useState(false);
 
   const calculateDistance = () => {
@@ -35,19 +35,25 @@ export default function StopCard({ stop, isCompleted, isCurrent, isLocked, curre
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: stop.stop_number * 0.05 }}
     >
-      <Card className={`overflow-hidden ${
-        isCompleted ? 'border-green-500 bg-green-50' : 
-        isCurrent ? 'border-amber-500 bg-white shadow-lg' : 
-        'border-gray-200 bg-gray-50'
-      }`}>
+      <Card 
+        className={`overflow-hidden ${
+          isCompleted ? 'border-green-500 bg-green-50' : 
+          isCurrent ? 'bg-white shadow-lg' : 
+          'border-gray-200 bg-gray-50'
+        }`}
+        style={isCurrent && accentColor ? { borderColor: accentColor, borderWidth: '2px' } : {}}
+      >
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3 flex-1">
-              <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${
-                isCompleted ? 'bg-green-500 text-white' :
-                isCurrent ? 'bg-amber-500 text-white' :
-                'bg-gray-300 text-gray-600'
-              }`}>
+              <div 
+                className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${
+                  isCompleted ? 'bg-green-500 text-white' :
+                  isCurrent ? 'text-white' :
+                  'bg-gray-300 text-gray-600'
+                }`}
+                style={isCurrent && accentColor ? { backgroundColor: accentColor } : {}}
+              >
                 {isCompleted ? <CheckCircle className="w-6 h-6" /> : stop.stop_number}
               </div>
               
@@ -75,8 +81,11 @@ export default function StopCard({ stop, isCompleted, isCurrent, isLocked, curre
           {!isLocked && (
             <>
               {stop.clue && (
-                <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
-                  <p className="text-sm font-medium text-amber-900">Clue:</p>
+                <div 
+                  className="bg-amber-50 border-l-4 p-4 rounded"
+                  style={accentColor ? { borderColor: accentColor } : { borderColor: '#f59e0b' }}
+                >
+                  <p className="text-sm font-medium" style={accentColor ? { color: accentColor } : {}}>Clue:</p>
                   <p className="text-gray-700 mt-1">{stop.clue}</p>
                 </div>
               )}
@@ -115,7 +124,11 @@ export default function StopCard({ stop, isCompleted, isCurrent, isLocked, curre
                   {isNearby && !showChecker && (
                     <Button 
                       onClick={() => setShowChecker(true)}
-                      className="w-full bg-amber-600 hover:bg-amber-700"
+                      className="w-full"
+                      style={accentColor ? { 
+                        backgroundColor: accentColor,
+                        color: 'white'
+                      } : {}}
                     >
                       <Camera className="w-4 h-4 mr-2" />
                       Check In & Take Selfie

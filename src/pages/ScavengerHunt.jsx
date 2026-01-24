@@ -393,6 +393,7 @@ export default function ScavengerHunt() {
                 isLocked={isLocked || isBonusLocked}
                 currentLocation={currentLocation}
                 onComplete={handleStopComplete}
+                accentColor={theme?.stop_card_accent}
               />
             );
           })}
