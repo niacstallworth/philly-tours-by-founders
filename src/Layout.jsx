@@ -28,7 +28,6 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Home', icon: Home, page: 'Home' },
-    { name: 'Scavenger Hunt', icon: MapPin, page: 'ScavengerHunt' },
     { name: 'Merchandise', icon: ShoppingBag, page: 'Merchandise' },
   ];
 
