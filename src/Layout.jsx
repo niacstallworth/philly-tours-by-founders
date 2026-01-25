@@ -34,7 +34,6 @@ export default function Layout({ children, currentPageName }) {
   const adminItems = [
     { name: 'Manage Tours', icon: Image, page: 'AdminTours' },
     { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
-    { name: 'Scavenger Hunts', icon: MapPin, page: 'AdminScavengerHunts' },
     { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
   ];
 
