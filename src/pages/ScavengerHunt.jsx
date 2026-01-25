@@ -19,6 +19,7 @@ export default function ScavengerHunt() {
   const [huntStarted, setHuntStarted] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [waiverSigned, setWaiverSigned] = useState(false);
+  const [locationPermissionDenied, setLocationPermissionDenied] = useState(false);
 
   const queryClient = useQueryClient();
   
@@ -45,15 +46,59 @@ export default function ScavengerHunt() {
           longitude: position.coords.longitude
         });
         setLocationError(null);
+        setLocationPermissionDenied(false);
       },
       (error) => {
-        setLocationError("Unable to retrieve your location. Please enable GPS.");
+        if (error.code === error.PERMISSION_DENIED) {
+          setLocationPermissionDenied(true);
+          setLocationError("Location access denied. Please enable location permissions in your browser settings.");
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          setLocationError("Location information unavailable. Please check your device settings.");
+        } else if (error.code === error.TIMEOUT) {
+          setLocationError("Location request timed out. Please try again.");
+        } else {
+          setLocationError("Unable to retrieve your location. Please enable GPS.");
+        }
       },
-      { enableHighAccuracy: true, maximumAge: 10000 }
+      { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
     );
 
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
+
+  const requestLocation = () => {
+    setLocationError(null);
+    setLocationPermissionDenied(false);
+    
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCurrentLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+        setLocationError(null);
+        setLocationPermissionDenied(false);
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          setLocationPermissionDenied(true);
+          setLocationError("Location access denied. Please enable location permissions in your browser settings.");
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          setLocationError("Location information unavailable. Please check your device settings.");
+        } else if (error.code === error.TIMEOUT) {
+          setLocationError("Location request timed out. Please try again.");
+        } else {
+          setLocationError("Unable to retrieve your location. Please enable GPS.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
 
   // Fetch all hunt stops
   const { data: stops, isLoading: stopsLoading } = useQuery({
@@ -229,25 +274,59 @@ export default function ScavengerHunt() {
                 </Badge>
               </div>
 
-              {locationError && (
-                <div className="bg-red-500/20 backdrop-blur-sm border border-red-300 rounded-lg p-4 mb-8 max-w-2xl mx-auto">
-                  <p className="text-white">{locationError}</p>
-                  <p className="text-sm text-red-200 mt-2">Please enable location services to play</p>
+              {!currentLocation && (
+                <div className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-6 mb-8 max-w-2xl mx-auto">
+                  <div className="flex items-start gap-3 mb-4">
+                    <MapPin className="w-6 h-6 flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Location Access Required</h3>
+                      {locationError ? (
+                        <>
+                          <p className="text-gray-200 mb-2">{locationError}</p>
+                          {locationPermissionDenied && (
+                            <p className="text-sm text-gray-300 mb-3">
+                              To play the scavenger hunt, please:
+                              <br />1. Click the location icon in your browser's address bar
+                              <br />2. Allow location access for this site
+                              <br />3. Click "Enable Location" below
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <p className="text-gray-200 mb-2">
+                          This scavenger hunt uses your GPS location to unlock clues as you explore Philadelphia.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={requestLocation}
+                    className="w-full"
+                    style={{ 
+                      backgroundColor: theme?.primary_color || '#D4AF37',
+                      color: 'white'
+                    }}
+                  >
+                    <MapPin className="w-4 h-4 mr-2" />
+                    Enable Location
+                  </Button>
                 </div>
               )}
 
-              <Button
-                onClick={handleStartHunt}
-                disabled={!currentLocation || startHuntMutation.isPending}
-                className="px-8 py-6 text-xl"
-                style={theme?.primary_color ? {
-                  backgroundColor: theme.primary_color,
-                  color: 'white'
-                } : {}}
-                size="lg"
-              >
-                {startHuntMutation.isPending ? 'Starting...' : 'Begin Your Quest'}
-              </Button>
+              {currentLocation && (
+                <Button
+                  onClick={handleStartHunt}
+                  disabled={startHuntMutation.isPending}
+                  className="px-8 py-6 text-xl"
+                  style={theme?.primary_color ? {
+                    backgroundColor: theme.primary_color,
+                    color: 'white'
+                  } : {}}
+                  size="lg"
+                >
+                  {startHuntMutation.isPending ? 'Starting...' : 'Begin Your Quest'}
+                </Button>
+              )}
             </motion.div>
 
             {/* Features */}
