@@ -32,40 +32,6 @@ export default function ScavengerHunt() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
-  // Get user's current location
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser");
-      return;
-    }
-
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        setCurrentLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        });
-        setLocationError(null);
-        setLocationPermissionDenied(false);
-      },
-      (error) => {
-        if (error.code === error.PERMISSION_DENIED) {
-          setLocationPermissionDenied(true);
-          setLocationError("Location access denied. Please enable location permissions in your browser settings.");
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          setLocationError("Location information unavailable. Please check your device settings.");
-        } else if (error.code === error.TIMEOUT) {
-          setLocationError("Location request timed out. Please try again.");
-        } else {
-          setLocationError("Unable to retrieve your location. Please enable GPS.");
-        }
-      },
-      { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
-    );
-
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, []);
-
   const requestLocation = () => {
     setLocationError(null);
     setLocationPermissionDenied(false);
@@ -83,6 +49,23 @@ export default function ScavengerHunt() {
         });
         setLocationError(null);
         setLocationPermissionDenied(false);
+        
+        // Start watching position after successful first request
+        const watchId = navigator.geolocation.watchPosition(
+          (position) => {
+            setCurrentLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            });
+          },
+          (error) => {
+            console.error('Watch position error:', error);
+          },
+          { enableHighAccuracy: true, maximumAge: 10000 }
+        );
+        
+        // Store watchId to cleanup later
+        window.__geoWatchId = watchId;
       },
       (error) => {
         if (error.code === error.PERMISSION_DENIED) {
@@ -99,6 +82,17 @@ export default function ScavengerHunt() {
       { enableHighAccuracy: true, timeout: 10000 }
     );
   };
+
+  // Get user's current location on mount
+  useEffect(() => {
+    requestLocation();
+    
+    return () => {
+      if (window.__geoWatchId) {
+        navigator.geolocation.clearWatch(window.__geoWatchId);
+      }
+    };
+  }, []);
 
   // Fetch all hunt stops
   const { data: stops, isLoading: stopsLoading } = useQuery({
