@@ -32,38 +32,13 @@ export default function ScavengerHunt() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
-  // Get user's current location
+  // Cleanup watch on unmount
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser");
-      return;
-    }
-
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        setCurrentLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        });
-        setLocationError(null);
-        setLocationPermissionDenied(false);
-      },
-      (error) => {
-        if (error.code === error.PERMISSION_DENIED) {
-          setLocationPermissionDenied(true);
-          setLocationError("Location access denied. Please enable location permissions in your browser settings.");
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          setLocationError("Location information unavailable. Please check your device settings.");
-        } else if (error.code === error.TIMEOUT) {
-          setLocationError("Location request timed out. Please try again.");
-        } else {
-          setLocationError("Unable to retrieve your location. Please enable GPS.");
-        }
-      },
-      { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
-    );
-
-    return () => navigator.geolocation.clearWatch(watchId);
+    return () => {
+      if (window.__geoWatchId) {
+        navigator.geolocation.clearWatch(window.__geoWatchId);
+      }
+    };
   }, []);
 
   const requestLocation = () => {
@@ -72,6 +47,10 @@ export default function ScavengerHunt() {
       return;
     }
 
+    setLocationError(null);
+    setLocationPermissionDenied(false);
+
+    // First get current position
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setCurrentLocation({
@@ -80,6 +59,24 @@ export default function ScavengerHunt() {
         });
         setLocationError(null);
         setLocationPermissionDenied(false);
+
+        // Then start watching for updates
+        if (window.__geoWatchId) {
+          navigator.geolocation.clearWatch(window.__geoWatchId);
+        }
+        
+        window.__geoWatchId = navigator.geolocation.watchPosition(
+          (position) => {
+            setCurrentLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            });
+          },
+          (error) => {
+            console.error('Watch error:', error);
+          },
+          { enableHighAccuracy: true, maximumAge: 10000 }
+        );
       },
       (error) => {
         if (error.code === error.PERMISSION_DENIED) {
@@ -93,7 +90,7 @@ export default function ScavengerHunt() {
           setLocationError("Unable to retrieve your location. Please enable GPS.");
         }
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 15000 }
     );
   };
 
