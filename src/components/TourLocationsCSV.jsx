@@ -3,7 +3,56 @@ import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 
 export default function TourLocationsCSV() {
-  const csvData = `Tour Name,Day,Stop Name,Address,Latitude,Longitude,Time,Description
+  const csvData = `Tour Name,Stop Number,Stop Name,Address,Latitude,Longitude,Description
+"Philadelphia Black Church Scavenger Hunt",1,"Mother Bethel AME Church","6th & Lombard, Philadelphia, PA",,,""
+"Philadelphia Black Church Scavenger Hunt",2,"African Episcopal Church of St. Thomas","52nd & Parish Street, Philadelphia, PA",,,""
+"Philadelphia Black Church Scavenger Hunt",3,"First African Baptist Church","16th & Christian Street, Philadelphia, PA",,,""
+"Philadelphia Black Church Scavenger Hunt",4,"Tindley Temple United Methodist Church","Broad & Fitzwater, Philadelphia, PA",,,""
+"Philadelphia Black Church Scavenger Hunt",5,"Church of the Advocate","18th & Diamond, North Philly, PA",,,""
+"Philadelphia Black Church Scavenger Hunt",6,"Triumph Baptist Church","Germantown Avenue, Philadelphia, PA",,,""
+"Philadelphia Black Church Scavenger Hunt",7,"Zion Baptist Church","Broad & Venango, Philadelphia, PA",,,""
+"Philadelphia Black Church Scavenger Hunt",8,"Liberation Circle","Rittenhouse Square Park, Philadelphia, PA",,,""
+"Philadelphia Music History",1,"Philadelphia International Records","309 S Broad Street, Philadelphia, PA",,,""
+"Philadelphia Music History",2,"The Uptown Theater","2240 N Broad Street, Philadelphia, PA",,,""
+"Philadelphia Music History",3,"Sigma Sound Studios","212 N 12th St, Philadelphia, PA",,,""
+"Philadelphia Music History",4,"The Roots Mural","South Street, Philadelphia, PA",,,""
+"Philadelphia Music History",5,"Gamble & Huff Mural","Broad Street, Philadelphia, PA",,,""
+"Philadelphia Music History",6,"Patti LaBelle's Childhood Neighborhood","West Philly - 54th area, Philadelphia, PA",,,""
+"Philadelphia Music History",7,"Marian Anderson Residence Museum","762 S Martin St, Philadelphia, PA",,,""
+"Philadelphia Music History",8,"Jill Scott's North Philly Roots","23rd & Cecil B. Moore area, Philadelphia, PA",,,""
+"Philadelphia Music History",9,"Boyz II Men Blvd","Broad Street designation near CAPA HS, Philadelphia, PA",,,""
+"Philadelphia Music History",10,"The Met Philadelphia","Philadelphia, PA",,,""
+"Philadelphia Music History",11,"The Dell Music Center","Ridge Ave & 33rd St, Fairmount Park, Philadelphia, PA",,,""
+"Philadelphia Music History",12,"South Street (General)","South Street, Philadelphia, PA",,,""
+"Philadelphia Music History",13,"TLA - Theatre of Living Arts","South Street, Philadelphia, PA",,,""
+"Philadelphia Music History",14,"Electric Factory (Franklin Music Hall)","N 7th St, Philadelphia, PA",,,""
+"Philadelphia Music History",15,"The Blue Note Jazz Club","Ridge Ave, Philadelphia, PA",,,""
+"Philadelphia Music History",16,"Clef Club of Jazz & Performing Arts","Broad Street, Philadelphia, PA",,,""
+"Philadelphia Music History",17,"WDAS-FM","Philadelphia, PA",,,""
+"Philadelphia Music History",18,"The Spectrum","South Philadelphia, PA",,,""
+"Philadelphia Music History",19,"Curtis Institute of Music","Rittenhouse Square, Philadelphia, PA",,,""
+"Philadelphia Music History",20,"Philadelphia Orchestra / Kimmel Center","Broad & Spruce St, Philadelphia, PA",,,""
+"Philadelphia Music History",21,"Max's Steaks","Broad & Erie, Philadelphia, PA",,,""
+"Philadelphia Music History",22,"Schoolly D's South Philly Area","South Philly Area, Philadelphia, PA",,,""
+"Philadelphia Music History",23,"The Beats, Rhymes & Life Mural","15th & Christian, Philadelphia, PA",,,""
+"Philadelphia Music History",24,"Lou Rawls Heritage Marker","Near the Navy Yard area, Philadelphia, PA",,,""
+"Philadelphia Music History",25,"LOVE Park","JFK Blvd & 15th St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",1,"The Temple That Watched City Hall Rise","1 N. Broad St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",2,"Franklin's Forgotten Printing Shop Symbol","Market St near 3rd St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",3,"The All-Seeing Eye That Isn't on the Dollar Bill","Chestnut St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",4,"The Lodge Room Hidden in Plain Sight on Broad Street","Broad St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",5,"Prince Hall's 1920s Egyptian Fortress","4611 Lancaster Ave, North Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",6,"The Pyramid That Wasn't a Tomb","Center City, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",7,"The Compass & Square Hiding on Penn's Hat","City Hall, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",8,"The Burned Hall That Rose Twice","South Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",9,"The Hospital Gate With the Oldest Masonic Mark in America","8th & Spruce St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",10,"The Bank Vault Door That Opens With a Handshake","Old City, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",11,"The Rooftop Where Washington's Apron Was Photographed","Old City, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",12,"The Stained-Glass Knight Who Guards the Third Degree","1 N. Broad St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",13,"The Street Corner Where the First American Lodge Met","Tun Tavern Location, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",14,"The Hidden Oriental Hall Balcony","1 N. Broad St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",15,"The Secret 33rd Step","1 N. Broad St, Philadelphia, PA",,,""
+"Masonic Philadelphia: Secrets in the Stone",16,"The Grand Master's Secret Chamber","1 N. Broad St, Philadelphia, PA",,,""
 "Black American Legacy & Quaker Heritage",Day 1,"Arch Street Friends Meeting House","Arch Street, Philadelphia, PA",,,Morning,"Oldest continuously used Quaker meeting house (1669-present)"
 "Black American Legacy & Quaker Heritage",Day 1,"Free Quaker Meeting House","5th & Arch St, Philadelphia, PA",,,Morning,"Quakers who supported the Revolution (1783)"
 "Black American Legacy & Quaker Heritage",Day 1,"Pennsylvania Abolition Society","6th & Chestnut St, Philadelphia, PA",,,Morning,"First abolitionist organization in the world (1775)"
@@ -214,8 +263,8 @@ export default function TourLocationsCSV() {
             Download Tour Locations CSV
           </h2>
           <p className="text-gray-600 mb-6">
-            This CSV contains all tour locations from your PDF document, formatted for Google Maps import.
-            It includes {csvData.split('\n').length - 1} locations across all tours.
+            This CSV contains all scavenger hunt locations and tour locations, formatted for Google Maps import.
+            It includes {csvData.split('\n').length - 1} locations across all hunts and tours.
           </p>
           
           <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
@@ -231,8 +280,13 @@ export default function TourLocationsCSV() {
           </div>
 
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="font-semibold text-gray-900 mb-2">Tours Included:</h3>
+            <h3 className="font-semibold text-gray-900 mb-2">Included:</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700">
+              <div className="font-semibold col-span-2 text-indigo-800">Scavenger Hunts:</div>
+              <div>• Philadelphia Black Church Hunt (8 stops)</div>
+              <div>• Music History Hunt (25 stops)</div>
+              <div>• Masonic Secrets in the Stone (16 stops)</div>
+              <div className="font-semibold col-span-2 text-indigo-800 mt-2">Full Tours:</div>
               <div>• Black American Legacy & Quaker Heritage (30 stops)</div>
               <div>• Rainbow Girls Philadelphia (10 stops)</div>
               <div>• Divine 9 Legacy Tour (8 stops)</div>
@@ -243,7 +297,6 @@ export default function TourLocationsCSV() {
               <div>• Black Medical Legacy (18 stops)</div>
               <div>• Eastern Star Weekend (10 stops)</div>
               <div>• Job's Daughters (9 stops)</div>
-              <div>• Masonic Scavenger Hunt (4 stops)</div>
               <div>• Black Architects Tour (9 stops)</div>
               <div>• SEPTA Broad Street Line (14 stops)</div>
               <div>• Philadelphia Foundations (6 stops)</div>

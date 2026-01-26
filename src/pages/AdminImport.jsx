@@ -156,6 +156,8 @@ export default function AdminImport() {
 
         <TourLocationsCSV />
 
+        <TourLocationsCSV />
+
         {/* Mode Toggle */}
         <div className="flex gap-4 mb-6">
           <Button
