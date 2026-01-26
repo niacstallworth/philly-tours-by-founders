@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Upload, Plus, CheckCircle, AlertCircle } from 'lucide-react';
+import TourLocationsCSV from '../components/TourLocationsCSV';
 
 export default function AdminImport() {
   const [importMode, setImportMode] = useState('form');
@@ -152,6 +153,8 @@ export default function AdminImport() {
           <h1 className="text-3xl font-bold text-gray-900">Import New Tour</h1>
           <p className="text-gray-600 mt-2">Add tours to the app using JSON or a form</p>
         </div>
+
+        <TourLocationsCSV />
 
         {/* Mode Toggle */}
         <div className="flex gap-4 mb-6">
