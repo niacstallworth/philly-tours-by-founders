@@ -36,7 +36,12 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 text-white">
-        {settings?.hero_video_url && !videoError ? (
+        {settings?.hero_video_embed ? (
+          <div 
+            className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none"
+            dangerouslySetInnerHTML={{ __html: settings.hero_video_embed }}
+          />
+        ) : settings?.hero_video_url && !videoError ? (
           <div className="absolute inset-0 overflow-hidden">
             <video
               ref={videoRef}

@@ -13,6 +13,7 @@ export default function AdminHomepage() {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     hero_video_url: '',
+    hero_video_embed: '',
     hero_title: 'Founders Threads',
     hero_subtitle: "Discover Philadelphia's rich tapestry of history, culture, and heritage through curated tours"
   });
@@ -70,17 +71,41 @@ export default function AdminHomepage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="hero_video_url">Background Video URL</Label>
+                <Label htmlFor="hero_video_url">Background Video URL (Direct File)</Label>
                 <Input
                   id="hero_video_url"
                   type="url"
                   placeholder="https://example.com/video.mp4"
                   value={formData.hero_video_url}
-                  onChange={(e) => setFormData({...formData, hero_video_url: e.target.value})}
+                  onChange={(e) => setFormData({...formData, hero_video_url: e.target.value, hero_video_embed: ''})}
                   className="mt-2"
                 />
                 <p className="text-sm text-gray-500 mt-1">
-                  Enter a direct link to a video file (MP4 or WebM format). Make sure the URL is publicly accessible. Leave empty to use the default image.
+                  Direct link to MP4 or WebM file. OR use embed code below.
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-500">Or</span>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="hero_video_embed">YouTube/Vimeo Embed Code</Label>
+                <Textarea
+                  id="hero_video_embed"
+                  placeholder='<iframe src="https://www.youtube.com/embed/VIDEO_ID?autoplay=1&mute=1&loop=1&controls=0" ...></iframe>'
+                  value={formData.hero_video_embed}
+                  onChange={(e) => setFormData({...formData, hero_video_embed: e.target.value, hero_video_url: ''})}
+                  className="mt-2 font-mono text-xs"
+                  rows={4}
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Paste the full iframe embed code from YouTube or Vimeo. Make sure to add autoplay=1&mute=1&loop=1&controls=0 to the URL.
                 </p>
               </div>
 
@@ -105,24 +130,31 @@ export default function AdminHomepage() {
                 />
               </div>
 
-              {formData.hero_video_url && (
+              {(formData.hero_video_url || formData.hero_video_embed) && (
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
-                  <video
-                    key={formData.hero_video_url}
-                    src={formData.hero_video_url}
-                    className="w-full h-48 object-cover rounded"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    controls
-                    onError={(e) => {
-                      toast.error('Video failed to load. Check the URL or try a different format.');
-                    }}
-                  />
+                  {formData.hero_video_embed ? (
+                    <div 
+                      className="w-full h-48 rounded overflow-hidden"
+                      dangerouslySetInnerHTML={{ __html: formData.hero_video_embed }}
+                    />
+                  ) : (
+                    <video
+                      key={formData.hero_video_url}
+                      src={formData.hero_video_url}
+                      className="w-full h-48 object-cover rounded"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      controls
+                      onError={(e) => {
+                        toast.error('Video failed to load. Check the URL or try a different format.');
+                      }}
+                    />
+                  )}
                   <p className="text-xs text-gray-500 mt-2">
-                    If the video doesn't play, check that the URL is correct and publicly accessible.
+                    Preview may not be exact. Check the actual homepage to see the final result.
                   </p>
                 </div>
               )}
