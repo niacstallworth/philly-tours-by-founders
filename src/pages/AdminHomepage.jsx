@@ -15,7 +15,12 @@ export default function AdminHomepage() {
     hero_video_url: '',
     hero_video_embed: '',
     hero_title: 'Founders Threads',
-    hero_subtitle: "Discover Philadelphia's rich tapestry of history, culture, and heritage through curated tours"
+    hero_subtitle: "Discover Philadelphia's rich tapestry of history, culture, and heritage through curated tours",
+    gradient_from: 'indigo-900',
+    gradient_via: 'indigo-800',
+    gradient_to: 'purple-900',
+    video_opacity: 20,
+    fallback_opacity: 10
   });
 
   const { data: settings, isLoading } = useQuery({

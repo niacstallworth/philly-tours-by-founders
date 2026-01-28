@@ -35,10 +35,26 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 text-white">
+      <div 
+        className="relative overflow-hidden text-white"
+        style={{
+          background: `linear-gradient(to bottom right, rgb(var(--tw-color-${settings?.gradient_from || 'indigo-900'})), rgb(var(--tw-color-${settings?.gradient_via || 'indigo-800'})), rgb(var(--tw-color-${settings?.gradient_to || 'purple-900'})))`
+        }}
+      >
+        <style jsx>{`
+          :root {
+            --tw-color-indigo-900: 49 46 129;
+            --tw-color-indigo-800: 55 48 163;
+            --tw-color-purple-900: 88 28 135;
+            --tw-color-blue-900: 30 58 138;
+            --tw-color-slate-900: 15 23 42;
+            --tw-color-emerald-900: 6 78 59;
+          }
+        `}</style>
         {settings?.hero_video_embed ? (
           <div 
-            className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none"
+            className="absolute inset-0 overflow-hidden pointer-events-none"
+            style={{ opacity: (settings?.video_opacity || 20) / 100 }}
             dangerouslySetInnerHTML={{ __html: settings.hero_video_embed }}
           />
         ) : settings?.hero_video_url && !videoError ? (
@@ -51,7 +67,8 @@ export default function Home() {
               muted
               playsInline
               preload="auto"
-              className="absolute inset-0 w-full h-full object-cover opacity-20"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ opacity: (settings?.video_opacity || 20) / 100 }}
               onError={() => setVideoError(true)}
               onLoadedData={(e) => e.target.play()}
             >
@@ -60,7 +77,10 @@ export default function Home() {
             </video>
           </div>
         ) : (
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600')] bg-cover bg-center opacity-10" />
+          <div 
+            className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600')] bg-cover bg-center"
+            style={{ opacity: (settings?.fallback_opacity || 10) / 100 }}
+          />
         )}
         
         <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-32">
