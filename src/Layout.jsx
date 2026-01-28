@@ -35,6 +35,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Manage Tours', icon: Image, page: 'AdminTours' },
     { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
     { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
+    { name: 'Homepage', icon: Settings, page: 'AdminHomepage' },
   ];
 
   return (
