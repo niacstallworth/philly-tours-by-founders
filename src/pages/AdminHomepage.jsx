@@ -135,6 +135,73 @@ export default function AdminHomepage() {
                 />
               </div>
 
+              <div className="space-y-4 border-t pt-4">
+                <h3 className="font-semibold text-gray-900">Background Theme</h3>
+                
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="gradient_from">Gradient Start</Label>
+                    <Input
+                      id="gradient_from"
+                      placeholder="indigo-900"
+                      value={formData.gradient_from}
+                      onChange={(e) => setFormData({...formData, gradient_from: e.target.value})}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="gradient_via">Gradient Middle</Label>
+                    <Input
+                      id="gradient_via"
+                      placeholder="indigo-800"
+                      value={formData.gradient_via}
+                      onChange={(e) => setFormData({...formData, gradient_via: e.target.value})}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="gradient_to">Gradient End</Label>
+                    <Input
+                      id="gradient_to"
+                      placeholder="purple-900"
+                      value={formData.gradient_to}
+                      onChange={(e) => setFormData({...formData, gradient_to: e.target.value})}
+                      className="mt-2"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500">
+                  Use Tailwind color classes (e.g., blue-900, slate-800, emerald-700)
+                </p>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="video_opacity">Video Opacity ({formData.video_opacity}%)</Label>
+                    <Input
+                      id="video_opacity"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={formData.video_opacity}
+                      onChange={(e) => setFormData({...formData, video_opacity: parseInt(e.target.value)})}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="fallback_opacity">Fallback Image Opacity ({formData.fallback_opacity}%)</Label>
+                    <Input
+                      id="fallback_opacity"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={formData.fallback_opacity}
+                      onChange={(e) => setFormData({...formData, fallback_opacity: parseInt(e.target.value)})}
+                      className="mt-2"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {(formData.hero_video_url || formData.hero_video_embed) && (
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
