@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import TourCard from '../components/tours/TourCard';
@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef(null);
   
   const { data: tours, isLoading: toursLoading } = useQuery({
     queryKey: ['tours'],
@@ -22,6 +23,15 @@ export default function Home() {
     }
   });
 
+  useEffect(() => {
+    if (videoRef.current && settings?.hero_video_url) {
+      videoRef.current.play().catch(() => {
+        // Autoplay was prevented
+        setVideoError(true);
+      });
+    }
+  }, [settings?.hero_video_url]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
       {/* Hero Section */}
@@ -29,13 +39,16 @@ export default function Home() {
         {settings?.hero_video_url && !videoError ? (
           <div className="absolute inset-0 overflow-hidden">
             <video
+              ref={videoRef}
               key={settings.hero_video_url}
               autoPlay
               loop
               muted
               playsInline
+              preload="auto"
               className="absolute inset-0 w-full h-full object-cover opacity-20"
               onError={() => setVideoError(true)}
+              onLoadedData={(e) => e.target.play()}
             >
               <source src={settings.hero_video_url} type="video/mp4" />
               <source src={settings.hero_video_url} type="video/webm" />
