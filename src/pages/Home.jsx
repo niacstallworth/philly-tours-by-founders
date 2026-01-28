@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import TourCard from '../components/tours/TourCard';
@@ -6,6 +6,8 @@ import { Compass, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Home() {
+  const [videoError, setVideoError] = useState(false);
+  
   const { data: tours, isLoading: toursLoading } = useQuery({
     queryKey: ['tours'],
     queryFn: () => base44.entities.Tour.list(),
@@ -24,16 +26,19 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 text-white">
-        {settings?.hero_video_url ? (
+        {settings?.hero_video_url && !videoError ? (
           <div className="absolute inset-0 overflow-hidden">
             <video
+              key={settings.hero_video_url}
               autoPlay
               loop
               muted
               playsInline
               className="absolute inset-0 w-full h-full object-cover opacity-20"
+              onError={() => setVideoError(true)}
             >
               <source src={settings.hero_video_url} type="video/mp4" />
+              <source src={settings.hero_video_url} type="video/webm" />
             </video>
           </div>
         ) : (

@@ -80,7 +80,7 @@ export default function AdminHomepage() {
                   className="mt-2"
                 />
                 <p className="text-sm text-gray-500 mt-1">
-                  Enter a direct link to an MP4 video file. Leave empty to use the default image.
+                  Enter a direct link to a video file (MP4 or WebM format). Make sure the URL is publicly accessible. Leave empty to use the default image.
                 </p>
               </div>
 
@@ -109,13 +109,21 @@ export default function AdminHomepage() {
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
                   <video
+                    key={formData.hero_video_url}
                     src={formData.hero_video_url}
                     className="w-full h-48 object-cover rounded"
                     autoPlay
                     loop
                     muted
                     playsInline
+                    controls
+                    onError={(e) => {
+                      toast.error('Video failed to load. Check the URL or try a different format.');
+                    }}
                   />
+                  <p className="text-xs text-gray-500 mt-2">
+                    If the video doesn't play, check that the URL is correct and publicly accessible.
+                  </p>
                 </div>
               )}
 
