@@ -48,7 +48,7 @@ export default function Merchandise() {
       <div className="relative h-96 md:h-[500px] overflow-hidden text-white">
         {settings?.hero_video_url && !videoError ? (
           <iframe
-            src={`${settings.hero_video_url}?autoplay=1&mute=1`}
+            src={`${settings.hero_video_url}?autoplay=1&mute=1&loop=1&playlist=${settings.hero_video_url.split('v=')[1]?.split('&')[0]}`}
             title="Hero video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
