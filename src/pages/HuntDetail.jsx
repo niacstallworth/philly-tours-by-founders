@@ -202,7 +202,7 @@ export default function HuntDetail() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 -mt-8">
+      <div className="max-w-4xl mx-auto px-6 py-6">
         {isComplete && (
           <Card className="mb-6 bg-green-50 border-green-200">
             <CardContent className="pt-6">
