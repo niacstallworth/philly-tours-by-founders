@@ -133,11 +133,13 @@ export default function HuntDetail() {
       );
 
       const radius = stop.verification_radius || 50;
+      const distanceInMiles = (distance * 0.000621371).toFixed(2);
       
       if (distance <= radius) {
         await updateProgressMutation.mutateAsync({ stopNumber: stop.stop_number });
+        toast.success('🎉 Success! You found the location!');
       } else {
-        toast.error(`You're ${Math.round(distance)}m away. Get within ${radius}m to check in.`);
+        toast.error(`You're ${distanceInMiles} miles away from this location. Get closer to check in!`);
         setCheckingLocation(null);
       }
     } catch (error) {
