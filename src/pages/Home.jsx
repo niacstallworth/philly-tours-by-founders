@@ -159,7 +159,8 @@ export default function Home() {
       </div>
 
       {/* Content Section */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
+        <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
             <TabsTrigger value="tours" className="flex items-center gap-2">
@@ -248,8 +249,8 @@ export default function Home() {
             )}
           </TabsContent>
         </Tabs>
-      </div>
-
-    </div>
-  );
-}
+        </div>
+        </div>
+        </>
+        );
+        }
