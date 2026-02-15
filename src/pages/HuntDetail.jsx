@@ -146,6 +146,25 @@ export default function HuntDetail() {
   };
 
   const handleCheckIn = async (stop) => {
+    if (!user) {
+      base44.auth.redirectToLogin(window.location.href);
+      return;
+    }
+    
+    if (!waiverAccepted) {
+      setShowWaiverForm(true);
+      return;
+    }
+
+    if (!progress) {
+      try {
+        await createProgressMutation.mutateAsync();
+      } catch (error) {
+        toast.error('Failed to start hunt');
+        return;
+      }
+    }
+
     setCheckingLocation(stop.stop_number);
     try {
       const location = await getUserLocation();
@@ -370,15 +389,6 @@ export default function HuntDetail() {
                 style={{ width: `${totalStops > 0 ? (completedCount / totalStops) * 100 : 0}%` }}
               />
             </div>
-            {!progress && (
-              <Button
-                onClick={handleStartHunt}
-                disabled={createProgressMutation.isPending}
-                className="w-full mt-4"
-              >
-                {!user ? 'Sign In to Start' : !waiverAccepted ? 'Accept Waiver to Start' : 'Start Hunt'}
-              </Button>
-            )}
           </CardContent>
         </Card>
 
@@ -455,7 +465,7 @@ export default function HuntDetail() {
                       <div className="flex gap-2 flex-col">
                         <Button
                           onClick={() => handleCheckIn(stop)}
-                          disabled={isChecking || !progress}
+                          disabled={isChecking}
                           className="w-full"
                         >
                           <Navigation className="w-4 h-4 mr-2" />
