@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
-import { Compass, Sparkles, Map, Trophy } from 'lucide-react';
+import { Compass, Sparkles, Map, Trophy, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
