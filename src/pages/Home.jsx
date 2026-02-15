@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
-import { Compass, Sparkles, Map, Trophy, MapPin } from 'lucide-react';
+import { Compass, Sparkles, Map, Trophy, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -54,6 +54,37 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          {settings && (settings.facebook_url || settings.instagram_url || settings.twitter_url || settings.youtube_url || settings.tiktok_url) && (
+            <div className="flex justify-center gap-4 mb-8">
+              {settings.facebook_url && (
+                <a href={settings.facebook_url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  <Facebook className="w-6 h-6" />
+                </a>
+              )}
+              {settings.instagram_url && (
+                <a href={settings.instagram_url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-600 transition-colors">
+                  <Instagram className="w-6 h-6" />
+                </a>
+              )}
+              {settings.twitter_url && (
+                <a href={settings.twitter_url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-400 transition-colors">
+                  <Twitter className="w-6 h-6" />
+                </a>
+              )}
+              {settings.youtube_url && (
+                <a href={settings.youtube_url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-red-600 transition-colors">
+                  <Youtube className="w-6 h-6" />
+                </a>
+              )}
+              {settings.tiktok_url && (
+                <a href={settings.tiktok_url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.04-.1z"/>
+                  </svg>
+                </a>
+              )}
+            </div>
+          )}
           <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-8">
             <TabsTrigger value="tours" className="flex items-center gap-2">
               <Map className="w-4 h-4" />
