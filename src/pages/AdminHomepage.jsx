@@ -14,6 +14,7 @@ export default function AdminHomepage() {
   const [formData, setFormData] = useState({
     hero_video_url: '',
     hero_video_embed: '',
+    hero_image_url: '',
     hero_title: 'Founders Threads',
     hero_subtitle: "Discover Philadelphia's rich tapestry of history, culture, and heritage through curated tours",
     gradient_from: 'indigo-900',
@@ -115,6 +116,21 @@ export default function AdminHomepage() {
                 />
                 <p className="text-sm text-gray-500 mt-1">
                   Paste the full iframe embed code from YouTube or Vimeo. Make sure to add autoplay=1&mute=1&loop=1&controls=0 to the URL.
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="hero_image_url">Fallback Background Image URL</Label>
+                <Input
+                  id="hero_image_url"
+                  type="url"
+                  placeholder="https://images.unsplash.com/photo-..."
+                  value={formData.hero_image_url}
+                  onChange={(e) => setFormData({...formData, hero_image_url: e.target.value})}
+                  className="mt-2"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Used when no video is set or if video fails to load
                 </p>
               </div>
 

@@ -86,6 +86,14 @@ export default function Home() {
               <source src={settings.hero_video_url} type="video/webm" />
             </video>
           </div>
+        ) : settings?.hero_image_url ? (
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ 
+              backgroundImage: `url(${settings.hero_image_url})`,
+              opacity: (settings?.fallback_opacity || 10) / 100 
+            }}
+          />
         ) : (
           <div 
             className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600')] bg-cover bg-center"
