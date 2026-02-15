@@ -3,20 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
-import WaiverModal from '../components/hunts/WaiverModal';
-import { Compass, Sparkles, Map, Trophy, Lock } from 'lucide-react';
+import { Compass, Sparkles, Map, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
   const [activeTab, setActiveTab] = useState('tours');
-  const [user, setUser] = useState(null);
-  const [waiverAccepted, setWaiverAccepted] = useState(false);
-  const [showWaiver, setShowWaiver] = useState(false);
-  const [checkingWaiver, setCheckingWaiver] = useState(true);
   
   const { data: tours, isLoading: toursLoading } = useQuery({
     queryKey: ['tours'],
@@ -27,8 +21,7 @@ export default function Home() {
   const { data: hunts, isLoading: huntsLoading } = useQuery({
     queryKey: ['hunts'],
     queryFn: () => base44.entities.ScavengerHunt.list(),
-    initialData: [],
-    enabled: !!user
+    initialData: []
   });
 
   const { data: settings } = useQuery({
@@ -47,43 +40,7 @@ export default function Home() {
     }
   }, [settings?.hero_video_url]);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        
-        const waivers = await base44.entities.Waiver.filter({ 
-          user_email: currentUser.email 
-        });
-        setWaiverAccepted(waivers.length > 0);
-      } catch (error) {
-        setUser(null);
-        setWaiverAccepted(false);
-      } finally {
-        setCheckingWaiver(false);
-      }
-    };
-    checkAuth();
-  }, []);
 
-  const handleTabChange = (value) => {
-    if (value === 'hunts' && !user) {
-      base44.auth.redirectToLogin(window.location.href);
-      return;
-    }
-    if (value === 'hunts' && user && !waiverAccepted) {
-      setShowWaiver(true);
-      return;
-    }
-    setActiveTab(value);
-  };
-
-  const handleWaiverAccept = () => {
-    setWaiverAccepted(true);
-    setShowWaiver(false);
-    setActiveTab('hunts');
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
@@ -176,7 +133,7 @@ export default function Home() {
 
       {/* Content Section */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
             <TabsTrigger value="tours" className="flex items-center gap-2">
               <Map className="w-4 h-4" />
@@ -227,71 +184,45 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="hunts">
-            {!user ? (
-              <div className="text-center py-20">
-                <Lock className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Sign In Required</h3>
-                <p className="text-gray-600 mb-6">Please sign in to view scavenger hunts</p>
-                <Button onClick={() => base44.auth.redirectToLogin()}>
-                  Sign In
-                </Button>
-              </div>
-            ) : !waiverAccepted ? (
-              <div className="text-center py-20">
-                <Lock className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Waiver Required</h3>
-                <p className="text-gray-600 mb-6">Accept the participation waiver to access scavenger hunts</p>
-                <Button onClick={() => setShowWaiver(true)}>
-                  View Waiver
-                </Button>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
+                GPS Scavenger Hunts
+              </h2>
+              <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+                Explore Philadelphia through GPS-verified scavenger hunts. Track your progress and discover hidden gems!
+              </p>
+            </motion.div>
+
+            {huntsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {[1, 2].map((i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="h-96 bg-gray-200 rounded-2xl" />
+                  </div>
+                ))}
               </div>
             ) : (
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
-                    GPS Scavenger Hunts
-                  </h2>
-                  <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-                    Explore Philadelphia through GPS-verified scavenger hunts. Track your progress and discover hidden gems!
-                  </p>
-                </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {hunts.map((hunt) => (
+                  <HuntCard key={hunt.id} hunt={hunt} />
+                ))}
+              </div>
+            )}
 
-                {huntsLoading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {[1, 2].map((i) => (
-                      <div key={i} className="animate-pulse">
-                        <div className="h-96 bg-gray-200 rounded-2xl" />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {hunts.map((hunt) => (
-                      <HuntCard key={hunt.id} hunt={hunt} />
-                    ))}
-                  </div>
-                )}
-
-                {!huntsLoading && hunts.length === 0 && (
-                  <div className="text-center py-20">
-                    <Trophy className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-500 text-lg">No hunts available yet</p>
-                  </div>
-                )}
-              </>
+            {!huntsLoading && hunts.length === 0 && (
+              <div className="text-center py-20">
+                <Trophy className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                <p className="text-gray-500 text-lg">No hunts available yet</p>
+              </div>
             )}
           </TabsContent>
         </Tabs>
       </div>
 
-      <WaiverModal 
-        open={showWaiver} 
-        onAccept={handleWaiverAccept}
-      />
     </div>
   );
 }
