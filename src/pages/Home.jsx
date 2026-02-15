@@ -34,9 +34,17 @@ export default function Home() {
 
   useEffect(() => {
     if (videoRef.current && settings?.hero_video_url) {
-      videoRef.current.play().catch(() => {
-        setVideoError(true);
-      });
+      const playVideo = async () => {
+        try {
+          videoRef.current.muted = true;
+          await videoRef.current.load();
+          await videoRef.current.play();
+        } catch (error) {
+          console.error('Video autoplay failed:', error);
+          setVideoError(true);
+        }
+      };
+      playVideo();
     }
   }, [settings?.hero_video_url]);
 
@@ -72,18 +80,14 @@ export default function Home() {
             <video
               ref={videoRef}
               key={settings.hero_video_url}
-              autoPlay
               loop
               muted
               playsInline
-              preload="auto"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ opacity: (settings?.video_opacity || 20) / 100 }}
               onError={() => setVideoError(true)}
-              onLoadedData={(e) => e.target.play()}
             >
               <source src={settings.hero_video_url} type="video/mp4" />
-              <source src={settings.hero_video_url} type="video/webm" />
             </video>
           </div>
         ) : settings?.hero_image_url ? (
