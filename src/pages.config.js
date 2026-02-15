@@ -54,6 +54,8 @@ import AdminTours from './pages/AdminTours';
 import Home from './pages/Home';
 import Merchandise from './pages/Merchandise';
 import TourDetail from './pages/TourDetail';
+import HuntDetail from './pages/HuntDetail';
+import AdminHunts from './pages/AdminHunts';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +67,8 @@ export const PAGES = {
     "Home": Home,
     "Merchandise": Merchandise,
     "TourDetail": TourDetail,
+    "HuntDetail": HuntDetail,
+    "AdminHunts": AdminHunts,
 }
 
 export const pagesConfig = {

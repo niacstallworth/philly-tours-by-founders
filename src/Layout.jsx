@@ -13,7 +13,8 @@ import {
   Upload,
   Image,
   LogOut,
-  ShoppingBag
+  ShoppingBag,
+  Trophy
 } from 'lucide-react';
 
 export default function Layout({ children, currentPageName }) {
@@ -45,6 +46,7 @@ export default function Layout({ children, currentPageName }) {
 
   const adminItems = [
     { name: 'Manage Tours', icon: Image, page: 'AdminTours' },
+    { name: 'Manage Hunts', icon: Trophy, page: 'AdminHunts' },
     { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
     { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
     { name: 'Homepage', icon: Settings, page: 'AdminHomepage' },
