@@ -54,8 +54,16 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {settings && (settings.facebook_url || settings.instagram_url || settings.twitter_url || settings.youtube_url || settings.tiktok_url) && (
+          {settings && (
             <div className="flex justify-center gap-4 mb-8">
+              <a href="mailto:info@foundersthread.org" className="text-gray-600 hover:text-red-600 transition-colors">
+                <Mail className="w-6 h-6" />
+              </a>
+              {settings.website_url && (
+                <a href={settings.website_url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-green-600 transition-colors">
+                  <Globe className="w-6 h-6" />
+                </a>
+              )}
               {settings.facebook_url && (
                 <a href={settings.facebook_url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors">
                   <Facebook className="w-6 h-6" />
