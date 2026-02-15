@@ -48,29 +48,29 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AdminHomepage from './pages/AdminHomepage';
+import AdminHunts from './pages/AdminHunts';
 import AdminImport from './pages/AdminImport';
 import AdminMerchandise from './pages/AdminMerchandise';
 import AdminTours from './pages/AdminTours';
 import Home from './pages/Home';
+import HuntDetail from './pages/HuntDetail';
+import Map from './pages/Map';
 import Merchandise from './pages/Merchandise';
 import TourDetail from './pages/TourDetail';
-import HuntDetail from './pages/HuntDetail';
-import AdminHunts from './pages/AdminHunts';
-import Map from './pages/Map';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminHomepage": AdminHomepage,
+    "AdminHunts": AdminHunts,
     "AdminImport": AdminImport,
     "AdminMerchandise": AdminMerchandise,
     "AdminTours": AdminTours,
     "Home": Home,
+    "HuntDetail": HuntDetail,
+    "Map": Map,
     "Merchandise": Merchandise,
     "TourDetail": TourDetail,
-    "HuntDetail": HuntDetail,
-    "AdminHunts": AdminHunts,
-    "Map": Map,
 }
 
 export const pagesConfig = {

@@ -209,8 +209,12 @@ export default function HuntDetail() {
       toast.error('Please fill in all fields');
       return;
     }
-    await acceptWaiverMutation.mutateAsync();
-    createProgressMutation.mutate();
+    try {
+      await acceptWaiverMutation.mutateAsync();
+      await createProgressMutation.mutateAsync();
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   if (isLoading || checkingWaiver) {
