@@ -54,7 +54,7 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-8">
             <TabsTrigger value="tours" className="flex items-center gap-2">
               <Map className="w-4 h-4" />
               Tours
@@ -62,6 +62,10 @@ export default function Home() {
             <TabsTrigger value="hunts" className="flex items-center gap-2">
               <Trophy className="w-4 h-4" />
               Scavenger Hunts
+            </TabsTrigger>
+            <TabsTrigger value="map" className="flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              Tour Map
             </TabsTrigger>
           </TabsList>
 
@@ -139,9 +143,35 @@ export default function Home() {
                 <p className="text-gray-500 text-lg">No hunts available yet</p>
               </div>
             )}
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  );
-}
+            </TabsContent>
+
+            <TabsContent value="map">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
+                Interactive Tour Map
+              </h2>
+              <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto">
+                Explore all tour locations on our interactive map
+              </p>
+            </motion.div>
+
+            <div className="w-full rounded-xl overflow-hidden shadow-lg border border-gray-200">
+              <iframe
+                src="https://www.google.com/maps/d/u/0/embed?mid=1ea-gv-cbR6gROsZXeYitu86fokfFGsw&ehbc=2E312F"
+                width="100%"
+                height="600"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+              />
+            </div>
+            </TabsContent>
+            </Tabs>
+            </div>
+            </div>
+            );
+            }
