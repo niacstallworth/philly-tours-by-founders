@@ -12,6 +12,32 @@ import { motion } from 'framer-motion';
 export default function Merchandise() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef(null);
+
+  const { data: settings } = useQuery({
+    queryKey: ['homepage-settings'],
+    queryFn: async () => {
+      const list = await base44.entities.HomePageSettings.list();
+      return list[0] || null;
+    }
+  });
+
+  useEffect(() => {
+    if (videoRef.current && settings?.hero_video_url) {
+      const playVideo = async () => {
+        try {
+          videoRef.current.muted = true;
+          await videoRef.current.load();
+          await videoRef.current.play();
+        } catch (error) {
+          console.error('Video autoplay failed:', error);
+          setVideoError(true);
+        }
+      };
+      playVideo();
+    }
+  }, [settings?.hero_video_url]);
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
