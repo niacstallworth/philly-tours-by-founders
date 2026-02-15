@@ -42,16 +42,16 @@ export default function TourCard({ tour }) {
               />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            <Badge className="absolute top-4 right-4 bg-white/90 text-indigo-900 border-none px-4 py-1.5 font-medium">
+            <Badge className="absolute top-4 right-4 bg-white/90 border-none px-4 py-1.5 font-medium" style={{color: 'var(--theme-primary)'}}>
               {tour.category}
             </Badge>
           </div>
           
           <div className="p-6">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-700 transition-colors">
+            <h3 className="text-2xl font-bold text-gray-900 mb-2 line-clamp-2 transition-colors" style={{'--hover-color': 'var(--theme-primary)'}} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-primary)'} onMouseLeave={(e) => e.currentTarget.style.color = ''}>
               {tour.title}
             </h3>
-            <p className="text-sm text-indigo-600 font-medium mb-3">{tour.subtitle}</p>
+            <p className="text-sm font-medium mb-3 text-theme-primary">{tour.subtitle}</p>
             <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
               {tour.description}
             </p>
@@ -67,7 +67,7 @@ export default function TourCard({ tour }) {
               </div>
             </div>
             
-            <div className="flex items-center text-indigo-600 font-medium group-hover:text-indigo-700 transition-colors">
+            <div className="flex items-center font-medium transition-colors text-theme-primary">
               <span>Explore Tour</span>
               <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-2" />
             </div>

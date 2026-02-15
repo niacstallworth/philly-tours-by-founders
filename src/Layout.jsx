@@ -19,9 +19,21 @@ import {
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [themeColors, setThemeColors] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
+    
+    base44.entities.HomePageSettings.list().then(list => {
+      if (list[0]) {
+        setThemeColors({
+          primary: list[0].primary_color || '#4f46e5',
+          primaryHover: list[0].primary_hover || '#4338ca',
+          secondary: list[0].secondary_color || '#7c3aed',
+          accent: list[0].accent_color || '#6366f1'
+        });
+      }
+    });
   }, []);
 
   const isAdmin = user?.role === 'admin';
@@ -40,8 +52,24 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen">
+      {themeColors && (
+        <style>{`
+          :root {
+            --theme-primary: ${themeColors.primary};
+            --theme-primary-hover: ${themeColors.primaryHover};
+            --theme-secondary: ${themeColors.secondary};
+            --theme-accent: ${themeColors.accent};
+          }
+          .bg-theme-primary { background-color: var(--theme-primary); }
+          .bg-theme-primary-hover:hover { background-color: var(--theme-primary-hover); }
+          .text-theme-primary { color: var(--theme-primary); }
+          .text-theme-secondary { color: var(--theme-secondary); }
+          .text-theme-accent { color: var(--theme-accent); }
+          .border-theme-primary { border-color: var(--theme-primary); }
+        `}</style>
+      )}
       {/* Top Navigation */}
-      <nav className="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+      <nav className="bg-theme-primary text-white shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}

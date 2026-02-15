@@ -20,7 +20,11 @@ export default function AdminHomepage() {
     gradient_via: 'indigo-800',
     gradient_to: 'purple-900',
     video_opacity: 20,
-    fallback_opacity: 10
+    fallback_opacity: 10,
+    primary_color: '#4f46e5',
+    primary_hover: '#4338ca',
+    secondary_color: '#7c3aed',
+    accent_color: '#6366f1'
   });
 
   const { data: settings, isLoading } = useQuery({
@@ -198,6 +202,93 @@ export default function AdminHomepage() {
                       onChange={(e) => setFormData({...formData, fallback_opacity: parseInt(e.target.value)})}
                       className="mt-2"
                     />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4 border-t pt-4">
+                <h3 className="font-semibold text-gray-900">Global Theme Colors</h3>
+                <p className="text-sm text-gray-500">These colors will be applied throughout the entire app</p>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="primary_color">Primary Color</Label>
+                    <div className="flex gap-2 items-center mt-2">
+                      <Input
+                        id="primary_color"
+                        type="color"
+                        value={formData.primary_color}
+                        onChange={(e) => setFormData({...formData, primary_color: e.target.value})}
+                        className="w-20 h-10 cursor-pointer"
+                      />
+                      <Input
+                        type="text"
+                        value={formData.primary_color}
+                        onChange={(e) => setFormData({...formData, primary_color: e.target.value})}
+                        className="font-mono text-sm"
+                        placeholder="#4f46e5"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="primary_hover">Primary Hover</Label>
+                    <div className="flex gap-2 items-center mt-2">
+                      <Input
+                        id="primary_hover"
+                        type="color"
+                        value={formData.primary_hover}
+                        onChange={(e) => setFormData({...formData, primary_hover: e.target.value})}
+                        className="w-20 h-10 cursor-pointer"
+                      />
+                      <Input
+                        type="text"
+                        value={formData.primary_hover}
+                        onChange={(e) => setFormData({...formData, primary_hover: e.target.value})}
+                        className="font-mono text-sm"
+                        placeholder="#4338ca"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="secondary_color">Secondary Color</Label>
+                    <div className="flex gap-2 items-center mt-2">
+                      <Input
+                        id="secondary_color"
+                        type="color"
+                        value={formData.secondary_color}
+                        onChange={(e) => setFormData({...formData, secondary_color: e.target.value})}
+                        className="w-20 h-10 cursor-pointer"
+                      />
+                      <Input
+                        type="text"
+                        value={formData.secondary_color}
+                        onChange={(e) => setFormData({...formData, secondary_color: e.target.value})}
+                        className="font-mono text-sm"
+                        placeholder="#7c3aed"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="accent_color">Accent Color</Label>
+                    <div className="flex gap-2 items-center mt-2">
+                      <Input
+                        id="accent_color"
+                        type="color"
+                        value={formData.accent_color}
+                        onChange={(e) => setFormData({...formData, accent_color: e.target.value})}
+                        className="w-20 h-10 cursor-pointer"
+                      />
+                      <Input
+                        type="text"
+                        value={formData.accent_color}
+                        onChange={(e) => setFormData({...formData, accent_color: e.target.value})}
+                        className="font-mono text-sm"
+                        placeholder="#6366f1"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
