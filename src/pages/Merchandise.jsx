@@ -23,21 +23,7 @@ export default function Merchandise() {
     }
   });
 
-  useEffect(() => {
-    if (videoRef.current && settings?.hero_video_url) {
-      const playVideo = async () => {
-        try {
-          videoRef.current.muted = true;
-          await videoRef.current.load();
-          await videoRef.current.play();
-        } catch (error) {
-          console.error('Video autoplay failed:', error);
-          setVideoError(true);
-        }
-      };
-      playVideo();
-    }
-  }, [settings?.hero_video_url]);
+
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
