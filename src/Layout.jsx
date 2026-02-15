@@ -51,7 +51,6 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
     { name: 'Import GPS Tours', icon: MapPin, page: 'AdminImportGPS' },
     { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
-    { name: 'Homepage', icon: Settings, page: 'AdminHomepage' },
   ];
 
   return (
