@@ -118,11 +118,11 @@ export default function Home() {
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-              Founders Threads
+              {settings?.hero_title || 'Founders Threads'}
             </h1>
             
             <p className="text-xl md:text-2xl text-indigo-200 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Discover Philadelphia's rich tapestry of history, culture, and heritage through curated tours
+              {settings?.hero_subtitle || "Discover Philadelphia's rich tapestry of history, culture, and heritage through curated tours"}
             </p>
             
             <div className="flex flex-wrap gap-4 justify-center text-sm">
