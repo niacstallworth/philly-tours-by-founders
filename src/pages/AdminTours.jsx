@@ -12,6 +12,8 @@ export default function AdminTours() {
   const [editingTour, setEditingTour] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
   const [purchaseUrl, setPurchaseUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [videoEmbed, setVideoEmbed] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -28,6 +30,8 @@ export default function AdminTours() {
       setEditingTour(null);
       setImageUrl('');
       setPurchaseUrl('');
+      setVideoUrl('');
+      setVideoEmbed('');
     }
   });
 
@@ -42,6 +46,8 @@ export default function AdminTours() {
     setEditingTour(tour);
     setImageUrl(tour.image_url || '');
     setPurchaseUrl(tour.purchase_url || '');
+    setVideoUrl(tour.video_url || '');
+    setVideoEmbed(tour.video_embed || '');
   };
 
   const handleSave = () => {
@@ -50,7 +56,9 @@ export default function AdminTours() {
         id: editingTour.id,
         data: { 
           image_url: imageUrl,
-          purchase_url: purchaseUrl 
+          purchase_url: purchaseUrl,
+          video_url: videoUrl,
+          video_embed: videoEmbed
         }
       });
     }
@@ -162,6 +170,45 @@ export default function AdminTours() {
                         <p className="text-xs text-gray-500">
                           Link where users can purchase or inquire about this tour.
                         </p>
+                      </div>
+
+                      <div className="space-y-4 border-t pt-4">
+                        <h3 className="font-semibold">Video Background (Optional)</h3>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="videoUrl">Direct Video URL</Label>
+                          <Input
+                            id="videoUrl"
+                            value={videoUrl}
+                            onChange={(e) => {
+                              setVideoUrl(e.target.value);
+                              setVideoEmbed('');
+                            }}
+                            placeholder="https://example.com/video.mp4"
+                          />
+                          <p className="text-xs text-gray-500">
+                            MP4 or WebM video URL. Will play instead of image.
+                          </p>
+                        </div>
+
+                        <div className="text-center text-sm text-gray-500">— OR —</div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="videoEmbed">YouTube/Vimeo Embed</Label>
+                          <Input
+                            id="videoEmbed"
+                            value={videoEmbed}
+                            onChange={(e) => {
+                              setVideoEmbed(e.target.value);
+                              setVideoUrl('');
+                            }}
+                            placeholder="<iframe src=...>"
+                            className="font-mono text-xs"
+                          />
+                          <p className="text-xs text-gray-500">
+                            Paste embed code with autoplay=1&mute=1&loop=1&controls=0
+                          </p>
+                        </div>
                       </div>
                       
                       <div className="flex justify-end gap-3 pt-4">

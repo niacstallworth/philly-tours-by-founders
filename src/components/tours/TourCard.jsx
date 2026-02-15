@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 export default function TourCard({ tour }) {
+  const [videoError, setVideoError] = React.useState(false);
+
   return (
     <Link to={createPageUrl('TourDetail') + `?id=${tour.id}`}>
       <motion.div
@@ -15,11 +17,30 @@ export default function TourCard({ tour }) {
       >
         <Card className="overflow-hidden bg-white border-none shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group">
           <div className="relative h-64 overflow-hidden">
-            <img
-              src={tour.image_url}
-              alt={tour.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
+            {tour.video_embed ? (
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                dangerouslySetInnerHTML={{ __html: tour.video_embed }}
+              />
+            ) : tour.video_url && !videoError ? (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                onError={() => setVideoError(true)}
+              >
+                <source src={tour.video_url} type="video/mp4" />
+                <source src={tour.video_url} type="video/webm" />
+              </video>
+            ) : (
+              <img
+                src={tour.image_url}
+                alt={tour.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <Badge className="absolute top-4 right-4 bg-white/90 text-indigo-900 border-none px-4 py-1.5 font-medium">
               {tour.category}
