@@ -13,7 +13,6 @@ export default function Merchandise() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [videoError, setVideoError] = useState(false);
-  const videoRef = useRef(null);
 
   const { data: settings } = useQuery({
     queryKey: ['homepage-settings'],
