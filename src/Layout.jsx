@@ -63,12 +63,13 @@ export default function Layout({ children, currentPageName }) {
             --theme-secondary: ${themeColors.secondary};
             --theme-accent: ${themeColors.accent};
           }
-          .bg-theme-primary { background-color: var(--theme-primary); }
-          .bg-theme-primary-hover:hover { background-color: var(--theme-primary-hover); }
-          .text-theme-primary { color: var(--theme-primary); }
-          .text-theme-secondary { color: var(--theme-secondary); }
-          .text-theme-accent { color: var(--theme-accent); }
-          .border-theme-primary { border-color: var(--theme-primary); }
+          .bg-theme-primary { background-color: var(--theme-primary) !important; }
+          .bg-theme-primary-hover:hover { background-color: var(--theme-primary-hover) !important; }
+          .text-theme-primary { color: var(--theme-primary) !important; }
+          .text-theme-secondary { color: var(--theme-secondary) !important; }
+          .text-theme-accent { color: var(--theme-accent) !important; }
+          .border-theme-primary { border-color: var(--theme-primary) !important; }
+          .text-theme-admin { color: var(--theme-accent) !important; }
         `}</style>
       )}
       {/* Top Navigation */}
@@ -105,11 +106,12 @@ export default function Layout({ children, currentPageName }) {
                     <Link
                       key={item.page}
                       to={createPageUrl(item.page)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-amber-300 ${
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
                         currentPageName === item.page 
                           ? 'bg-white/20' 
                           : 'hover:bg-white/10'
                       }`}
+                      style={{color: themeColors?.accent}}
                     >
                       <item.icon className="w-4 h-4" />
                       {item.name}
@@ -142,7 +144,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden bg-indigo-800 border-t border-white/10">
+          <div className="md:hidden bg-theme-primary border-t border-white/10" style={{backgroundColor: themeColors?.primary}}>
             <div className="px-4 py-4 space-y-2">
               {navItems.map((item) => (
                 <Link
@@ -163,18 +165,19 @@ export default function Layout({ children, currentPageName }) {
               {isAdmin && (
                 <>
                   <div className="border-t border-white/20 my-2 pt-2">
-                    <p className="px-4 text-xs text-amber-300 uppercase font-medium mb-2">Admin</p>
+                    <p className="px-4 text-xs uppercase font-medium mb-2" style={{color: themeColors?.accent}}>Admin</p>
                   </div>
                   {adminItems.map((item) => (
                     <Link
                       key={item.page}
                       to={createPageUrl(item.page)}
                       onClick={() => setMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-amber-300 ${
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
                         currentPageName === item.page 
                           ? 'bg-white/20' 
                           : 'hover:bg-white/10'
                       }`}
+                      style={{color: themeColors?.accent}}
                     >
                       <item.icon className="w-5 h-5" />
                       {item.name}
