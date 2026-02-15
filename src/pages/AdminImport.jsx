@@ -11,6 +11,7 @@ import { Upload, Plus, CheckCircle, AlertCircle } from 'lucide-react';
 import TourLocationsCSV from '../components/TourLocationsCSV';
 
 export default function AdminImport() {
+  const [contentType, setContentType] = useState('tour');
   const [importMode, setImportMode] = useState('form');
   const [jsonData, setJsonData] = useState('');
   const [status, setStatus] = useState(null);
@@ -24,18 +25,26 @@ export default function AdminImport() {
     description: '',
     duration: '',
     category: 'historical',
+    difficulty: 'moderate',
     image_url: '',
     practical_notes: '',
-    days_json: ''
+    days_json: '',
+    stops_json: ''
   });
 
   const queryClient = useQueryClient();
 
-  const createTourMutation = useMutation({
-    mutationFn: (tourData) => base44.entities.Tour.create(tourData),
+  const createMutation = useMutation({
+    mutationFn: (data) => {
+      if (contentType === 'tour') {
+        return base44.entities.Tour.create(data);
+      } else {
+        return base44.entities.ScavengerHunt.create(data);
+      }
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tours'] });
-      setStatus({ type: 'success', message: 'Tour created successfully!' });
+      queryClient.invalidateQueries({ queryKey: [contentType === 'tour' ? 'tours' : 'hunts'] });
+      setStatus({ type: 'success', message: `${contentType === 'tour' ? 'Tour' : 'Hunt'} created successfully!` });
       setJsonData('');
       setFormData({
         title: '',
@@ -43,20 +52,22 @@ export default function AdminImport() {
         description: '',
         duration: '',
         category: 'historical',
+        difficulty: 'moderate',
         image_url: '',
         practical_notes: '',
-        days_json: ''
+        days_json: '',
+        stops_json: ''
       });
     },
     onError: (error) => {
-      setStatus({ type: 'error', message: error.message || 'Failed to create tour' });
+      setStatus({ type: 'error', message: error.message || `Failed to create ${contentType}` });
     }
   });
 
   const handleJsonImport = () => {
     try {
       const parsed = JSON.parse(jsonData);
-      createTourMutation.mutate(parsed);
+      createMutation.mutate(parsed);
     } catch (error) {
       setStatus({ type: 'error', message: 'Invalid JSON format' });
     }
@@ -66,20 +77,32 @@ export default function AdminImport() {
     e.preventDefault();
     
     try {
-      const tourData = {
-        title: formData.title,
-        subtitle: formData.subtitle,
-        description: formData.description,
-        duration: formData.duration,
-        category: formData.category,
-        image_url: formData.image_url,
-        practical_notes: formData.practical_notes ? formData.practical_notes.split('\n').filter(n => n.trim()) : [],
-        days: formData.days_json ? JSON.parse(formData.days_json) : []
-      };
-      
-      createTourMutation.mutate(tourData);
+      if (contentType === 'tour') {
+        const tourData = {
+          title: formData.title,
+          subtitle: formData.subtitle,
+          description: formData.description,
+          duration: formData.duration,
+          category: formData.category,
+          image_url: formData.image_url,
+          practical_notes: formData.practical_notes ? formData.practical_notes.split('\n').filter(n => n.trim()) : [],
+          days: formData.days_json ? JSON.parse(formData.days_json) : []
+        };
+        createMutation.mutate(tourData);
+      } else {
+        const huntData = {
+          title: formData.title,
+          subtitle: formData.subtitle,
+          description: formData.description,
+          duration: formData.duration,
+          difficulty: formData.difficulty,
+          image_url: formData.image_url,
+          stops: formData.stops_json ? JSON.parse(formData.stops_json) : []
+        };
+        createMutation.mutate(huntData);
+      }
     } catch (error) {
-      setStatus({ type: 'error', message: 'Invalid days JSON format' });
+      setStatus({ type: 'error', message: 'Invalid JSON format in itinerary/stops' });
     }
   };
 
@@ -93,37 +116,34 @@ export default function AdminImport() {
       // Upload the PDF file
       const { file_url } = await base44.integrations.Core.UploadFile({ file: pdfFile });
       
-      // Extract tour data from PDF
-      const result = await base44.integrations.Core.ExtractDataFromUploadedFile({
-        file_url,
-        json_schema: {
-          type: "object",
-          properties: {
-            title: { type: "string" },
-            subtitle: { type: "string" },
-            description: { type: "string" },
-            duration: { type: "string" },
-            category: { type: "string" },
-            image_url: { type: "string" },
-            practical_notes: { type: "array", items: { type: "string" } },
-            days: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  day_number: { type: "integer" },
-                  title: { type: "string" },
-                  focus: { type: "string" },
-                  locations: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        time: { type: "string" },
-                        name: { type: "string" },
-                        address: { type: "string" },
-                        description: { type: "string" }
-                      }
+      // Extract data from PDF
+      const schema = contentType === 'tour' ? {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          subtitle: { type: "string" },
+          description: { type: "string" },
+          duration: { type: "string" },
+          category: { type: "string" },
+          image_url: { type: "string" },
+          practical_notes: { type: "array", items: { type: "string" } },
+          days: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                day_number: { type: "integer" },
+                title: { type: "string" },
+                focus: { type: "string" },
+                locations: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      time: { type: "string" },
+                      name: { type: "string" },
+                      address: { type: "string" },
+                      description: { type: "string" }
                     }
                   }
                 }
@@ -131,10 +151,40 @@ export default function AdminImport() {
             }
           }
         }
+      } : {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          subtitle: { type: "string" },
+          description: { type: "string" },
+          duration: { type: "string" },
+          difficulty: { type: "string" },
+          image_url: { type: "string" },
+          stops: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                stop_number: { type: "integer" },
+                name: { type: "string" },
+                address: { type: "string" },
+                latitude: { type: "number" },
+                longitude: { type: "number" },
+                clue: { type: "string" },
+                description: { type: "string" }
+              }
+            }
+          }
+        }
+      };
+
+      const result = await base44.integrations.Core.ExtractDataFromUploadedFile({
+        file_url,
+        json_schema: schema
       });
       
       if (result.status === 'success' && result.output) {
-        createTourMutation.mutate(result.output);
+        createMutation.mutate(result.output);
         setPdfFile(null);
       } else {
         setStatus({ type: 'error', message: result.details || 'Failed to extract data from PDF' });
@@ -150,8 +200,24 @@ export default function AdminImport() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Import New Tour</h1>
-          <p className="text-gray-600 mt-2">Add tours to the app using JSON or a form</p>
+          <h1 className="text-3xl font-bold text-gray-900">Import New Content</h1>
+          <p className="text-gray-600 mt-2">Add tours or scavenger hunts to the app</p>
+        </div>
+
+        {/* Content Type Toggle */}
+        <div className="flex gap-4 mb-6">
+          <Button
+            variant={contentType === 'tour' ? 'default' : 'outline'}
+            onClick={() => setContentType('tour')}
+          >
+            Tour
+          </Button>
+          <Button
+            variant={contentType === 'hunt' ? 'default' : 'outline'}
+            onClick={() => setContentType('hunt')}
+          >
+            Scavenger Hunt
+          </Button>
         </div>
 
         <TourLocationsCSV />
@@ -201,7 +267,7 @@ export default function AdminImport() {
         {importMode === 'pdf' && (
           <Card>
             <CardHeader>
-              <CardTitle>Upload PDF Tour Document</CardTitle>
+              <CardTitle>Upload PDF {contentType === 'tour' ? 'Tour' : 'Hunt'} Document</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
@@ -211,7 +277,7 @@ export default function AdminImport() {
                     {pdfFile ? pdfFile.name : 'Click to upload PDF'}
                   </div>
                   <p className="text-sm text-gray-500">
-                    Upload a PDF document with tour information
+                    Upload a PDF document with {contentType === 'tour' ? 'tour' : 'hunt'} information
                   </p>
                 </Label>
                 <Input
@@ -226,16 +292,16 @@ export default function AdminImport() {
               {pdfFile && (
                 <div className="bg-blue-50 p-4 rounded-lg text-sm text-blue-900">
                   <p className="font-semibold mb-1">File selected: {pdfFile.name}</p>
-                  <p className="text-xs">The AI will extract tour information from this PDF</p>
+                  <p className="text-xs">The AI will extract {contentType} information from this PDF</p>
                 </div>
               )}
               
               <Button 
                 onClick={handlePdfImport}
-                disabled={!pdfFile || isProcessingPdf || createTourMutation.isPending}
+                disabled={!pdfFile || isProcessingPdf || createMutation.isPending}
                 className="w-full"
               >
-                {isProcessingPdf ? 'Processing PDF...' : createTourMutation.isPending ? 'Creating Tour...' : 'Extract & Import Tour'}
+                {isProcessingPdf ? 'Processing PDF...' : createMutation.isPending ? `Creating ${contentType}...` : `Extract & Import ${contentType === 'tour' ? 'Tour' : 'Hunt'}`}
               </Button>
             </CardContent>
           </Card>
@@ -245,20 +311,22 @@ export default function AdminImport() {
         {importMode === 'json' && (
           <Card>
             <CardHeader>
-              <CardTitle>Paste Tour JSON</CardTitle>
+              <CardTitle>Paste {contentType === 'tour' ? 'Tour' : 'Hunt'} JSON</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <Textarea
                 value={jsonData}
                 onChange={(e) => setJsonData(e.target.value)}
-                placeholder='{"title": "Tour Name", "subtitle": "...", "description": "...", "duration": "2 Days", "category": "historical", "image_url": "https://...", "practical_notes": ["Note 1", "Note 2"], "days": [...]}'
+                placeholder={contentType === 'tour' 
+                  ? '{"title": "Tour Name", "subtitle": "...", "description": "...", "duration": "2 Days", "category": "historical", "image_url": "https://...", "practical_notes": ["..."], "days": [...]}'
+                  : '{"title": "Hunt Name", "subtitle": "...", "description": "...", "duration": "2 hours", "difficulty": "moderate", "image_url": "https://...", "stops": [...]}'}
                 className="font-mono text-sm h-96"
               />
               
               <div className="bg-blue-50 p-4 rounded-lg text-sm text-blue-900">
                 <p className="font-semibold mb-2">JSON Format Example:</p>
                 <pre className="text-xs overflow-x-auto">
-{`{
+{contentType === 'tour' ? `{
   "title": "Tour Title",
   "subtitle": "Tour Subtitle",
   "description": "Tour description...",
@@ -281,16 +349,34 @@ export default function AdminImport() {
       ]
     }
   ]
+}` : `{
+  "title": "Hunt Title",
+  "subtitle": "Hunt Subtitle",
+  "description": "Hunt description...",
+  "duration": "2 hours",
+  "difficulty": "moderate",
+  "image_url": "https://images.unsplash.com/...",
+  "stops": [
+    {
+      "stop_number": 1,
+      "name": "Stop Name",
+      "address": "123 Main St",
+      "latitude": 39.9526,
+      "longitude": -75.1652,
+      "clue": "Find the place where...",
+      "description": "Historical info..."
+    }
+  ]
 }`}
                 </pre>
               </div>
               
               <Button 
                 onClick={handleJsonImport}
-                disabled={createTourMutation.isPending}
+                disabled={createMutation.isPending}
                 className="w-full"
               >
-                {createTourMutation.isPending ? 'Importing...' : 'Import Tour'}
+                {createMutation.isPending ? 'Importing...' : `Import ${contentType === 'tour' ? 'Tour' : 'Hunt'}`}
               </Button>
             </CardContent>
           </Card>
@@ -301,7 +387,7 @@ export default function AdminImport() {
           <form onSubmit={handleFormSubmit}>
             <Card>
               <CardHeader>
-                <CardTitle>Create New Tour</CardTitle>
+                <CardTitle>Create New {contentType === 'tour' ? 'Tour' : 'Scavenger Hunt'}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -343,27 +429,46 @@ export default function AdminImport() {
                       id="duration"
                       value={formData.duration}
                       onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                      placeholder="e.g., 2 Days, 1 Day (9 AM - 5 PM)"
+                      placeholder={contentType === 'tour' ? "e.g., 2 Days" : "e.g., 2 hours"}
                     />
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select 
-                      value={formData.category}
-                      onValueChange={(value) => setFormData({...formData, category: value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="historical">Historical</SelectItem>
-                        <SelectItem value="cultural">Cultural</SelectItem>
-                        <SelectItem value="educational">Educational</SelectItem>
-                        <SelectItem value="family">Family</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {contentType === 'tour' ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="category">Category</Label>
+                      <Select 
+                        value={formData.category}
+                        onValueChange={(value) => setFormData({...formData, category: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="historical">Historical</SelectItem>
+                          <SelectItem value="cultural">Cultural</SelectItem>
+                          <SelectItem value="educational">Educational</SelectItem>
+                          <SelectItem value="family">Family</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Label htmlFor="difficulty">Difficulty</Label>
+                      <Select 
+                        value={formData.difficulty}
+                        onValueChange={(value) => setFormData({...formData, difficulty: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="easy">Easy</SelectItem>
+                          <SelectItem value="moderate">Moderate</SelectItem>
+                          <SelectItem value="challenging">Challenging</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="space-y-2">
@@ -386,37 +491,55 @@ export default function AdminImport() {
                   )}
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="practical_notes">Practical Notes (one per line)</Label>
-                  <Textarea
-                    id="practical_notes"
-                    value={formData.practical_notes}
-                    onChange={(e) => setFormData({...formData, practical_notes: e.target.value})}
-                    placeholder="Best months: April–June&#10;Transportation: SEPTA&#10;Cost: $50-100"
-                    className="h-24"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="days_json">Days & Itinerary (JSON)</Label>
-                  <Textarea
-                    id="days_json"
-                    value={formData.days_json}
-                    onChange={(e) => setFormData({...formData, days_json: e.target.value})}
-                    placeholder='[{"day_number": 1, "title": "Day 1", "focus": "Theme", "locations": [{"time": "9:00 AM", "name": "Location", "address": "Address", "description": "..."}]}]'
-                    className="font-mono text-sm h-48"
-                  />
-                  <p className="text-xs text-gray-500">
-                    Paste the days array in JSON format
-                  </p>
-                </div>
+                {contentType === 'tour' ? (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="practical_notes">Practical Notes (one per line)</Label>
+                      <Textarea
+                        id="practical_notes"
+                        value={formData.practical_notes}
+                        onChange={(e) => setFormData({...formData, practical_notes: e.target.value})}
+                        placeholder="Best months: April–June&#10;Transportation: SEPTA&#10;Cost: $50-100"
+                        className="h-24"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="days_json">Days & Itinerary (JSON)</Label>
+                      <Textarea
+                        id="days_json"
+                        value={formData.days_json}
+                        onChange={(e) => setFormData({...formData, days_json: e.target.value})}
+                        placeholder='[{"day_number": 1, "title": "Day 1", "focus": "Theme", "locations": [{"time": "9:00 AM", "name": "Location", "address": "Address", "description": "..."}]}]'
+                        className="font-mono text-sm h-48"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Paste the days array in JSON format
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-2">
+                    <Label htmlFor="stops_json">Hunt Stops (JSON)</Label>
+                    <Textarea
+                      id="stops_json"
+                      value={formData.stops_json}
+                      onChange={(e) => setFormData({...formData, stops_json: e.target.value})}
+                      placeholder='[{"stop_number": 1, "name": "Independence Hall", "address": "520 Chestnut St", "latitude": 39.9489, "longitude": -75.1500, "clue": "Where liberty was born...", "description": "..."}]'
+                      className="font-mono text-sm h-48"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Paste the stops array in JSON format with GPS coordinates
+                    </p>
+                  </div>
+                )}
                 
                 <Button 
                   type="submit"
-                  disabled={createTourMutation.isPending}
+                  disabled={createMutation.isPending}
                   className="w-full"
                 >
-                  {createTourMutation.isPending ? 'Creating Tour...' : 'Create Tour'}
+                  {createMutation.isPending ? `Creating ${contentType}...` : `Create ${contentType === 'tour' ? 'Tour' : 'Hunt'}`}
                 </Button>
               </CardContent>
             </Card>
