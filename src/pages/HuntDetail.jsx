@@ -4,14 +4,23 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock, Upload, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function HuntDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const huntId = urlParams.get('id');
+  const [user, setUser] = useState(null);
+  const [waiverAccepted, setWaiverAccepted] = useState(false);
+  const [checkingWaiver, setCheckingWaiver] = useState(true);
+  const [showWaiverForm, setShowWaiverForm] = useState(false);
+  const [waiverForm, setWaiverForm] = useState({ fullName: '', agreed: false });
   const [userLocation, setUserLocation] = useState(null);
   const [checkingLocation, setCheckingLocation] = useState(null);
+  const [photoUploads, setPhotoUploads] = useState({});
   const queryClient = useQueryClient();
 
   const { data: hunt, isLoading } = useQuery({
@@ -26,19 +35,52 @@ export default function HuntDetail() {
   const { data: progress } = useQuery({
     queryKey: ['hunt-progress', huntId],
     queryFn: async () => {
-      const user = await base44.auth.me();
       const progressList = await base44.entities.HuntProgress.filter({ 
         hunt_id: huntId,
         user_email: user.email 
       });
       return progressList[0] || null;
     },
-    enabled: !!huntId
+    enabled: !!huntId && !!user
+  });
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+        
+        const waivers = await base44.entities.Waiver.filter({ 
+          user_email: currentUser.email 
+        });
+        setWaiverAccepted(waivers.length > 0);
+      } catch (error) {
+        setUser(null);
+        setWaiverAccepted(false);
+      } finally {
+        setCheckingWaiver(false);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  const acceptWaiverMutation = useMutation({
+    mutationFn: async () => {
+      return await base44.entities.Waiver.create({
+        user_email: user.email,
+        full_name: waiverForm.fullName,
+        accepted_at: new Date().toISOString()
+      });
+    },
+    onSuccess: () => {
+      setWaiverAccepted(true);
+      setShowWaiverForm(false);
+      toast.success('Waiver accepted');
+    }
   });
 
   const createProgressMutation = useMutation({
     mutationFn: async () => {
-      const user = await base44.auth.me();
       return await base44.entities.HuntProgress.create({
         hunt_id: huntId,
         user_email: user.email,
@@ -132,12 +174,123 @@ export default function HuntDetail() {
     return progress?.completed_stops?.includes(stopNumber);
   };
 
-  if (isLoading) {
+  const isStopUnlocked = (stopNumber) => {
+    if (!progress) return stopNumber <= 2;
+    if (stopNumber <= 2) return true;
+    return progress.completed_stops?.includes(stopNumber - 1);
+  };
+
+  const handlePhotoUpload = async (stopNumber, file) => {
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setPhotoUploads(prev => ({ ...prev, [stopNumber]: file_url }));
+      
+      await updateProgressMutation.mutateAsync({ stopNumber });
+      toast.success('Photo verified!');
+    } catch (error) {
+      toast.error('Failed to upload photo');
+    }
+  };
+
+  const handleStartHunt = () => {
+    if (!user) {
+      base44.auth.redirectToLogin(window.location.href);
+      return;
+    }
+    if (!waiverAccepted) {
+      setShowWaiverForm(true);
+      return;
+    }
+    createProgressMutation.mutate();
+  };
+
+  const handleWaiverSubmit = () => {
+    if (!waiverForm.fullName || !waiverForm.agreed) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    acceptWaiverMutation.mutate();
+  };
+
+  if (isLoading || checkingWaiver) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
   if (!hunt) {
     return <div className="min-h-screen flex items-center justify-center">Hunt not found</div>;
+  }
+
+  if (showWaiverForm) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-2xl mx-auto px-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Participation Waiver</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <p className="text-sm text-yellow-900 font-medium mb-2">⚠️ Important Notice</p>
+                <p className="text-sm text-yellow-800">
+                  By participating in this scavenger hunt, you acknowledge the risks involved in traveling to various locations.
+                </p>
+              </div>
+
+              <div className="space-y-4 text-sm text-gray-600">
+                <p>I understand and agree that:</p>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>I will obey all traffic laws and pedestrian rules while participating in this hunt</li>
+                  <li>I am responsible for my own safety and well-being throughout the activity</li>
+                  <li>I will respect private property and public spaces</li>
+                  <li>The organizers are not liable for any injuries, accidents, or incidents that occur during participation</li>
+                  <li>I am physically capable of completing this activity</li>
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="fullName">Full Name *</Label>
+                  <Input
+                    id="fullName"
+                    value={waiverForm.fullName}
+                    onChange={(e) => setWaiverForm(prev => ({ ...prev, fullName: e.target.value }))}
+                    placeholder="Enter your full name"
+                  />
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="agreed"
+                    checked={waiverForm.agreed}
+                    onCheckedChange={(checked) => setWaiverForm(prev => ({ ...prev, agreed: checked }))}
+                  />
+                  <Label htmlFor="agreed" className="text-sm cursor-pointer">
+                    I have read and agree to the terms above. I accept full responsibility for my participation in this scavenger hunt.
+                  </Label>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowWaiverForm(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleWaiverSubmit}
+                  disabled={!waiverForm.fullName || !waiverForm.agreed || acceptWaiverMutation.isPending}
+                  className="flex-1"
+                >
+                  {acceptWaiverMutation.isPending ? 'Accepting...' : 'Accept & Continue'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   const completedCount = progress?.completed_stops?.length || 0;
@@ -209,11 +362,11 @@ export default function HuntDetail() {
             </div>
             {!progress && (
               <Button
-                onClick={() => createProgressMutation.mutate()}
+                onClick={handleStartHunt}
                 disabled={createProgressMutation.isPending}
                 className="w-full mt-4"
               >
-                Start Hunt
+                {!user ? 'Sign In to Start' : !waiverAccepted ? 'Accept Waiver to Start' : 'Start Hunt'}
               </Button>
             )}
           </CardContent>
@@ -228,61 +381,111 @@ export default function HuntDetail() {
           </CardContent>
         </Card>
 
-        <h2 className="text-2xl font-bold mb-4">Hunt Stops</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold">Hunt Stops</h2>
+          {!user && (
+            <Button size="sm" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
+              Sign In
+            </Button>
+          )}
+        </div>
         <div className="space-y-4">
-          {hunt.stops?.map((stop) => {
+          {hunt.stops?.map((stop, index) => {
             const completed = isStopCompleted(stop.stop_number);
+            const unlocked = isStopUnlocked(stop.stop_number);
             const isChecking = checkingLocation === stop.stop_number;
+            const needsAuth = stop.stop_number > 2 && !user;
             
             return (
-              <Card key={stop.stop_number} className={completed ? 'bg-green-50 border-green-200' : ''}>
+              <Card key={stop.stop_number} className={completed ? 'bg-green-50 border-green-200' : unlocked ? '' : 'opacity-50'}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">
                       {completed ? (
                         <CheckCircle2 className="w-6 h-6 text-green-600 mt-1" />
-                      ) : (
+                      ) : unlocked ? (
                         <Circle className="w-6 h-6 text-gray-400 mt-1" />
+                      ) : (
+                        <Lock className="w-6 h-6 text-gray-400 mt-1" />
                       )}
                       <div>
-                        <h3 className="font-bold text-lg">Stop {stop.stop_number}: {stop.name}</h3>
-                        <p className="text-sm text-gray-600">{stop.address}</p>
+                        <h3 className="font-bold text-lg">Stop {stop.stop_number}: {unlocked || completed ? stop.name : '???'}</h3>
+                        {(unlocked || completed) && <p className="text-sm text-gray-600">{stop.address}</p>}
+                        {!unlocked && !completed && (
+                          <p className="text-sm text-gray-500 italic">Complete the previous stop to unlock</p>
+                        )}
                       </div>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                    <p className="text-sm font-medium text-yellow-900 mb-1">🔍 Clue:</p>
-                    <p className="text-yellow-800">{stop.clue}</p>
-                  </div>
-                  
-                  {completed && stop.description && (
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <p className="text-sm text-gray-700">{stop.description}</p>
+                {(unlocked || completed) && (
+                  <CardContent className="space-y-3">
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <p className="text-sm font-medium text-yellow-900 mb-1">🔍 Clue:</p>
+                      <p className="text-yellow-800">{stop.clue}</p>
                     </div>
-                  )}
-
-                  <div className="flex gap-2">
-                    {!completed && progress && (
-                      <Button
-                        onClick={() => handleCheckIn(stop)}
-                        disabled={isChecking}
-                        className="flex-1"
-                      >
-                        <Navigation className="w-4 h-4 mr-2" />
-                        {isChecking ? 'Verifying...' : 'Check In'}
-                      </Button>
+                    
+                    {completed && stop.description && (
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <p className="text-sm text-gray-700">{stop.description}</p>
+                      </div>
                     )}
+
+                    {needsAuth && !completed && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                        <Lock className="w-8 h-8 mx-auto text-blue-600 mb-2" />
+                        <p className="text-sm text-blue-900 font-medium mb-2">Sign in required</p>
+                        <Button size="sm" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
+                          Sign In to Continue
+                        </Button>
+                      </div>
+                    )}
+
+                    {!needsAuth && !completed && progress && (
+                      <div className="flex gap-2 flex-col">
+                        <Button
+                          onClick={() => handleCheckIn(stop)}
+                          disabled={isChecking}
+                          className="w-full"
+                        >
+                          <Navigation className="w-4 h-4 mr-2" />
+                          {isChecking ? 'Verifying GPS...' : 'Check In with GPS'}
+                        </Button>
+                        
+                        <div className="text-center text-sm text-gray-500">or</div>
+                        
+                        <div>
+                          <Label htmlFor={`photo-${stop.stop_number}`} className="cursor-pointer">
+                            <div className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-colors">
+                              <Camera className="w-5 h-5 text-gray-400" />
+                              <span className="text-sm text-gray-600">Upload Photo Proof</span>
+                            </div>
+                          </Label>
+                          <Input
+                            id={`photo-${stop.stop_number}`}
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            onChange={(e) => {
+                              const file = e.target.files[0];
+                              if (file) handlePhotoUpload(stop.stop_number, file);
+                            }}
+                            className="hidden"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
                     <Button
                       variant="outline"
                       onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`, '_blank')}
+                      className="w-full"
                     >
                       <MapPin className="w-4 h-4 mr-2" />
-                      Directions
+                      Get Directions
                     </Button>
-                  </div>
-                </CardContent>
+                  </CardContent>
+                )}
               </Card>
             );
           })}
