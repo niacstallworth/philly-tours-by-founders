@@ -50,6 +50,7 @@
 import AdminHomepage from './pages/AdminHomepage';
 import AdminHunts from './pages/AdminHunts';
 import AdminImport from './pages/AdminImport';
+import AdminImportGPS from './pages/AdminImportGPS';
 import AdminMerchandise from './pages/AdminMerchandise';
 import AdminTours from './pages/AdminTours';
 import Home from './pages/Home';
@@ -57,7 +58,6 @@ import HuntDetail from './pages/HuntDetail';
 import Map from './pages/Map';
 import Merchandise from './pages/Merchandise';
 import TourDetail from './pages/TourDetail';
-import AdminImportGPS from './pages/AdminImportGPS';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +65,7 @@ export const PAGES = {
     "AdminHomepage": AdminHomepage,
     "AdminHunts": AdminHunts,
     "AdminImport": AdminImport,
+    "AdminImportGPS": AdminImportGPS,
     "AdminMerchandise": AdminMerchandise,
     "AdminTours": AdminTours,
     "Home": Home,
@@ -72,7 +73,6 @@ export const PAGES = {
     "Map": Map,
     "Merchandise": Merchandise,
     "TourDetail": TourDetail,
-    "AdminImportGPS": AdminImportGPS,
 }
 
 export const pagesConfig = {

@@ -51,116 +51,8 @@ export default function Home() {
 
 
   return (
-    <>
-      {/* Hero Section */}
-      <div 
-        className="relative overflow-hidden text-white"
-        style={{
-          background: `linear-gradient(to bottom right, rgb(var(--tw-color-${settings?.gradient_from || 'indigo-900'})), rgb(var(--tw-color-${settings?.gradient_via || 'indigo-800'})), rgb(var(--tw-color-${settings?.gradient_to || 'purple-900'})})`,
-          height: '100vh',
-          minHeight: '600px'
-        }}
-      >
-        <style jsx>{`
-          :root {
-            --tw-color-indigo-900: 49 46 129;
-            --tw-color-indigo-800: 55 48 163;
-            --tw-color-purple-900: 88 28 135;
-            --tw-color-blue-900: 30 58 138;
-            --tw-color-slate-900: 15 23 42;
-            --tw-color-emerald-900: 6 78 59;
-          }
-        `}</style>
-        {settings?.hero_video_embed ? (
-          <div 
-            className="absolute inset-0 overflow-hidden"
-            style={{ opacity: (settings?.video_opacity || 20) / 100 }}
-          >
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: '50%',
-                left: '50%',
-                width: '100vw',
-                height: '56.25vw',
-                minHeight: '100vh',
-                minWidth: '177.77vh',
-                transform: 'translate(-50%, -50%)'
-              }}
-              dangerouslySetInnerHTML={{ __html: settings.hero_video_embed }}
-            />
-          </div>
-        ) : settings?.hero_video_url && !videoError ? (
-          <div className="absolute inset-0 overflow-hidden">
-            <video
-              ref={videoRef}
-              key={settings.hero_video_url}
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ opacity: (settings?.video_opacity || 20) / 100 }}
-              onError={() => setVideoError(true)}
-            >
-              <source src={settings.hero_video_url} type="video/mp4" />
-            </video>
-          </div>
-        ) : settings?.hero_image_url ? (
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ 
-              backgroundImage: `url(${settings.hero_image_url})`,
-              opacity: (settings?.fallback_opacity || 10) / 100 
-            }}
-          />
-        ) : (
-          <div 
-            className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600')] bg-cover bg-center"
-            style={{ opacity: (settings?.fallback_opacity || 10) / 100 }}
-          />
-        )}
-        
-        <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-32">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Compass className="w-12 h-12" />
-              <Sparkles className="w-8 h-8" />
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-              {settings?.hero_title || 'Founders Threads'}
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-indigo-200 max-w-3xl mx-auto mb-8 leading-relaxed">
-              {settings?.hero_subtitle || "Discover Philadelphia's rich tapestry of history, culture, and heritage through curated tours"}
-            </p>
-            
-            <div className="flex flex-wrap gap-4 justify-center text-sm">
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                <span>🏛️</span>
-                <span>Historic Landmarks</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                <span>🎨</span>
-                <span>Cultural Experiences</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                <span>📍</span>
-                <span>Hidden Gems</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Content Section */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
-        <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
             <TabsTrigger value="tours" className="flex items-center gap-2">
@@ -249,8 +141,7 @@ export default function Home() {
             )}
           </TabsContent>
         </Tabs>
-        </div>
       </div>
-    </>
+    </div>
   );
 }
