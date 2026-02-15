@@ -161,7 +161,7 @@ export default function Home() {
 
             <div className="w-full rounded-xl overflow-hidden shadow-lg border border-gray-200">
               <iframe
-                src="https://www.google.com/maps/d/u/0/embed?mid=1ea-gv-cbR6gROsZXeYitu86fokfFGsw&ehbc=2E312F"
+                src="https://www.google.com/maps/d/embed?mid=1ea-gv-cbR6gROsZXeYitu86fokfFGsw&ehbc=2E312F"
                 width="100%"
                 height="600"
                 style={{ border: 0 }}
