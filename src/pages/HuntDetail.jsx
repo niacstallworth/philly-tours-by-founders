@@ -201,7 +201,12 @@ export default function HuntDetail() {
       setShowWaiverForm(true);
       return;
     }
-    await createProgressMutation.mutateAsync();
+    try {
+      await createProgressMutation.mutateAsync();
+    } catch (error) {
+      console.error('Start hunt error:', error);
+      toast.error('Failed to start hunt: ' + error.message);
+    }
   };
 
   const handleWaiverSubmit = async () => {
