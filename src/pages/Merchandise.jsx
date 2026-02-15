@@ -62,17 +62,14 @@ export default function Merchandise() {
       {/* Hero Section */}
       <div className="relative h-96 md:h-[500px] overflow-hidden text-white">
         {settings?.hero_video_url && !videoError ? (
-          <video
-            ref={videoRef}
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
+          <iframe
+            src={settings.hero_video_url}
+            title="Hero video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            style={{position:'absolute', top:0, left:0, width:'100%', height:'100%', border:0}}
             onError={() => setVideoError(true)}
-          >
-            <source src={settings.hero_video_url} type="video/mp4" />
-            <source src={settings.hero_video_url} type="video/webm" />
-          </video>
+          />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" />
         )}
