@@ -192,7 +192,7 @@ export default function HuntDetail() {
     }
   };
 
-  const handleStartHunt = () => {
+  const handleStartHunt = async () => {
     if (!user) {
       base44.auth.redirectToLogin(window.location.href);
       return;
@@ -201,15 +201,16 @@ export default function HuntDetail() {
       setShowWaiverForm(true);
       return;
     }
-    createProgressMutation.mutate();
+    await createProgressMutation.mutateAsync();
   };
 
-  const handleWaiverSubmit = () => {
+  const handleWaiverSubmit = async () => {
     if (!waiverForm.fullName || !waiverForm.agreed) {
       toast.error('Please fill in all fields');
       return;
     }
-    acceptWaiverMutation.mutate();
+    await acceptWaiverMutation.mutateAsync();
+    createProgressMutation.mutate();
   };
 
   if (isLoading || checkingWaiver) {
@@ -441,49 +442,28 @@ export default function HuntDetail() {
                       </div>
                     )}
 
-                    {!needsAuth && !completed && progress && (
+                    {!needsAuth && !completed && (
                       <div className="flex gap-2 flex-col">
                         <Button
                           onClick={() => handleCheckIn(stop)}
-                          disabled={isChecking}
+                          disabled={isChecking || !progress}
                           className="w-full"
                         >
                           <Navigation className="w-4 h-4 mr-2" />
-                          {isChecking ? 'Verifying GPS...' : 'Check In with GPS'}
+                          {isChecking ? 'Verifying GPS...' : 'Check In'}
                         </Button>
                         
-                        <div className="text-center text-sm text-gray-500">or</div>
-                        
-                        <div>
-                          <Label htmlFor={`photo-${stop.stop_number}`} className="cursor-pointer">
-                            <div className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-colors">
-                              <Camera className="w-5 h-5 text-gray-400" />
-                              <span className="text-sm text-gray-600">Upload Photo Proof</span>
-                            </div>
-                          </Label>
-                          <Input
-                            id={`photo-${stop.stop_number}`}
-                            type="file"
-                            accept="image/*"
-                            capture="environment"
-                            onChange={(e) => {
-                              const file = e.target.files[0];
-                              if (file) handlePhotoUpload(stop.stop_number, file);
-                            }}
-                            className="hidden"
-                          />
-                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`, '_blank')}
+                          className="w-full"
+                        >
+                          <MapPin className="w-4 h-4 mr-2" />
+                          Get Directions
+                        </Button>
                       </div>
                     )}
-                    
-                    <Button
-                      variant="outline"
-                      onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`, '_blank')}
-                      className="w-full"
-                    >
-                      <MapPin className="w-4 h-4 mr-2" />
-                      Get Directions
-                    </Button>
+
                   </CardContent>
                 )}
               </Card>
