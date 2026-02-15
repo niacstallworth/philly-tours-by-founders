@@ -56,7 +56,9 @@ export default function Home() {
       <div 
         className="relative overflow-hidden text-white"
         style={{
-          background: `linear-gradient(to bottom right, rgb(var(--tw-color-${settings?.gradient_from || 'indigo-900'})), rgb(var(--tw-color-${settings?.gradient_via || 'indigo-800'})), rgb(var(--tw-color-${settings?.gradient_to || 'purple-900'})))`
+          background: `linear-gradient(to bottom right, rgb(var(--tw-color-${settings?.gradient_from || 'indigo-900'})), rgb(var(--tw-color-${settings?.gradient_via || 'indigo-800'})), rgb(var(--tw-color-${settings?.gradient_to || 'purple-900'})})`,
+          height: '100vh',
+          minHeight: '600px'
         }}
       >
         <style jsx>{`
@@ -71,10 +73,23 @@ export default function Home() {
         `}</style>
         {settings?.hero_video_embed ? (
           <div 
-            className="absolute inset-0 overflow-hidden pointer-events-none"
+            className="absolute inset-0 overflow-hidden"
             style={{ opacity: (settings?.video_opacity || 20) / 100 }}
-            dangerouslySetInnerHTML={{ __html: settings.hero_video_embed }}
-          />
+          >
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: '50%',
+                left: '50%',
+                width: '100vw',
+                height: '56.25vw',
+                minHeight: '100vh',
+                minWidth: '177.77vh',
+                transform: 'translate(-50%, -50%)'
+              }}
+              dangerouslySetInnerHTML={{ __html: settings.hero_video_embed }}
+            />
+          </div>
         ) : settings?.hero_video_url && !videoError ? (
           <div className="absolute inset-0 overflow-hidden">
             <video
