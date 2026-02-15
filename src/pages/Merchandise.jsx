@@ -60,8 +60,25 @@ export default function Merchandise() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white py-20">
-        <div className="max-w-7xl mx-auto px-6 text-center">
+      <div className="relative h-96 md:h-[500px] overflow-hidden text-white">
+        {settings?.hero_video_url && !videoError ? (
+          <video
+            ref={videoRef}
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={() => setVideoError(true)}
+          >
+            <source src={settings.hero_video_url} type="video/mp4" />
+            <source src={settings.hero_video_url} type="video/webm" />
+          </video>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" />
+        )}
+        <div className="absolute inset-0 bg-black/40" />
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
