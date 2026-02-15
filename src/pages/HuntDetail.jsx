@@ -5,22 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock, Upload, Camera } from 'lucide-react';
+
+import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function HuntDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const huntId = urlParams.get('id');
   const [user, setUser] = useState(null);
-  const [waiverAccepted, setWaiverAccepted] = useState(false);
-  const [checkingWaiver, setCheckingWaiver] = useState(true);
-  const [showWaiverForm, setShowWaiverForm] = useState(false);
-  const [waiverForm, setWaiverForm] = useState({ fullName: '', agreed: false });
-  const [userLocation, setUserLocation] = useState(null);
   const [checkingLocation, setCheckingLocation] = useState(null);
-  const [photoUploads, setPhotoUploads] = useState({});
   const queryClient = useQueryClient();
 
   const { data: hunt, isLoading } = useQuery({
@@ -45,39 +38,8 @@ export default function HuntDetail() {
   });
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        
-        const waivers = await base44.entities.Waiver.filter({ 
-          user_email: currentUser.email 
-        });
-        setWaiverAccepted(waivers.length > 0);
-      } catch (error) {
-        setUser(null);
-        setWaiverAccepted(false);
-      } finally {
-        setCheckingWaiver(false);
-      }
-    };
-    checkAuth();
+    base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
-
-  const acceptWaiverMutation = useMutation({
-    mutationFn: async () => {
-      return await base44.entities.Waiver.create({
-        user_email: user.email,
-        full_name: waiverForm.fullName,
-        accepted_at: new Date().toISOString()
-      });
-    },
-    onSuccess: () => {
-      setWaiverAccepted(true);
-      setShowWaiverForm(false);
-      toast.success('Waiver accepted');
-    }
-  });
 
   const createProgressMutation = useMutation({
     mutationFn: async () => {
@@ -150,11 +112,6 @@ export default function HuntDetail() {
       base44.auth.redirectToLogin(window.location.href);
       return;
     }
-    
-    if (!waiverAccepted) {
-      setShowWaiverForm(true);
-      return;
-    }
 
     if (!progress) {
       try {
@@ -199,127 +156,12 @@ export default function HuntDetail() {
     return progress.completed_stops?.includes(stopNumber - 1);
   };
 
-  const handlePhotoUpload = async (stopNumber, file) => {
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setPhotoUploads(prev => ({ ...prev, [stopNumber]: file_url }));
-      
-      await updateProgressMutation.mutateAsync({ stopNumber });
-      toast.success('Photo verified!');
-    } catch (error) {
-      toast.error('Failed to upload photo');
-    }
-  };
-
-  const handleStartHunt = async () => {
-    if (!user) {
-      base44.auth.redirectToLogin(window.location.href);
-      return;
-    }
-    if (!waiverAccepted) {
-      setShowWaiverForm(true);
-      return;
-    }
-    try {
-      await createProgressMutation.mutateAsync();
-    } catch (error) {
-      console.error('Start hunt error:', error);
-      toast.error('Failed to start hunt: ' + error.message);
-    }
-  };
-
-  const handleWaiverSubmit = async () => {
-    if (!waiverForm.fullName || !waiverForm.agreed) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-    try {
-      await acceptWaiverMutation.mutateAsync();
-      await createProgressMutation.mutateAsync();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  if (isLoading || checkingWaiver) {
+  if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
   if (!hunt) {
     return <div className="min-h-screen flex items-center justify-center">Hunt not found</div>;
-  }
-
-  if (showWaiverForm) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-2xl mx-auto px-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Participation Waiver</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-sm text-yellow-900 font-medium mb-2">⚠️ Important Notice</p>
-                <p className="text-sm text-yellow-800">
-                  By participating in this scavenger hunt, you acknowledge the risks involved in traveling to various locations.
-                </p>
-              </div>
-
-              <div className="space-y-4 text-sm text-gray-600">
-                <p>I understand and agree that:</p>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li>I will obey all traffic laws and pedestrian rules while participating in this hunt</li>
-                  <li>I am responsible for my own safety and well-being throughout the activity</li>
-                  <li>I will respect private property and public spaces</li>
-                  <li>The organizers are not liable for any injuries, accidents, or incidents that occur during participation</li>
-                  <li>I am physically capable of completing this activity</li>
-                </ul>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="fullName">Full Name *</Label>
-                  <Input
-                    id="fullName"
-                    value={waiverForm.fullName}
-                    onChange={(e) => setWaiverForm(prev => ({ ...prev, fullName: e.target.value }))}
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="agreed"
-                    checked={waiverForm.agreed}
-                    onCheckedChange={(checked) => setWaiverForm(prev => ({ ...prev, agreed: checked }))}
-                  />
-                  <Label htmlFor="agreed" className="text-sm cursor-pointer">
-                    I have read and agree to the terms above. I accept full responsibility for my participation in this scavenger hunt.
-                  </Label>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowWaiverForm(false)}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleWaiverSubmit}
-                  disabled={!waiverForm.fullName || !waiverForm.agreed || acceptWaiverMutation.isPending}
-                  className="flex-1"
-                >
-                  {acceptWaiverMutation.isPending ? 'Accepting...' : 'Accept & Continue'}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
   }
 
   const completedCount = progress?.completed_stops?.length || 0;
