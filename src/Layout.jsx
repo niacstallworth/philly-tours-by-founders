@@ -78,11 +78,6 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69227c15039c9c847b675240/f32ecc7ef_ChatGPTImageFeb15202611_59_53AM.png" 
-                alt="Founders Threads" 
-                className="w-8 h-8 rounded-lg"
-              />
               <span className="font-bold text-lg">Founders Threads</span>
             </Link>
 
