@@ -225,15 +225,24 @@ export default function AdminTours() {
                   </DialogContent>
                 </Dialog>
                 
-                <Button 
-                  onClick={() => handleDelete(tour.id)}
-                  className="w-full"
-                  variant="destructive"
-                  disabled={deleteTourMutation.isPending}
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete Tour
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="w-full" variant="destructive" disabled={deleteTourMutation.isPending}>
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete Tour
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Tour?</AlertDialogTitle>
+                      <AlertDialogDescription>This will permanently delete "{tour.title}". This cannot be undone.</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => deleteTourMutation.mutate(tour.id)} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </CardContent>
             </Card>
           ))}
