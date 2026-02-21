@@ -52,7 +52,6 @@ import AdminImport from './pages/AdminImport';
 import AdminImportGPS from './pages/AdminImportGPS';
 import AdminMerchandise from './pages/AdminMerchandise';
 import AdminTours from './pages/AdminTours';
-import Home from './pages/Home';
 import HuntDetail from './pages/HuntDetail';
 import Merchandise from './pages/Merchandise';
 import TourDetail from './pages/TourDetail';
@@ -66,7 +65,6 @@ export const PAGES = {
     "AdminImportGPS": AdminImportGPS,
     "AdminMerchandise": AdminMerchandise,
     "AdminTours": AdminTours,
-    "Home": Home,
     "HuntDetail": HuntDetail,
     "Merchandise": Merchandise,
     "TourDetail": TourDetail,
@@ -74,7 +72,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "Home",
+    mainPage: "AdminHunts",
     Pages: PAGES,
     Layout: __Layout,
 };
