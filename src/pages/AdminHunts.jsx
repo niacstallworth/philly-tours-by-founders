@@ -204,15 +204,24 @@ export default function AdminHunts() {
                   </DialogContent>
                 </Dialog>
                 
-                <Button 
-                  onClick={() => handleDelete(hunt.id)}
-                  className="w-full"
-                  variant="destructive"
-                  disabled={deleteHuntMutation.isPending}
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete Hunt
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="w-full" variant="destructive" disabled={deleteHuntMutation.isPending}>
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete Hunt
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Hunt?</AlertDialogTitle>
+                      <AlertDialogDescription>This will permanently delete "{hunt.title}". This cannot be undone.</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => deleteHuntMutation.mutate(hunt.id)} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </CardContent>
             </Card>
           ))}
