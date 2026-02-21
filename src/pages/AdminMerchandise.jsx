@@ -164,6 +164,7 @@ export default function AdminMerchandise() {
   };
 
   return (
+    <AdminGuard>
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
