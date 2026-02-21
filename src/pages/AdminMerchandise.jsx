@@ -10,7 +10,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Pencil, Trash2, Plus, Upload, ShoppingBag, Download } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Pencil, Trash2, Plus, Upload, ShoppingBag } from 'lucide-react';
+import AdminGuard from '../components/AdminGuard';
+import ProductForm from '../components/merchandise/ProductForm';
 
 export default function AdminMerchandise() {
   const [editingProduct, setEditingProduct] = useState(null);
