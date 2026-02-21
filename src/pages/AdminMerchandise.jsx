@@ -314,14 +314,23 @@ export default function AdminMerchandise() {
                     </DialogContent>
                   </Dialog>
                   
-                  <Button 
-                    onClick={() => handleDelete(product.id)}
-                    className="w-full"
-                    variant="destructive"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button className="w-full" variant="destructive">
+                        <Trash2 className="w-4 h-4 mr-2" />Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Product?</AlertDialogTitle>
+                        <AlertDialogDescription>This will permanently delete "{product.name}". This cannot be undone.</AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(product.id)} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </CardContent>
               </Card>
             ))}
