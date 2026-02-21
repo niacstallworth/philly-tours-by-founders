@@ -65,9 +65,7 @@ export default function AdminMerchandise() {
   };
 
   const handleDelete = (id) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      deleteProductMutation.mutate(id);
-    }
+    deleteProductMutation.mutate(id);
   };
 
   const handleCSVImport = async () => {
