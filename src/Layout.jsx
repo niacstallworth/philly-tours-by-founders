@@ -52,7 +52,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
     { name: 'Import GPS Tours', icon: MapPin, page: 'AdminImportGPS' },
     { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
-    { name: 'Settings', icon: Settings, page: 'AdminSettings' },
+    { name: 'Site Settings', icon: Wrench, page: 'AdminSettings' },
   ];
 
   return (
