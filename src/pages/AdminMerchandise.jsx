@@ -104,13 +104,13 @@ export default function AdminMerchandise() {
       if (result.status === 'success' && result.output?.products) {
         await base44.entities.Product.bulkCreate(result.output.products);
         queryClient.invalidateQueries({ queryKey: ['products'] });
-        alert(`Successfully imported ${result.output.products.length} products!`);
+        toast.success(`Imported ${result.output.products.length} products!`);
         setCsvFile(null);
       } else {
-        alert('Failed to extract products from CSV: ' + (result.details || 'Unknown error'));
+        toast.error('Failed to extract products: ' + (result.details || 'Unknown error'));
       }
     } catch (error) {
-      alert('Import failed: ' + error.message);
+      toast.error('Import failed: ' + error.message);
     } finally {
       setImporting(false);
     }
