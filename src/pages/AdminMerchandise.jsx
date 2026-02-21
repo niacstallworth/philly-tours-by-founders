@@ -152,13 +152,13 @@ export default function AdminMerchandise() {
           featured: false
         })));
         queryClient.invalidateQueries({ queryKey: ['products'] });
-        alert(`Successfully imported ${result.products.length} products!`);
+        toast.success(`Imported ${result.products.length} products!`);
         setWebsiteUrl('');
       } else {
-        alert('No products found on the website');
+        toast.error('No products found on the website');
       }
     } catch (error) {
-      alert('Import failed: ' + error.message);
+      toast.error('Import failed: ' + error.message);
     } finally {
       setImporting(false);
     }
