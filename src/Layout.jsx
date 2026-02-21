@@ -43,6 +43,7 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Home', icon: Home, page: 'Home' },
+    { name: 'AR Experience', icon: Glasses, page: 'ARExperience' },
     { name: 'Merchandise', icon: ShoppingBag, page: 'Merchandise' },
   ];
 
