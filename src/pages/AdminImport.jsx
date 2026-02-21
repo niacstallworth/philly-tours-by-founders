@@ -707,5 +707,6 @@ export default function AdminImport() {
         )}
       </div>
     </div>
+    </AdminGuard>
   );
 }
