@@ -161,9 +161,14 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            ) : tours.length > 0 ? (
+            ) : filteredTours.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {tours.map((tour) => <TourCard key={tour.id} tour={tour} />)}
+                {filteredTours.map((tour) => <TourCard key={tour.id} tour={tour} />)}
+              </div>
+            ) : tours.length > 0 ? (
+              <div className="text-center py-16">
+                <Search className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                <p className="text-gray-500">No tours match your search.</p>
               </div>
             ) : (
               <div className="text-center py-24">
