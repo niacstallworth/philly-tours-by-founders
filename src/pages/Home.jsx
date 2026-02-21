@@ -12,6 +12,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('tours');
+  const [tourSearch, setTourSearch] = useState('');
+  const [huntSearch, setHuntSearch] = useState('');
+  const [huntDifficulty, setHuntDifficulty] = useState('all');
+  const [tourCategory, setTourCategory] = useState('all');
   const contentRef = useRef(null);
 
   const { data: tours, isLoading: toursLoading } = useQuery({
