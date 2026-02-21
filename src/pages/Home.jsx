@@ -38,6 +38,24 @@ export default function Home() {
     }
   });
 
+  const filteredTours = (tours || []).filter(tour => {
+    const matchesSearch = !tourSearch || 
+      tour.title?.toLowerCase().includes(tourSearch.toLowerCase()) ||
+      tour.description?.toLowerCase().includes(tourSearch.toLowerCase());
+    const matchesCategory = tourCategory === 'all' || tour.category === tourCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const tourCategories = ['all', ...new Set((tours || []).map(t => t.category).filter(Boolean))];
+
+  const filteredHunts = (hunts || []).filter(hunt => {
+    const matchesSearch = !huntSearch ||
+      hunt.title?.toLowerCase().includes(huntSearch.toLowerCase()) ||
+      hunt.description?.toLowerCase().includes(huntSearch.toLowerCase());
+    const matchesDifficulty = huntDifficulty === 'all' || hunt.difficulty === huntDifficulty;
+    return matchesSearch && matchesDifficulty;
+  });
+
   const handleExplore = (tab) => {
     setActiveTab(tab);
     setTimeout(() => {
