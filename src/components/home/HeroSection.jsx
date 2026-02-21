@@ -73,7 +73,7 @@ export default function HeroSection({ settings, onExplore }) {
               size="lg"
               variant="outline"
               onClick={() => onExplore('hunts')}
-              className="border-white/40 text-white hover:bg-white/10 font-semibold px-8 py-6 text-base rounded-full backdrop-blur-sm"
+              className="border-2 border-white text-white hover:bg-white/20 font-semibold px-8 py-6 text-base rounded-full backdrop-blur-sm bg-white/10"
             >
               <Trophy className="w-5 h-5 mr-2" />
               Start a Hunt
