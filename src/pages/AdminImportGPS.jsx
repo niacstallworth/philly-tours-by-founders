@@ -226,5 +226,6 @@ export default function AdminImportGPS() {
         </Card>
       </div>
     </div>
+    </AdminGuard>
   );
 }
