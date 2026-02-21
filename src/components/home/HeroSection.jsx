@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Map, Trophy, ArrowDown } from 'lucide-react';
+import { Map, Trophy, ArrowDown, MapPin } from 'lucide-react';
 
 export default function HeroSection({ settings, onExplore }) {
   const title = settings?.hero_title || 'Founders Threads';
@@ -13,8 +13,8 @@ export default function HeroSection({ settings, onExplore }) {
 
   return (
     <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-      {/* Background */}
-      {videoUrl ? (
+      {/* Background video */}
+      {videoUrl && (
         <video
           autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
@@ -22,8 +22,9 @@ export default function HeroSection({ settings, onExplore }) {
         >
           <source src={videoUrl} />
         </video>
-      ) : null}
+      )}
 
+      {/* Background image */}
       {bgImage && (
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -92,6 +93,3 @@ export default function HeroSection({ settings, onExplore }) {
     </div>
   );
 }
-
-// Named import fix
-import { MapPin } from 'lucide-react';
