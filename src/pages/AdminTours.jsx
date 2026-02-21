@@ -249,5 +249,6 @@ export default function AdminTours() {
         </div>
       </div>
     </div>
+    </AdminGuard>
   );
 }
