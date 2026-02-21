@@ -267,80 +267,87 @@ export default function HuntDetail() {
             </Button>
           )}
         </div>
-        <div className="space-y-4">
-          {hunt.stops?.map((stop, index) => {
+        <div className="space-y-3">
+          {hunt.stops?.map((stop) => {
             const completed = isStopCompleted(stop.stop_number);
             const unlocked = isStopUnlocked(stop.stop_number);
             const isChecking = checkingLocation === stop.stop_number;
             const needsAuth = stop.stop_number > 2 && !user;
-            
+
             return (
-              <Card key={stop.stop_number} className={completed ? 'bg-green-50 border-green-200' : unlocked ? '' : 'opacity-50'}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3">
-                      {completed ? (
-                        <CheckCircle2 className="w-6 h-6 text-green-600 mt-1" />
-                      ) : unlocked ? (
-                        <Circle className="w-6 h-6 text-gray-400 mt-1" />
-                      ) : (
-                        <Lock className="w-6 h-6 text-gray-400 mt-1" />
-                      )}
-                      <div>
-                        <h3 className="font-bold text-lg">Stop {stop.stop_number}: {unlocked || completed ? stop.name : '???'}</h3>
-                        {(unlocked || completed) && <p className="text-sm text-gray-600">{stop.address}</p>}
-                        {!unlocked && !completed && (
-                          <p className="text-sm text-gray-500 italic">Complete the previous stop to unlock</p>
-                        )}
-                      </div>
+              <Card
+                key={stop.stop_number}
+                className={`transition-all duration-300 ${
+                  completed ? 'bg-green-50 border-green-200 shadow-sm' :
+                  unlocked ? 'bg-white shadow-sm' :
+                  'bg-gray-50 border-gray-200 opacity-60'
+                }`}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm
+                      ${completed ? 'bg-green-500 text-white' : unlocked ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-200 text-gray-500'}`}>
+                      {completed ? <CheckCircle2 className="w-5 h-5" /> : unlocked ? stop.stop_number : <Lock className="w-4 h-4" />}
                     </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-base leading-tight">
+                        {unlocked || completed ? stop.name : `Stop ${stop.stop_number}`}
+                      </h3>
+                      {(unlocked || completed) && stop.address && (
+                        <p className="text-xs text-gray-500 mt-0.5 truncate">{stop.address}</p>
+                      )}
+                      {!unlocked && !completed && (
+                        <p className="text-xs text-gray-400 italic mt-0.5">Complete previous stop to unlock</p>
+                      )}
+                    </div>
+                    {completed && <Badge className="bg-green-100 text-green-700 flex-shrink-0">Done</Badge>}
                   </div>
                 </CardHeader>
+
                 {(unlocked || completed) && (
-                  <CardContent className="space-y-3">
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                      <p className="text-sm font-medium text-yellow-900 mb-1">🔍 Clue:</p>
-                      <p className="text-yellow-800">{stop.clue}</p>
+                  <CardContent className="pt-0 space-y-3">
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                      <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1.5">🔍 Clue</p>
+                      <p className="text-sm text-amber-900 leading-relaxed">{stop.clue}</p>
                     </div>
-                    
+
                     {completed && stop.description && (
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <p className="text-sm text-gray-700">{stop.description}</p>
+                      <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+                        <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-1.5">📖 About this spot</p>
+                        <p className="text-sm text-gray-700 leading-relaxed">{stop.description}</p>
                       </div>
                     )}
 
                     {needsAuth && !completed && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                        <Lock className="w-8 h-8 mx-auto text-blue-600 mb-2" />
-                        <p className="text-sm text-blue-900 font-medium mb-2">Sign in required</p>
+                      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
+                        <Lock className="w-6 h-6 mx-auto text-blue-500 mb-2" />
+                        <p className="text-sm text-blue-900 font-medium mb-2">Sign in to check in here</p>
                         <Button size="sm" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
-                          Sign In to Continue
+                          Sign In
                         </Button>
                       </div>
                     )}
 
                     {!needsAuth && !completed && (
-                      <div className="flex gap-2 flex-col">
+                      <div className="flex gap-2">
                         <Button
                           onClick={() => handleCheckIn(stop)}
                           disabled={isChecking}
-                          className="w-full"
+                          className="flex-1 bg-indigo-600 hover:bg-indigo-700"
                         >
                           <Navigation className="w-4 h-4 mr-2" />
-                          {isChecking ? 'Verifying GPS...' : 'Check In'}
+                          {isChecking ? 'Verifying GPS...' : 'Check In Here'}
                         </Button>
-                        
-                        <Button
-                          variant="outline"
-                          onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`, '_blank')}
-                          className="w-full"
-                        >
-                          <MapPin className="w-4 h-4 mr-2" />
-                          Get Directions
-                        </Button>
+                        {stop.latitude && stop.longitude && (
+                          <Button
+                            variant="outline"
+                            onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}`, '_blank')}
+                          >
+                            <MapPin className="w-4 h-4" />
+                          </Button>
+                        )}
                       </div>
                     )}
-
                   </CardContent>
                 )}
               </Card>
