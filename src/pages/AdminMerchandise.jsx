@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Pencil, Trash2, Plus, Upload, ShoppingBag } from 'lucide-react';
+import { toast } from 'sonner';
 import AdminGuard from '../components/AdminGuard';
 import ProductForm from '../components/merchandise/ProductForm';
 
