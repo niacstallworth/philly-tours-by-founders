@@ -4,9 +4,11 @@ import { base44 } from '@/api/base44Client';
 import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
 import HeroSection from '../components/home/HeroSection';
-import { Compass, Map, Trophy, MapPin, Facebook, Instagram, Twitter, Youtube, Mail, Globe } from 'lucide-react';
+import { Compass, Map, Trophy, MapPin, Facebook, Instagram, Twitter, Youtube, Mail, Globe, Search, Filter } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('tours');
