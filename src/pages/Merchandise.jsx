@@ -12,17 +12,6 @@ import { motion } from 'framer-motion';
 export default function Merchandise() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [videoError, setVideoError] = useState(false);
-
-  const { data: settings } = useQuery({
-    queryKey: ['homepage-settings'],
-    queryFn: async () => {
-      const list = await base44.entities.HomePageSettings.list();
-      return list[0] || null;
-    }
-  });
-
-
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
