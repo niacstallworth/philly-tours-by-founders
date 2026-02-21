@@ -288,6 +288,7 @@ export default function AdminImport() {
   };
 
   return (
+    <AdminGuard>
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
@@ -310,8 +311,6 @@ export default function AdminImport() {
             Scavenger Hunt
           </Button>
         </div>
-
-        <TourLocationsCSV />
 
         <TourLocationsCSV />
 
