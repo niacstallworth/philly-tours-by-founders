@@ -214,9 +214,14 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            ) : hunts.length > 0 ? (
+            ) : filteredHunts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {hunts.map((hunt) => <HuntCard key={hunt.id} hunt={hunt} />)}
+                {filteredHunts.map((hunt) => <HuntCard key={hunt.id} hunt={hunt} />)}
+              </div>
+            ) : hunts.length > 0 ? (
+              <div className="text-center py-16">
+                <Search className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                <p className="text-gray-500">No hunts match your search.</p>
               </div>
             ) : (
               <div className="text-center py-24">
