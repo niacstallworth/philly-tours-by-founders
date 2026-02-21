@@ -184,9 +184,26 @@ export default function Home() {
           <TabsContent value="hunts">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">GPS Scavenger Hunts</h2>
-              <p className="text-gray-500 text-center mb-12 max-w-2xl mx-auto">
+              <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
                 Explore Philadelphia through GPS-verified scavenger hunts — track your progress and discover hidden gems!
               </p>
+              <div className="flex flex-col sm:flex-row gap-3 mb-10 max-w-2xl mx-auto">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input placeholder="Search hunts..." value={huntSearch} onChange={e => setHuntSearch(e.target.value)} className="pl-9" />
+                </div>
+                <Select value={huntDifficulty} onValueChange={setHuntDifficulty}>
+                  <SelectTrigger className="w-full sm:w-44">
+                    <SelectValue placeholder="Difficulty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Difficulties</SelectItem>
+                    <SelectItem value="easy">Easy</SelectItem>
+                    <SelectItem value="moderate">Moderate</SelectItem>
+                    <SelectItem value="challenging">Challenging</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </motion.div>
 
             {huntsLoading ? (
