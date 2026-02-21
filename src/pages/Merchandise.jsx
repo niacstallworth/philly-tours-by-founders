@@ -46,18 +46,7 @@ export default function Merchandise() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30">
       {/* Hero Section */}
       <div className="relative h-96 md:h-[500px] overflow-hidden text-white">
-        {settings?.hero_video_url && !videoError ? (
-          <iframe
-            src={`${settings.hero_video_url}?autoplay=1&mute=1`}
-            title="Hero video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            style={{position:'absolute', top:0, left:0, width:'100%', height:'100%', border:0}}
-            onError={() => setVideoError(true)}
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" />
-        )}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" />
         <div className="absolute inset-0 bg-black/40" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
