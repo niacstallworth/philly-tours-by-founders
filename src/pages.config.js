@@ -56,6 +56,7 @@ import HuntDetail from './pages/HuntDetail';
 import Merchandise from './pages/Merchandise';
 import TourDetail from './pages/TourDetail';
 import AdminSettings from './pages/AdminSettings';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "Merchandise": Merchandise,
     "TourDetail": TourDetail,
     "AdminSettings": AdminSettings,
+    "Home": Home,
 }
 
 export const pagesConfig = {
