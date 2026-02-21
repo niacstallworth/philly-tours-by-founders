@@ -16,7 +16,8 @@ import {
   LogOut,
   ShoppingBag,
   Trophy,
-  Wrench
+  Wrench,
+  Glasses
 } from 'lucide-react';
 
 export default function Layout({ children, currentPageName }) {
