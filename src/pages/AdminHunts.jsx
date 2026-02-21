@@ -228,5 +228,6 @@ export default function AdminHunts() {
         </div>
       </div>
     </div>
+    </AdminGuard>
   );
 }
