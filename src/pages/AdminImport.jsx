@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Upload, Plus, CheckCircle, AlertCircle } from 'lucide-react';
 import TourLocationsCSV from '../components/TourLocationsCSV';
+import AdminGuard from '../components/AdminGuard';
 
 export default function AdminImport() {
   const [contentType, setContentType] = useState('tour');
