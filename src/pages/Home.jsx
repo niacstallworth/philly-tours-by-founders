@@ -130,9 +130,27 @@ export default function Home() {
           <TabsContent value="tours">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Available Tours</h2>
-              <p className="text-gray-500 text-center mb-12 max-w-2xl mx-auto">
+              <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
                 Choose from our carefully crafted tours that bring Philadelphia's stories to life
               </p>
+              <div className="flex flex-col sm:flex-row gap-3 mb-10 max-w-2xl mx-auto">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input placeholder="Search tours..." value={tourSearch} onChange={e => setTourSearch(e.target.value)} className="pl-9" />
+                </div>
+                {tourCategories.length > 1 && (
+                  <Select value={tourCategory} onValueChange={setTourCategory}>
+                    <SelectTrigger className="w-full sm:w-44">
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tourCategories.map(c => (
+                        <SelectItem key={c} value={c}>{c === 'all' ? 'All Categories' : c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
             </motion.div>
 
             {toursLoading ? (
