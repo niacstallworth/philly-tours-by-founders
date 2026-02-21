@@ -30,24 +30,6 @@ export default function Home() {
     }
   });
 
-  useEffect(() => {
-    if (videoRef.current && settings?.hero_video_url) {
-      const playVideo = async () => {
-        try {
-          videoRef.current.muted = true;
-          await videoRef.current.load();
-          await videoRef.current.play();
-        } catch (error) {
-          console.error('Video autoplay failed:', error);
-          setVideoError(true);
-        }
-      };
-      playVideo();
-    }
-  }, [settings?.hero_video_url]);
-
-
-
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-6 py-12">
