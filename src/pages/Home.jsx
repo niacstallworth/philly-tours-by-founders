@@ -188,9 +188,9 @@ export default function Home() {
                 loading="lazy"
               />
             </div>
-            </TabsContent>
-            </Tabs>
-            </div>
-            </div>
-            );
-            }
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}
