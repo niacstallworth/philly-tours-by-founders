@@ -346,10 +346,9 @@ export default function AdminMerchandise() {
         )}
       </div>
     </div>
+    </AdminGuard>
   );
 }
-
-function ProductForm({ product, onSave, onCancel, isPending }) {
   const [formData, setFormData] = useState({
     name: product?.name || '',
     description: product?.description || '',
