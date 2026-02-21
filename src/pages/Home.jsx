@@ -8,10 +8,8 @@ import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Home() {
-  const [videoError, setVideoError] = useState(false);
-  const videoRef = useRef(null);
   const [activeTab, setActiveTab] = useState('tours');
-  
+
   const { data: tours, isLoading: toursLoading } = useQuery({
     queryKey: ['tours'],
     queryFn: () => base44.entities.Tour.list(),
