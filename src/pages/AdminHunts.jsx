@@ -66,12 +66,6 @@ export default function AdminHunts() {
     }
   };
 
-  const handleDelete = (huntId) => {
-    if (confirm('Are you sure you want to delete this hunt?')) {
-      deleteHuntMutation.mutate(huntId);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -81,6 +75,7 @@ export default function AdminHunts() {
   }
 
   return (
+    <AdminGuard>
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
