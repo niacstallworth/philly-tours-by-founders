@@ -185,86 +185,85 @@ export default function HuntDetail() {
   const totalStops = hunt.stops?.length || 0;
   const isComplete = completedCount === totalStops && totalStops > 0;
 
+  const difficultyColor = {
+    easy: 'bg-green-100 text-green-800',
+    moderate: 'bg-amber-100 text-amber-800',
+    challenging: 'bg-red-100 text-red-800'
+  }[hunt.difficulty] || 'bg-gray-100 text-gray-800';
+
+  const progressPct = totalStops > 0 ? (completedCount / totalStops) * 100 : 0;
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <div className="relative h-96 overflow-hidden">
-        <img
-          src={hunt.image_url}
-          alt={hunt.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+      {/* Hero */}
+      <div className="relative h-80 md:h-[440px] overflow-hidden">
+        {hunt.image_url ? (
+          <img src={hunt.image_url} alt={hunt.title} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-indigo-900 to-purple-900" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-white">
           <div className="max-w-4xl mx-auto">
-            <Badge className="mb-4 bg-white/20 backdrop-blur-sm border-none">
-              {hunt.difficulty}
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-3">{hunt.title}</h1>
-            <p className="text-xl mb-4">{hunt.subtitle}</p>
-            <div className="flex flex-wrap gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span>{hunt.duration}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span>{totalStops} stops</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Trophy className="w-4 h-4" />
-                <span>GPS Verified</span>
-              </div>
+            <Badge className={`mb-3 capitalize ${difficultyColor}`}>{hunt.difficulty}</Badge>
+            <h1 className="text-3xl md:text-5xl font-bold mb-2 leading-tight">{hunt.title}</h1>
+            {hunt.subtitle && <p className="text-lg text-white/80 mb-4">{hunt.subtitle}</p>}
+            <div className="flex flex-wrap gap-4 text-sm text-white/80">
+              {hunt.duration && (
+                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" />{hunt.duration}</div>
+              )}
+              <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />{totalStops} stops</div>
+              <div className="flex items-center gap-1.5"><Trophy className="w-4 h-4" />GPS Verified</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-6">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 space-y-5">
         {isComplete && (
-          <Card className="mb-6 bg-green-50 border-green-200">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3">
-                <Trophy className="w-8 h-8 text-green-600" />
-                <div>
-                  <h3 className="font-bold text-green-900">Hunt Completed!</h3>
-                  <p className="text-sm text-green-700">Congratulations on finishing this scavenger hunt!</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+              <Trophy className="w-6 h-6 text-green-600" />
+            </div>
+            <div>
+              <h3 className="font-bold text-green-900 text-lg">Hunt Completed! 🎉</h3>
+              <p className="text-sm text-green-700">Congratulations on finishing this scavenger hunt!</p>
+            </div>
+          </div>
         )}
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>Progress</span>
-              <span className="text-lg font-normal">{completedCount} / {totalStops}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className="bg-green-500 h-3 rounded-full transition-all duration-500"
-                style={{ width: `${totalStops > 0 ? (completedCount / totalStops) * 100 : 0}%` }}
+        {/* Progress */}
+        <Card>
+          <CardContent className="pt-5 pb-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="font-semibold text-gray-900">Your Progress</span>
+              <span className="text-sm font-medium text-gray-500">{completedCount} of {totalStops} stops</span>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-3">
+              <div
+                className="bg-gradient-to-r from-indigo-500 to-green-500 h-3 rounded-full transition-all duration-700"
+                style={{ width: `${progressPct}%` }}
               />
             </div>
+            <p className="text-xs text-gray-400 mt-2 text-right">{Math.round(progressPct)}% complete</p>
           </CardContent>
         </Card>
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>About This Hunt</CardTitle>
+        {/* About */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">About This Hunt</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 leading-relaxed">{hunt.description}</p>
           </CardContent>
         </Card>
 
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Hunt Stops</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900">Hunt Stops</h2>
           {!user && (
-            <Button size="sm" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
-              Sign In
+            <Button size="sm" variant="outline" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
+              Sign In to Track
             </Button>
           )}
         </div>
