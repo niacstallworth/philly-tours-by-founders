@@ -87,6 +87,8 @@ export default function Home() {
   };
 
   return (
+    <>
+    {showOnboarding && <OnboardingModal onClose={handleCloseOnboarding} />}
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Hero */}
@@ -310,5 +312,6 @@ export default function Home() {
       </div>
     </div>
     </PullToRefresh>
+    </>
   );
 }
