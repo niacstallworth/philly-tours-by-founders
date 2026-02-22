@@ -64,11 +64,30 @@ export default function Merchandise() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
-      {/* Hero Section with Video */}
-      <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-black">
-        <div className="absolute inset-0 w-full h-full">
+    {/* Hero Section with Video */}
+    <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-black">
+      <div className="absolute inset-0 w-full h-full">
+        {settings?.merchandise_hero_video_embed ? (
+          <div dangerouslySetInnerHTML={{ __html: settings.merchandise_hero_video_embed }} style={{ width: '100%', height: '100%' }} />
+        ) : settings?.merchandise_hero_video_url ? (
+          <video
+            src={settings.merchandise_hero_video_url}
+            autoPlay
+            loop
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '120%',
+              height: '120%',
+              objectFit: 'cover',
+              pointerEvents: 'none'
+            }}
+          />
+        ) : (
           <iframe
-            src="https://www.youtube.com/embed/TonPbG2M3fU?autoplay=1&mute=1&loop=1&playlist=TonPbG2M3fU&controls=0&modestbranding=1"
+            src="https://www.youtube.com/embed/2eQ6dcX3ql4?autoplay=1&loop=1&playlist=2eQ6dcX3ql4&controls=0&modestbranding=1"
             frameBorder="0"
             allow="autoplay; encrypted-media"
             style={{
@@ -81,25 +100,26 @@ export default function Merchandise() {
               pointerEvents: 'none'
             }}
           />
-        </div>
-        <div className="absolute inset-0 bg-black/40" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">Merchandise</h1>
-           <p className="text-xl text-purple-200 max-w-2xl mx-auto">
-             Explore our collection of exclusive Philadelphia-inspired products
-            </p>
-            <div className="mt-6 bg-white/15 backdrop-blur-sm border border-white/30 rounded-2xl px-6 py-4 max-w-lg mx-auto text-center">
-              <p className="text-white font-semibold text-sm">💡 Tip: Play hunts and scavenger games to earn points and redeem items for free!</p>
-            </div>
-          {user && userProfile && (
-            <div className="mt-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              <span className="text-white font-semibold">{userProfile.total_points || 0} Points</span>
-            </div>
-          )}
-        </div>
+        )}
       </div>
+      <div className="absolute inset-0 bg-black/40" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
+        <h1 className="text-5xl md:text-6xl font-bold mb-4">{settings?.merchandise_hero_title || 'Merchandise'}</h1>
+         <p className="text-xl text-purple-200 max-w-2xl mx-auto">
+            {settings?.merchandise_hero_subtitle || 'Explore our collection of exclusive Philadelphia-inspired products'}
+          </p>
+          <div className="mt-6 bg-white/15 backdrop-blur-sm border border-white/30 rounded-2xl px-6 py-4 max-w-lg mx-auto text-center">
+            <p className="text-white font-semibold text-sm">💡 Tip: Play hunts and scavenger games to earn points and redeem items for free!</p>
+          </div>
+        {user && userProfile && (
+          <div className="mt-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            <span className="text-white font-semibold">{userProfile.total_points || 0} Points</span>
+          </div>
+        )}
+      </div>
+    </div>
 
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-6 py-8">
