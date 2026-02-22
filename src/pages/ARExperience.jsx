@@ -253,7 +253,32 @@ export default function ARExperience() {
   if (mode === 'ar') {
     return (
       <div className="fixed inset-0 bg-black z-50">
-        <video ref={videoRef} className="w-full h-full object-cover" playsInline muted autoPlay />
+        {/* Live camera feed */}
+        {!isDemoMode && (
+          <video ref={videoRef} className="absolute inset-0 w-full h-full object-cover" playsInline muted autoPlay />
+        )}
+        {isDemoMode && (
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900" />
+        )}
+
+        {/* Canvas AR overlay — drawn on top of camera */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full z-10 pointer-events-none"
+        />
+
+        {/* Scan pulse ring when site detected */}
+        <AnimatePresence>
+          {scanPulse && (
+            <motion.div
+              className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+              initial={{ opacity: 0.8 }} animate={{ opacity: 0 }} exit={{ opacity: 0 }}
+              transition={{ duration: 1.2 }}
+            >
+              <div className="w-64 h-64 rounded-full border-4 border-green-400 opacity-60" />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Close */}
         <button
@@ -266,16 +291,23 @@ export default function ARExperience() {
         {/* Compass */}
         {heading !== null && (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-4 py-2 text-white text-sm">
-            <Navigation className="w-4 h-4" style={{ transform: `rotate(${heading}deg)` }} />
+            <Compass className="w-4 h-4" style={{ transform: `rotate(${-heading}deg)`, transition: 'transform 0.3s ease' }} />
             {heading}°
           </div>
         )}
 
-        {/* Status */}
+        {/* Status / Distance indicator */}
         <div className="absolute bottom-24 left-0 right-0 z-20 flex justify-center px-4">
           {!userPos ? (
             <div className="bg-black/50 backdrop-blur-sm rounded-full px-5 py-2.5 text-white/80 text-sm flex items-center gap-2">
               <MapPin className="w-4 h-4 animate-pulse" />Acquiring GPS…
+            </div>
+          ) : !nearbySite && nearestSite ? (
+            <div className="bg-black/50 backdrop-blur-sm rounded-full px-5 py-2.5 text-white/80 text-sm flex items-center gap-2">
+              <Navigation className="w-4 h-4 text-indigo-300" />
+              {nearestDistance < 1000
+                ? `${nearestDistance}m to ${nearestSite.name}`
+                : `${(nearestDistance / 1000).toFixed(1)}km to ${nearestSite.name}`}
             </div>
           ) : !nearbySite ? (
             <div className="bg-black/50 backdrop-blur-sm rounded-full px-5 py-2.5 text-white/80 text-sm flex items-center gap-2">
