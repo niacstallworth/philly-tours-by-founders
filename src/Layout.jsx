@@ -70,13 +70,16 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div
-      className="min-h-screen flex flex-col bg-gray-50"
+      className="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-900"
       style={{ overscrollBehavior: 'none', WebkitOverflowScrolling: 'touch' }}
     >
       {/* Global CSS injections */}
       <style>{`
         * { -webkit-tap-highlight-color: transparent; }
         body { overscroll-behavior: none; }
+        @media (prefers-color-scheme: dark) {
+          body { background-color: #0f172a; color: #f1f5f9; }
+        }
         nav button, nav a { user-select: none; -webkit-user-select: none; }
 
         :root {
