@@ -4,9 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import DaySchedule from '../components/tours/DaySchedule';
-import { ArrowLeft, Calendar, MapPin, Info } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { Calendar, MapPin, Info } from 'lucide-react';
 
 export default function TourDetail() {
   const urlParams = new URLSearchParams(window.location.search);
