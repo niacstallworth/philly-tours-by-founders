@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import ARExperience from './pages/ARExperience';
 import AdminHunts from './pages/AdminHunts';
 import AdminImport from './pages/AdminImport';
 import AdminImportGPS from './pages/AdminImportGPS';
@@ -57,11 +58,12 @@ import Home from './pages/Home';
 import HuntDetail from './pages/HuntDetail';
 import Merchandise from './pages/Merchandise';
 import TourDetail from './pages/TourDetail';
-import ARExperience from './pages/ARExperience';
+import UserSettings from './pages/UserSettings';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "ARExperience": ARExperience,
     "AdminHunts": AdminHunts,
     "AdminImport": AdminImport,
     "AdminImportGPS": AdminImportGPS,
@@ -72,7 +74,7 @@ export const PAGES = {
     "HuntDetail": HuntDetail,
     "Merchandise": Merchandise,
     "TourDetail": TourDetail,
-    "ARExperience": ARExperience,
+    "UserSettings": UserSettings,
 }
 
 export const pagesConfig = {
