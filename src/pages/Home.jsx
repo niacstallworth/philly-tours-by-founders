@@ -5,7 +5,7 @@ import PullToRefresh from '../components/ui/PullToRefresh';
 import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
 import HeroSection from '../components/home/HeroSection';
-import { Compass, Map, Trophy, MapPin, Facebook, Instagram, Twitter, Youtube, Mail, Globe, Search, Filter } from 'lucide-react';
+import { Compass, Map, Trophy, MapPin, Facebook, Instagram, Twitter, Youtube, Mail, Globe, Search, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -123,18 +123,24 @@ export default function Home() {
       {/* Content */}
       <div ref={contentRef} className="max-w-7xl mx-auto px-6 py-14 dark:text-white">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-10">
-            <TabsTrigger value="tours" className="flex items-center gap-2">
+          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-4 mb-10">
+            <TabsTrigger value="tours" className="flex items-center gap-1.5">
               <Map className="w-4 h-4" />
-              Tours
+              <span className="hidden sm:inline">Tours</span>
+              <span className="sm:hidden">Tours</span>
             </TabsTrigger>
-            <TabsTrigger value="hunts" className="flex items-center gap-2">
+            <TabsTrigger value="hunts" className="flex items-center gap-1.5">
               <Trophy className="w-4 h-4" />
-              Scavenger Hunts
+              <span className="hidden sm:inline">Scavenger Hunts</span>
+              <span className="sm:hidden">Hunts</span>
             </TabsTrigger>
-            <TabsTrigger value="map" className="flex items-center gap-2">
+            <TabsTrigger value="shop" className="flex items-center gap-1.5">
+              <ShoppingBag className="w-4 h-4" />
+              Shop
+            </TabsTrigger>
+            <TabsTrigger value="map" className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4" />
-              Tour Map
+              Map
             </TabsTrigger>
           </TabsList>
 
@@ -243,6 +249,29 @@ export default function Home() {
                 <p className="text-gray-400 max-w-sm mx-auto">Scavenger hunts will appear here once they're published. Stay tuned!</p>
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="shop">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 text-center">Merchandise</h2>
+              <p className="text-gray-500 dark:text-slate-400 text-center mb-8 max-w-2xl mx-auto">
+                Support Founders Threads — browse our collection of apparel and accessories
+              </p>
+            </motion.div>
+            <div className="flex flex-col items-center justify-center py-16 gap-4">
+              <ShoppingBag className="w-16 h-16 text-indigo-300" />
+              <p className="text-gray-500 dark:text-slate-400 text-center max-w-sm">
+                Visit the full Shop tab below for our complete merchandise collection.
+              </p>
+              <a
+                href={`#/Merchandise`}
+                onClick={e => { e.preventDefault(); window.location.href = '/Merchandise'; }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                Go to Shop
+              </a>
+            </div>
           </TabsContent>
 
           <TabsContent value="map">

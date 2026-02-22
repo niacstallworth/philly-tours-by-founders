@@ -44,15 +44,7 @@ export default function AppHeader({ currentPageName, themeColors, menuOpen, onMe
         {title || 'Founders Threads'}
       </Link>
 
-      {/* Desktop hamburger / mobile placeholder */}
-      <button
-        className="w-16 flex justify-end md:hidden text-white"
-        onClick={onMenuToggle}
-        style={{ WebkitTapHighlightColor: 'transparent' }}
-      >
-        {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
-      <div className="hidden md:block w-16" />
+      <div className="w-16" />
     </header>
   );
 }

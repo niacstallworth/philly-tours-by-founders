@@ -9,7 +9,8 @@ export default function HeroSection({ settings, onExplore }) {
   const bgImage = settings?.hero_image_url || 'https://images.unsplash.com/photo-1569761316261-9a8696fa2ca3?w=1600&q=80';
   const videoUrl = settings?.hero_video_url;
   const opacity = (settings?.video_opacity ?? 20) / 100;
-  const primaryColor = settings?.primary_color || '#4f46e5';
+  // Wait for settings to load before using primary color to avoid flash
+  const primaryColor = settings ? (settings.primary_color || '#4f46e5') : null;
 
   return (
     <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
@@ -32,13 +33,19 @@ export default function HeroSection({ settings, onExplore }) {
         />
       )}
 
-      {/* Gradient overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(135deg, ${primaryColor}ee 0%, #1e1b4b 100%)`
-        }}
-      />
+      {/* Gradient overlay — only render once we have the real color */}
+      {primaryColor && (
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, ${primaryColor}ee 0%, #1e1b4b 100%)`
+          }}
+        />
+      )}
+      {/* Dark fallback overlay while loading */}
+      {!primaryColor && (
+        <div className="absolute inset-0 bg-slate-900/80" />
+      )}
 
       {/* Content */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
