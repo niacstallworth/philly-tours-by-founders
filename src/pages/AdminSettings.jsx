@@ -86,11 +86,11 @@ export default function AdminSettings() {
             </div>
           </div>
 
-          {/* Hero Section */}
+          {/* Home Hero Section */}
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Video className="w-5 h-5" /> Hero Section
+                <Video className="w-5 h-5" /> Home Hero Section
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -118,6 +118,46 @@ export default function AdminSettings() {
               <div className="space-y-2">
                 <Label>Video Opacity (%)</Label>
                 <Input type="number" min="0" max="100" value={form.video_opacity} onChange={e => set('video_opacity', Number(e.target.value))} className="w-32" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Merchandise Hero Section */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Video className="w-5 h-5" /> Merchandise Hero Section
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Title</Label>
+                  <Input value={form.merchandise_hero_title} onChange={e => set('merchandise_hero_title', e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Subtitle</Label>
+                  <Input value={form.merchandise_hero_subtitle} onChange={e => set('merchandise_hero_subtitle', e.target.value)} placeholder="Explore our collection..." />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Background Image URL</Label>
+                <Input value={form.merchandise_hero_image_url} onChange={e => set('merchandise_hero_image_url', e.target.value)} placeholder="https://images.unsplash.com/..." />
+                {form.merchandise_hero_image_url && (
+                  <img src={form.merchandise_hero_image_url} alt="preview" className="w-full h-32 object-cover rounded-lg mt-2" onError={e => e.target.style.display='none'} />
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label>Background Video URL (MP4/WebM)</Label>
+                <Input value={form.merchandise_hero_video_url} onChange={e => set('merchandise_hero_video_url', e.target.value)} placeholder="https://example.com/video.mp4" />
+              </div>
+              <div className="space-y-2">
+                <Label>Video Embed Code (YouTube/Vimeo)</Label>
+                <Textarea value={form.merchandise_hero_video_embed} onChange={e => set('merchandise_hero_video_embed', e.target.value)} placeholder="Paste YouTube embed code here" rows="3" />
+              </div>
+              <div className="space-y-2">
+                <Label>Video Opacity (%)</Label>
+                <Input type="number" min="0" max="100" value={form.merchandise_video_opacity} onChange={e => set('merchandise_video_opacity', Number(e.target.value))} className="w-32" />
               </div>
             </CardContent>
           </Card>
