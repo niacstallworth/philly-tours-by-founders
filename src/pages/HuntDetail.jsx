@@ -6,14 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 
-import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock, Share2 } from 'lucide-react';
+import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock, Share2, Users, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import { AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import ShareHuntModal from '../components/hunts/ShareHuntModal';
 
 export default function HuntDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const huntId = urlParams.get('id');
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [checkingLocation, setCheckingLocation] = useState(null);
   const [showShare, setShowShare] = useState(false);
@@ -188,6 +190,38 @@ export default function HuntDetail() {
     return allCompleted.includes(stopNumber - 1);
   };
 
+  const handleStartMultiplayer = async () => {
+    if (!user) {
+      base44.auth.redirectToLogin(window.location.href);
+      return;
+    }
+
+    try {
+      const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const session = await base44.entities.MultiplayerSession.create({
+        hunt_id: hunt.id,
+        hunt_title: hunt.title,
+        creator_email: user.email,
+        session_code: code,
+        status: 'active',
+        player_count: 1,
+        started_at: new Date().toISOString()
+      });
+
+      await base44.entities.SessionPlayer.create({
+        session_id: session.id,
+        user_email: user.email,
+        user_name: user.full_name || user.email.split('@')[0],
+        joined_at: new Date().toISOString()
+      });
+
+      navigate(`/MultiplayerHunt?code=${code}`);
+    } catch (error) {
+      console.error('Failed to create multiplayer session:', error);
+      toast.error('Could not start multiplayer hunt');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -299,13 +333,21 @@ export default function HuntDetail() {
           </CardContent>
         </Card>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
           <h2 className="text-2xl font-bold text-gray-900">Hunt Stops</h2>
-          {!user && (
-            <Button size="sm" variant="outline" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
-              Sign In to Track
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {user && (user.membership === 'elite' || user.role === 'admin') && !isComplete && (
+              <Button size="sm" onClick={handleStartMultiplayer} className="gap-2 bg-purple-600 hover:bg-purple-700">
+                <Users className="w-4 h-4" />
+                Multiplayer
+              </Button>
+            )}
+            {!user && (
+              <Button size="sm" variant="outline" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
+                Sign In to Track
+              </Button>
+            )}
+          </div>
         </div>
         <div className="space-y-3">
           {hunt.stops?.map((stop) => {
