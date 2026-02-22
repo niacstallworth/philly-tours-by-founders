@@ -71,9 +71,12 @@ export default function Merchandise() {
           </motion.div>
           
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Merchandise</h1>
-          <p className="text-xl text-purple-200 max-w-2xl mx-auto">
-            Explore our collection of exclusive Philadelphia-inspired products
-          </p>
+           <p className="text-xl text-purple-200 max-w-2xl mx-auto">
+             Explore our collection of exclusive Philadelphia-inspired products
+           </p>
+           <div className="mt-6 bg-white/15 backdrop-blur-sm border border-white/30 rounded-2xl px-6 py-4 max-w-lg mx-auto text-center">
+             <p className="text-white font-semibold text-sm">💡 Tip: Play hunts and scavenger games to earn points and redeem items for free!</p>
+           </div>
           {user && userProfile && (
             <div className="mt-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-300" />

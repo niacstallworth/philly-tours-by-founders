@@ -214,6 +214,19 @@ export default function Home() {
               <p className="text-gray-500 dark:text-slate-400 text-center mb-8 max-w-2xl mx-auto">
                 Explore Philadelphia through GPS-verified scavenger hunts — track your progress and discover hidden gems!
               </p>
+
+              {/* Rewards Banner */}
+              <div className="mb-10 max-w-3xl mx-auto bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-6">
+                <div className="flex items-start gap-4">
+                  <div className="text-4xl">🎁</div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">Earn Free Merchandise</h3>
+                    <p className="text-gray-700 text-sm">
+                      Complete hunts, scan locations, and earn points—redeem them for exclusive merchandise absolutely free! Every hunt completed = rewards unlocked.
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div className="flex flex-col sm:flex-row gap-3 mb-10 max-w-2xl mx-auto">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />

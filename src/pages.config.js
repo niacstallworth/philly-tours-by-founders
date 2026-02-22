@@ -58,12 +58,12 @@ import AdminTags from './pages/AdminTags';
 import AdminTours from './pages/AdminTours';
 import Home from './pages/Home';
 import HuntDetail from './pages/HuntDetail';
+import Leaderboard from './pages/Leaderboard';
 import Merchandise from './pages/Merchandise';
+import MultiplayerHunt from './pages/MultiplayerHunt';
 import TagScanner from './pages/TagScanner';
 import TourDetail from './pages/TourDetail';
 import UserSettings from './pages/UserSettings';
-import Leaderboard from './pages/Leaderboard';
-import MultiplayerHunt from './pages/MultiplayerHunt';
 import __Layout from './Layout.jsx';
 
 
@@ -79,12 +79,12 @@ export const PAGES = {
     "AdminTours": AdminTours,
     "Home": Home,
     "HuntDetail": HuntDetail,
+    "Leaderboard": Leaderboard,
     "Merchandise": Merchandise,
+    "MultiplayerHunt": MultiplayerHunt,
     "TagScanner": TagScanner,
     "TourDetail": TourDetail,
     "UserSettings": UserSettings,
-    "Leaderboard": Leaderboard,
-    "MultiplayerHunt": MultiplayerHunt,
 }
 
 export const pagesConfig = {
