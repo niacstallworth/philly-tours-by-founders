@@ -25,7 +25,8 @@ Deno.serve(async (req) => {
     }
 
     // Update stats
-    const newPoints = (profile.total_points || 0) + (points_earned || 0);
+    const huntBonusPoints = hunt_completed ? 50 : 0;
+    const newPoints = (profile.total_points || 0) + (points_earned || 0) + huntBonusPoints;
     const newHunts = (profile.hunts_completed || 0) + (hunt_completed ? 1 : 0);
     const newScore = newPoints + newHunts * 100;
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '../components/ui/PullToRefresh';
 import { base44 } from '@/api/base44Client';
@@ -7,13 +7,20 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ShoppingBag, ExternalLink, Search, Star } from 'lucide-react';
+import { ShoppingBag, ExternalLink, Search, Star, Sparkles, AlertCircle, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 export default function Merchandise() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [user, setUser] = useState(null);
+  const [redeeming, setRedeeming] = useState(null);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => setUser(null));
+  }, []);
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -23,6 +30,15 @@ export default function Merchandise() {
     queryKey: ['products'],
     queryFn: () => base44.entities.Product.list(),
     initialData: []
+  });
+
+  const { data: userProfile } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: () => {
+      if (!user?.email) return null;
+      return base44.entities.UserProfile.filter({ user_email: user.email }).then(p => p[0]);
+    },
+    enabled: !!user?.email,
   });
 
   const categories = ['all', ...new Set(products.map(p => p.category).filter(Boolean))];
@@ -58,6 +74,12 @@ export default function Merchandise() {
           <p className="text-xl text-purple-200 max-w-2xl mx-auto">
             Explore our collection of exclusive Philadelphia-inspired products
           </p>
+          {user && userProfile && (
+            <div className="mt-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              <span className="text-white font-semibold">{userProfile.total_points || 0} Points</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -97,7 +119,7 @@ export default function Merchandise() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} featured />
+                <ProductCard key={product.id} product={product} featured user={user} userProfile={userProfile} redeeming={redeeming} setRedeeming={setRedeeming} queryClient={queryClient} />
               ))}
             </div>
           </div>
@@ -121,7 +143,7 @@ export default function Merchandise() {
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {regularProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product.id} product={product} user={user} userProfile={userProfile} redeeming={redeeming} setRedeeming={setRedeeming} queryClient={queryClient} />
                   ))}
                 </div>
               </>
@@ -141,7 +163,32 @@ export default function Merchandise() {
   );
 }
 
-function ProductCard({ product, featured = false }) {
+function ProductCard({ product, featured = false, user, userProfile, redeeming, setRedeeming, queryClient }) {
+  const handleRedeemPoints = async () => {
+    if (!user) {
+      base44.auth.redirectToLogin(window.location.href);
+      return;
+    }
+
+    setRedeeming(product.id);
+    try {
+      const response = await base44.functions.invoke('redeemProduct', { product_id: product.id });
+      if (response.data.success) {
+        toast.success(response.data.message);
+        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      } else {
+        toast.error(response.data.error || 'Redemption failed');
+      }
+    } catch (error) {
+      toast.error('Could not redeem product. Please try again.');
+      console.error(error);
+    } finally {
+      setRedeeming(null);
+    }
+  };
+
+  const hasEnoughPoints = userProfile && (userProfile.total_points || 0) >= (product.points_cost || 0);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -174,11 +221,21 @@ function ProductCard({ product, featured = false }) {
         )}
         
         <CardHeader className="flex-1">
-          <div className="flex justify-between items-start gap-2 mb-2">
+          <div className="flex justify-between items-start gap-2 mb-3">
             <CardTitle className="text-lg">{product.name}</CardTitle>
-            <Badge variant="outline" className="flex-shrink-0">
-              ${product.price?.toFixed(2)}
-            </Badge>
+            <div className="flex flex-col gap-1 flex-shrink-0">
+              {product.points_cost && (
+                <Badge className="bg-amber-100 text-amber-800 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  {product.points_cost} pts
+                </Badge>
+              )}
+              {product.price && (
+                <Badge variant="outline" className="flex-shrink-0">
+                  ${product.price?.toFixed(2)}
+                </Badge>
+              )}
+            </div>
           </div>
           
           {product.category && (
@@ -194,8 +251,25 @@ function ProductCard({ product, featured = false }) {
           )}
         </CardHeader>
         
-        <CardContent>
-          {product.purchase_url ? (
+        <CardContent className="space-y-2">
+          {product.points_cost ? (
+            <Button
+              onClick={handleRedeemPoints}
+              disabled={!user || !hasEnoughPoints || redeeming === product.id}
+              className="w-full bg-amber-500 hover:bg-amber-600"
+            >
+              {redeeming === product.id ? (
+                <>Redeeming...</>
+              ) : !user ? (
+                <>Sign in to redeem</>
+              ) : !hasEnoughPoints ? (
+                <><AlertCircle className="w-4 h-4 mr-2" />Not enough points</>
+              ) : (
+                <><Sparkles className="w-4 h-4 mr-2" />Redeem Points</>
+              )}
+            </Button>
+          ) : null}
+          {product.purchase_url && (
             <a
               href={product.purchase_url}
               target="_blank"
@@ -207,10 +281,11 @@ function ProductCard({ product, featured = false }) {
                 disabled={!product.in_stock}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                {product.in_stock ? 'Purchase' : 'Out of Stock'}
+                {product.in_stock ? 'Buy' : 'Out of Stock'}
               </Button>
             </a>
-          ) : (
+          )}
+          {!product.points_cost && !product.purchase_url && (
             <Button 
               className="w-full"
               variant="outline"
