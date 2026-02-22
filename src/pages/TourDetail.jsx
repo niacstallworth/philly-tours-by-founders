@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import DaySchedule from '../components/tours/DaySchedule';
 import { Calendar, MapPin, Info } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 
 export default function TourDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -36,9 +34,6 @@ export default function TourDetail() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600 mb-4">Tour not found</p>
-          <Link to={createPageUrl('Home')}>
-            <Button>Back to Tours</Button>
-          </Link>
         </div>
       </div>
     );
