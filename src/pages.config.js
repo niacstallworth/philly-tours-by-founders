@@ -61,6 +61,7 @@ import Merchandise from './pages/Merchandise';
 import TourDetail from './pages/TourDetail';
 import UserSettings from './pages/UserSettings';
 import TagScanner from './pages/TagScanner';
+import AdminTags from './pages/AdminTags';
 import __Layout from './Layout.jsx';
 
 
@@ -79,6 +80,7 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "UserSettings": UserSettings,
     "TagScanner": TagScanner,
+    "AdminTags": AdminTags,
 }
 
 export const pagesConfig = {
