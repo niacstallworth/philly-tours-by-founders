@@ -56,11 +56,17 @@ export default function Merchandise() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
-      {/* Hero Section */}
+      {/* Hero Section with Video */}
       <div className="relative h-96 md:h-[500px] overflow-hidden text-white">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" />
+        <iframe
+          className="absolute inset-0 w-full h-full"
+          src="https://www.youtube.com/embed/ze-FCaRMC0M?t=119&autoplay=1&mute=1&loop=1&playlist=ze-FCaRMC0M&controls=0&modestbranding=1"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          style={{ pointerEvents: 'none' }}
+        />
         <div className="absolute inset-0 bg-black/40" />
-        
+
         <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -69,14 +75,14 @@ export default function Merchandise() {
           >
             <ShoppingBag className="w-16 h-16" />
           </motion.div>
-          
+
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Merchandise</h1>
            <p className="text-xl text-purple-200 max-w-2xl mx-auto">
              Explore our collection of exclusive Philadelphia-inspired products
-           </p>
-           <div className="mt-6 bg-white/15 backdrop-blur-sm border border-white/30 rounded-2xl px-6 py-4 max-w-lg mx-auto text-center">
-             <p className="text-white font-semibold text-sm">💡 Tip: Play hunts and scavenger games to earn points and redeem items for free!</p>
-           </div>
+            </p>
+            <div className="mt-6 bg-white/15 backdrop-blur-sm border border-white/30 rounded-2xl px-6 py-4 max-w-lg mx-auto text-center">
+              <p className="text-white font-semibold text-sm">💡 Tip: Play hunts and scavenger games to earn points and redeem items for free!</p>
+            </div>
           {user && userProfile && (
             <div className="mt-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-300" />
