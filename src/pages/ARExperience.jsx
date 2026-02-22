@@ -320,10 +320,10 @@ export default function ARExperience() {
                 onClick={() => startAR(true)}
                 size="lg"
                 variant="outline"
-                className="border-white/40 text-white hover:bg-white/10 px-8 rounded-full text-base"
+                className="border-white/40 text-white bg-white/10 hover:bg-white/20 px-8 rounded-full text-base"
                 disabled={sites.length === 0}
               >
-                ✨ Try Demo Mode
+                Try Demo Mode
               </Button>
             </div>
 
