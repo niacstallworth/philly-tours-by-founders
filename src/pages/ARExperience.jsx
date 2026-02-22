@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, MapPin, Glasses, Mail, CheckCircle, X, Info, Navigation, AlertCircle, Lock, Crown, Compass, Scan } from 'lucide-react';
+import { Camera, MapPin, Glasses, Mail, CheckCircle, X, Info, Navigation, AlertCircle, Lock, Crown, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
@@ -416,7 +416,7 @@ export default function ARExperience() {
 
         {/* Mode badge */}
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-white/80 text-xs font-semibold">
-          <Scan className="w-3.5 h-3.5 text-indigo-300" />{isDemoMode ? 'Demo Mode' : 'AR Live'}
+          {isDemoMode ? 'Demo Mode' : 'AR Live'}
         </div>
 
         {/* Demo mode banner */}

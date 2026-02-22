@@ -4,9 +4,8 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 
-import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock, Share2, Users, Crown } from 'lucide-react';
+import { MapPin, Clock, Trophy, CheckCircle2, Navigation, Lock, Share2, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';

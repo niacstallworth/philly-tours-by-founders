@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { QrCode, Camera, X, CheckCircle, AlertCircle, MapPin, Star, ScanLine } from 'lucide-react';
+import { QrCode, Camera, X, CheckCircle, AlertCircle, MapPin, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
@@ -151,8 +151,7 @@ export default function TagScanner() {
         </button>
 
         <div className="absolute bottom-24 left-0 right-0 z-20 flex flex-col items-center gap-3 px-6">
-          <div className="bg-black/60 backdrop-blur-sm rounded-full px-5 py-2.5 text-white/80 text-sm flex items-center gap-2">
-            <ScanLine className="w-4 h-4 text-indigo-300" />
+          <div className="bg-black/60 backdrop-blur-sm rounded-full px-5 py-2.5 text-white/80 text-sm">
             {'BarcodeDetector' in window ? 'Point camera at QR code or barcode' : 'Auto-scan not supported — use manual entry'}
           </div>
           <button

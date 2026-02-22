@@ -6,7 +6,7 @@ import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
 import HeroSection from '../components/home/HeroSection';
 import OnboardingModal from '../components/home/OnboardingModal';
-import { Compass, Map, Trophy, MapPin, Facebook, Instagram, Twitter, Youtube, Mail, Globe, Search, ShoppingBag } from 'lucide-react';
+import { Compass, Map, Trophy, Facebook, Instagram, Twitter, Youtube, Mail, Globe, Search, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
