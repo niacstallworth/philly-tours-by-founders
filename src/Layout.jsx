@@ -8,8 +8,9 @@ import BottomTabBar from './components/layout/BottomTabBar';
 import AdminDrawer from './components/layout/AdminDrawer';
 import PushNotificationPrompt from './components/notifications/PushNotificationPrompt';
 import OfflineIndicator from './components/OfflineIndicator';
+import InstallPrompt from './components/pwa/InstallPrompt';
 
-// Pages that show the bottom tab bar
+      // Pages that show the bottom tab bar
 const TAB_PAGES = ['Home', 'ARExperience', 'TagScanner', 'Leaderboard', 'Merchandise', 'UserSettings'];
 // Pages that are detail/deep pages (show Back button)
 const DETAIL_PAGES = ['HuntDetail', 'TourDetail'];
@@ -159,6 +160,7 @@ export default function Layout({ children, currentPageName }) {
 
       <OfflineIndicator />
       <PushNotificationPrompt />
+      <InstallPrompt />
       <Toaster position="top-center" richColors />
     </div>
   );
