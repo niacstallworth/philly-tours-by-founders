@@ -47,8 +47,22 @@ export default function ARExperience() {
   const canAccessSite = (site) => site.is_free || isElite;
 
   // Start camera
-  const startAR = async () => {
+  const startAR = async (demo = false) => {
     setCameraError(null);
+    if (demo) {
+      setIsDemoMode(true);
+      setMode('ar');
+      // Simulate being at the first site (or first free site)
+      const demoSite = sites.find(s => s.is_free) || sites[0];
+      if (demoSite) {
+        setTimeout(() => {
+          setNearbySite(demoSite);
+          setOverlayVisible(true);
+        }, 1200);
+      }
+      return;
+    }
+    setIsDemoMode(false);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
