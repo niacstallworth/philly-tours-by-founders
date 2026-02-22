@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, MapPin, Glasses, Mail, CheckCircle, X, Info, Navigation, AlertCircle, Lock, Crown } from 'lucide-react';
+import { Camera, MapPin, Glasses, Mail, CheckCircle, X, Info, Navigation, AlertCircle, Lock, Crown, Compass, Scan } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
