@@ -57,6 +57,65 @@ export default function UserSettings() {
             </div>
           </Card>
 
+          {/* Membership Status */}
+          <Card className="mb-4 overflow-hidden">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Membership</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+                <Crown className={`w-5 h-5 ${user?.membership === 'elite' || user?.role === 'admin' ? 'text-amber-500' : 'text-gray-300'}`} />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    {user?.membership === 'elite' || user?.role === 'admin' ? 'Elite Member' : 'Free Member'}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {user?.membership === 'elite' || user?.role === 'admin'
+                      ? 'All AR heritage sites unlocked'
+                      : 'Upgrade for full AR access'}
+                  </p>
+                </div>
+                {!(user?.membership === 'elite' || user?.role === 'admin') && (
+                  <a href="mailto:info@foundersthread.org?subject=Elite Membership" className="text-xs bg-amber-500 text-white px-3 py-1.5 rounded-full font-semibold">
+                    Upgrade
+                  </a>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Nav */}
+          <Card className="mb-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Explore</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {[
+                { href: '/Home', icon: MapPin, label: 'Tours & Scavenger Hunts' },
+                { href: '/ARExperience', icon: Crown, label: 'AR Heritage Viewer' },
+                { href: '/Merchandise', icon: ShoppingBag, label: 'Shop Merchandise' },
+              ].map(item => (
+                <a key={item.href} href={item.href} className="flex items-center justify-between px-5 py-4 border-b border-gray-100 last:border-0">
+                  <div className="flex items-center gap-3 text-gray-700">
+                    <item.icon className="w-5 h-5 text-gray-400" />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                </a>
+              ))}
+              <button
+                onClick={() => { sessionStorage.removeItem('onboarding_seen'); window.location.href = '/Home'; }}
+                className="flex items-center justify-between px-5 py-4 w-full text-left"
+              >
+                <div className="flex items-center gap-3 text-gray-700">
+                  <RotateCcw className="w-5 h-5 text-gray-400" />
+                  <span className="text-sm font-medium">Replay App Tour</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </button>
+            </CardContent>
+          </Card>
+
           {/* Account Section */}
           <Card className="mb-4">
             <CardHeader className="pb-2">
