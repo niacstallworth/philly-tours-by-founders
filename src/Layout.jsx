@@ -25,6 +25,8 @@ export default function Layout({ children, currentPageName }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeColors, setThemeColors] = useState(null);
   const location = useLocation();
+  const mainRef = useRef(null);
+  const scrollPositions = useRef({});
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -39,6 +41,27 @@ export default function Layout({ children, currentPageName }) {
       }
     });
   }, []);
+
+  // Preserve scroll position when switching between tab pages
+  useEffect(() => {
+    const el = mainRef.current;
+    if (!el) return;
+    // Save scroll of outgoing page (runs on page name change before new render)
+    return () => {
+      scrollPositions.current[currentPageName] = el.scrollTop;
+    };
+  }, [currentPageName]);
+
+  useEffect(() => {
+    const el = mainRef.current;
+    if (!el) return;
+    const saved = scrollPositions.current[currentPageName];
+    if (TAB_PAGES.includes(currentPageName) && saved != null) {
+      el.scrollTop = saved;
+    } else if (!DETAIL_PAGES.includes(currentPageName)) {
+      el.scrollTop = 0;
+    }
+  }, [currentPageName]);
 
   const isAdmin = user?.role === 'admin';
   const showBottomBar = TAB_PAGES.includes(currentPageName) || DETAIL_PAGES.includes(currentPageName);
@@ -103,6 +126,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Page Content with safe-area + header offset */}
       <main
+        ref={mainRef}
         className="flex-1 overflow-y-auto"
         style={{
           paddingTop: 'calc(56px + env(safe-area-inset-top))',
