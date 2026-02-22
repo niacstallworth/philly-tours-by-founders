@@ -253,8 +253,17 @@ export default function ARExperience() {
         </AnimatePresence>
 
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-white/80 text-xs font-semibold">
-          <Glasses className="w-3.5 h-3.5" />AR Mode
+          <Glasses className="w-3.5 h-3.5" />{isDemoMode ? 'Demo Mode' : 'AR Mode'}
         </div>
+
+        {/* Demo mode banner */}
+        {isDemoMode && (
+          <div className="absolute top-14 left-0 right-0 z-20 flex justify-center px-4">
+            <div className="bg-amber-500/80 backdrop-blur-sm rounded-full px-5 py-2 text-white text-xs font-semibold flex items-center gap-2">
+              ✨ Demo — simulating GPS location at heritage sites
+            </div>
+          </div>
+        )}
       </div>
     );
   }
