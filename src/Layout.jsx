@@ -1,210 +1,133 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
-import { 
-  Home, 
-  Map, 
-  MapPin, 
-  Settings, 
-  Menu, 
-  X, 
-  Upload,
-  Image,
-  LogOut,
-  ShoppingBag,
-  Trophy,
-  Wrench,
-  Glasses
-} from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import AppHeader from './components/layout/AppHeader';
+import BottomTabBar from './components/layout/BottomTabBar';
+import AdminDrawer from './components/layout/AdminDrawer';
+
+// Pages that show the bottom tab bar
+const TAB_PAGES = ['Home', 'ARExperience', 'Merchandise', 'UserSettings'];
+// Pages that are detail/deep pages (show Back button)
+const DETAIL_PAGES = ['HuntDetail', 'TourDetail'];
+// Pages that hide the bottom tab bar (admin)
+const ADMIN_PAGES = ['AdminTours', 'AdminHunts', 'AdminImport', 'AdminImportGPS', 'AdminMerchandise', 'AdminSettings'];
+
+const pageVariants = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -6 },
+};
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeColors, setThemeColors] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
-    
     base44.entities.HomePageSettings.list().then(list => {
       if (list[0]) {
         setThemeColors({
           primary: list[0].primary_color || '#4f46e5',
           primaryHover: list[0].primary_hover || '#4338ca',
           secondary: list[0].secondary_color || '#7c3aed',
-          accent: list[0].accent_color || '#6366f1'
+          accent: list[0].accent_color || '#6366f1',
         });
       }
     });
   }, []);
 
   const isAdmin = user?.role === 'admin';
-
-  const navItems = [
-    { name: 'Home', icon: Home, page: 'Home' },
-    { name: 'AR Experience', icon: Glasses, page: 'ARExperience' },
-    { name: 'Merchandise', icon: ShoppingBag, page: 'Merchandise' },
-  ];
-
-  const adminItems = [
-    { name: 'Manage Tours', icon: Image, page: 'AdminTours' },
-    { name: 'Manage Hunts', icon: Trophy, page: 'AdminHunts' },
-    { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
-    { name: 'Import GPS Tours', icon: MapPin, page: 'AdminImportGPS' },
-    { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
-    { name: 'Site Settings', icon: Wrench, page: 'AdminSettings' },
-  ];
+  const showBottomBar = TAB_PAGES.includes(currentPageName) || DETAIL_PAGES.includes(currentPageName);
+  const showAdminHamburger = isAdmin && !ADMIN_PAGES.includes(currentPageName);
+  const primary = themeColors?.primary || '#4f46e5';
 
   return (
-    <div className="min-h-screen">
-      {themeColors && (
-        <style>{`
-          :root {
-            --theme-primary: ${themeColors.primary};
-            --theme-primary-hover: ${themeColors.primaryHover};
-            --theme-secondary: ${themeColors.secondary};
-            --theme-accent: ${themeColors.accent};
-          }
-          .bg-theme-primary { background-color: var(--theme-primary) !important; }
-          .bg-theme-primary-hover:hover { background-color: var(--theme-primary-hover) !important; }
-          .text-theme-primary { color: var(--theme-primary) !important; }
-          .text-theme-secondary { color: var(--theme-secondary) !important; }
-          .text-theme-accent { color: var(--theme-accent) !important; }
-          .border-theme-primary { border-color: var(--theme-primary) !important; }
-          .text-theme-admin { color: var(--theme-accent) !important; }
-        `}</style>
+    <div
+      className="min-h-screen flex flex-col bg-gray-50"
+      style={{ overscrollBehavior: 'none', WebkitOverflowScrolling: 'touch' }}
+    >
+      {/* Global CSS injections */}
+      <style>{`
+        * { -webkit-tap-highlight-color: transparent; }
+        body { overscroll-behavior: none; }
+        nav button, nav a { user-select: none; -webkit-user-select: none; }
+
+        :root {
+          --theme-primary: ${primary};
+          --theme-primary-hover: ${themeColors?.primaryHover || '#4338ca'};
+          --theme-secondary: ${themeColors?.secondary || '#7c3aed'};
+          --theme-accent: ${themeColors?.accent || '#6366f1'};
+        }
+        .bg-theme-primary { background-color: var(--theme-primary) !important; }
+        .text-theme-primary { color: var(--theme-primary) !important; }
+        .text-theme-secondary { color: var(--theme-secondary) !important; }
+        .text-theme-accent { color: var(--theme-accent) !important; }
+        .border-theme-primary { border-color: var(--theme-primary) !important; }
+      `}</style>
+
+      {/* Top Header */}
+      <AppHeader
+        currentPageName={currentPageName}
+        themeColors={themeColors}
+        menuOpen={menuOpen}
+        onMenuToggle={() => setMenuOpen(v => !v)}
+      />
+
+      {/* Admin slide-in drawer (hamburger) */}
+      {isAdmin && (
+        <AdminDrawer
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          themeColors={themeColors}
+          currentPageName={currentPageName}
+          onLogout={() => base44.auth.logout()}
+        />
       )}
-      {/* Top Navigation */}
-      <nav className="bg-theme-primary text-white shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-              <span className="font-bold text-lg">Founders Threads</span>
-            </Link>
 
-            {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-6">
-              {navItems.map((item) => (
-                <Link
-                  key={item.page}
-                  to={createPageUrl(item.page)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                    currentPageName === item.page 
-                      ? 'bg-white/20' 
-                      : 'hover:bg-white/10'
-                  }`}
-                >
-                  <item.icon className="w-4 h-4" />
-                  {item.name}
-                </Link>
-              ))}
-
-              {isAdmin && (
-                <>
-                  <div className="w-px h-6 bg-white/30" />
-                  {adminItems.map((item) => (
-                    <Link
-                      key={item.page}
-                      to={createPageUrl(item.page)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                        currentPageName === item.page 
-                          ? 'bg-white/20' 
-                          : 'hover:bg-white/10'
-                      }`}
-                      style={{color: themeColors?.accent}}
-                    >
-                      <item.icon className="w-4 h-4" />
-                      {item.name}
-                    </Link>
-                  ))}
-                </>
-              )}
-
-              {user && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => base44.auth.logout()}
-                  className="text-white hover:bg-white/10"
-                >
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+      {/* Desktop top nav for admin pages */}
+      {ADMIN_PAGES.includes(currentPageName) && (
+        <div
+          className="hidden md:flex sticky top-0 z-40 items-center gap-1 px-4 py-2 text-white text-sm"
+          style={{ backgroundColor: primary, marginTop: 0 }}
+        >
+          {/* admin breadcrumb hint */}
+          <span className="opacity-70">Admin</span>
+          <span className="opacity-40 mx-1">/</span>
+          <span className="font-semibold">{currentPageName.replace('Admin', '')}</span>
         </div>
+      )}
 
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="md:hidden bg-theme-primary border-t border-white/10" style={{backgroundColor: themeColors?.primary}}>
-            <div className="px-4 py-4 space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.page}
-                  to={createPageUrl(item.page)}
-                  onClick={() => setMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
-                    currentPageName === item.page 
-                      ? 'bg-white/20' 
-                      : 'hover:bg-white/10'
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  {item.name}
-                </Link>
-              ))}
+      {/* Page Content with safe-area + header offset */}
+      <main
+        className="flex-1 overflow-y-auto"
+        style={{
+          paddingTop: 'calc(56px + env(safe-area-inset-top))',
+          paddingBottom: showBottomBar ? 'calc(64px + env(safe-area-inset-bottom))' : 'env(safe-area-inset-bottom)',
+        }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPageName}
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
+      </main>
 
-              {isAdmin && (
-                <>
-                  <div className="border-t border-white/20 my-2 pt-2">
-                    <p className="px-4 text-xs uppercase font-medium mb-2" style={{color: themeColors?.accent}}>Admin</p>
-                  </div>
-                  {adminItems.map((item) => (
-                    <Link
-                      key={item.page}
-                      to={createPageUrl(item.page)}
-                      onClick={() => setMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
-                        currentPageName === item.page 
-                          ? 'bg-white/20' 
-                          : 'hover:bg-white/10'
-                      }`}
-                      style={{color: themeColors?.accent}}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      {item.name}
-                    </Link>
-                  ))}
-                </>
-              )}
+      {/* Bottom Tab Bar — mobile only, shown on main + detail pages */}
+      {showBottomBar && (
+        <BottomTabBar currentPageName={currentPageName} themeColors={themeColors} />
+      )}
 
-              {user && (
-                <button
-                  onClick={() => base44.auth.logout()}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 w-full text-left"
-                >
-                  <LogOut className="w-5 h-5" />
-                  Logout
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Page Content */}
-      <main>{children}</main>
       <Toaster position="top-center" richColors />
     </div>
   );
