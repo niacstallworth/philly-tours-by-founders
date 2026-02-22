@@ -9,7 +9,7 @@ import AdminDrawer from './components/layout/AdminDrawer';
 import PushNotificationPrompt from './components/notifications/PushNotificationPrompt';
 
 // Pages that show the bottom tab bar
-const TAB_PAGES = ['Home', 'ARExperience', 'TagScanner', 'Leaderboard', 'UserSettings'];
+const TAB_PAGES = ['Home', 'ARExperience', 'TagScanner', 'Leaderboard', 'Merchandise', 'UserSettings'];
 // Pages that are detail/deep pages (show Back button)
 const DETAIL_PAGES = ['HuntDetail', 'TourDetail'];
 // Pages that hide the bottom tab bar (admin)

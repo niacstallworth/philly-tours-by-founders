@@ -9,6 +9,7 @@ const tabs = [
   { name: 'AR', icon: Glasses, page: 'ARExperience', label: 'AR' },
   { name: 'Scan', icon: QrCode, page: 'TagScanner', label: 'Scan' },
   { name: 'Leaderboard', icon: Trophy, page: 'Leaderboard', label: 'Board' },
+  { name: 'Shop', icon: ShoppingBag, page: 'Merchandise', label: 'Shop' },
   { name: 'Settings', icon: Settings, page: 'UserSettings', label: 'Settings' },
 ];
 
