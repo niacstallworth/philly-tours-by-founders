@@ -57,7 +57,7 @@ export default function HeroSection({ settings, onExplore }) {
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69227c15039c9c847b675240/08e68c1d2_304bfa31-6011-4657-bfd8-42771fa596c0.png"
             alt={title}
-            className="max-w-xs md:max-w-2xl mx-auto mb-6 h-auto"
+            className="max-w-xs md:max-w-2xl mx-auto mb-2 h-auto"
           />
 
           <p className="text-xl md:text-2xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed">
