@@ -7,6 +7,7 @@ import AppHeader from './components/layout/AppHeader';
 import BottomTabBar from './components/layout/BottomTabBar';
 import AdminDrawer from './components/layout/AdminDrawer';
 import PushNotificationPrompt from './components/notifications/PushNotificationPrompt';
+import OfflineIndicator from './components/OfflineIndicator';
 
 // Pages that show the bottom tab bar
 const TAB_PAGES = ['Home', 'ARExperience', 'TagScanner', 'Leaderboard', 'Merchandise', 'UserSettings'];
@@ -156,6 +157,7 @@ export default function Layout({ children, currentPageName }) {
         <BottomTabBar currentPageName={currentPageName} themeColors={themeColors} />
       )}
 
+      <OfflineIndicator />
       <PushNotificationPrompt />
       <Toaster position="top-center" richColors />
     </div>

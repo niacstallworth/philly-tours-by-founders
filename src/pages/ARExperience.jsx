@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import { getOfflineDB, preloadHeritageSites, getCachedHeritageSites, isOnline } from '@/components/offlineSync';
 
 function distance(lat1, lng1, lat2, lng2) {
   const R = 6371000;
@@ -40,11 +41,27 @@ export default function ARExperience() {
 
   const { data: sites = [] } = useQuery({
     queryKey: ['heritage-sites'],
-    queryFn: () => base44.entities.HeritageSite.list(),
+    queryFn: async () => {
+      try {
+        const data = await base44.entities.HeritageSite.list();
+        if (isOnline() && data.length > 0) {
+          await preloadHeritageSites(data);
+        }
+        return data;
+      } catch (error) {
+        // Fall back to cached data if offline
+        if (!isOnline()) {
+          return await getCachedHeritageSites();
+        }
+        throw error;
+      }
+    },
   });
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
+    // Preload cached sites on mount
+    getCachedHeritageSites().catch(console.error);
   }, []);
 
   const isElite = user?.role === 'admin' || user?.membership === 'elite';
