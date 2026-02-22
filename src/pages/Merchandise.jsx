@@ -57,14 +57,23 @@ export default function Merchandise() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
       {/* Hero Section with Video */}
-      <div className="relative h-96 md:h-[500px] overflow-hidden text-white">
-        <iframe
-          className="absolute inset-0 w-full h-full"
-          src="https://www.youtube.com/embed/ze-FCaRMC0M?t=119&autoplay=1&mute=1&loop=1&playlist=ze-FCaRMC0M&controls=0&modestbranding=1"
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          style={{ pointerEvents: 'none' }}
-        />
+      <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-black">
+        <div className="absolute inset-0 w-full h-full">
+          <iframe
+            src="https://www.youtube.com/embed/ze-FCaRMC0M?t=119&autoplay=1&mute=1&loop=1&playlist=ze-FCaRMC0M&controls=0&modestbranding=1"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '120%',
+              height: '120%',
+              pointerEvents: 'none'
+            }}
+          />
+        </div>
         <div className="absolute inset-0 bg-black/40" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
