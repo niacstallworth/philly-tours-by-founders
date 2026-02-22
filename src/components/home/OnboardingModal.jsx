@@ -32,15 +32,15 @@ export default function OnboardingModal({ onClose }) {
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Welcome to Founders Threads</h2>
         <p className="text-sm text-gray-500 dark:text-slate-400 mb-5">Explore Philadelphia's heritage through:</p>
 
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="flex flex-col gap-2 mb-5">
           {features.map((f) => (
-            <div key={f.title} className={`${f.bg} rounded-2xl p-3.5 flex flex-col gap-2`}>
-              <div className="w-8 h-8 rounded-xl bg-white/70 flex items-center justify-center">
+            <div key={f.title} className={`${f.bg} rounded-xl px-3 py-2.5 flex items-center gap-3`}>
+              <div className="w-8 h-8 rounded-lg bg-white/70 flex items-center justify-center shrink-0">
                 {f.icon}
               </div>
               <div>
                 <div className="text-sm font-semibold text-gray-800">{f.title}</div>
-                <div className="text-xs text-gray-500 leading-snug mt-0.5">{f.desc}</div>
+                <div className="text-xs text-gray-500 leading-snug">{f.desc}</div>
               </div>
             </div>
           ))}
