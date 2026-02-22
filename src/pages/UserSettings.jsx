@@ -9,6 +9,7 @@ import { User, LogOut, Trash2, ChevronRight, Shield, Mail, Crown, MapPin, Trophy
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import HuntHistory from '../components/settings/HuntHistory';
+import BadgeShowcase from '../components/badges/BadgeShowcase';
 
 export default function UserSettings() {
   const [user, setUser] = useState(null);
@@ -187,6 +188,9 @@ export default function UserSettings() {
               )}
             </CardContent>
           </Card>
+
+          {/* Badges Showcase */}
+          {user && <BadgeShowcase userEmail={user?.email} user={user} />}
 
           {/* Hunt History */}
           {user && <HuntHistory user={user} />}
