@@ -70,12 +70,26 @@ export default function HuntDetail() {
         ...(isComplete && { completed_at: new Date().toISOString() })
       });
     },
-    onSuccess: (_, { stopNumber }) => {
+    onSuccess: async (_, { stopNumber }) => {
       queryClient.invalidateQueries({ queryKey: ['hunt-progress', huntId] });
       setCheckingLocation(null);
       // Remove from optimistic once server confirms (server state takes over)
       setOptimisticCompleted(prev => prev.filter(n => n !== stopNumber));
       toast.success('Stop verified!');
+
+      // Check if hunt is now complete and update stats
+      const newCompleted = [...(progress.completed_stops || []), stopNumber];
+      if (newCompleted.length === hunt.stops.length && user?.email) {
+        try {
+          await base44.functions.invoke('updateUserStats', {
+            points_earned: 0,
+            hunt_completed: true,
+          });
+          toast.success('🏆 Hunt recorded to leaderboard!');
+        } catch (error) {
+          console.error('Failed to update stats:', error);
+        }
+      }
     },
     onError: (_, { stopNumber }) => {
       // Roll back optimistic update on failure

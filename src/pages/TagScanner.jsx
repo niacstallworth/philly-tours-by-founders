@@ -55,6 +55,13 @@ export default function TagScanner() {
           site_name: tag.site_name,
           points_earned: tag.reward_points || 10,
         });
+        // Update user leaderboard stats
+        if (user?.email) {
+          await base44.functions.invoke('updateUserStats', {
+            points_earned: tag.reward_points || 10,
+            hunt_completed: false,
+          });
+        }
       }
       setMode('result');
     } catch (e) {
