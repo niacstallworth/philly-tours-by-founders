@@ -1,10 +1,29 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Home, Glasses, ShoppingBag, Settings, QrCode, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const tabs = [
+interface Tab {
+  name: string;
+  icon: React.ElementType;
+  page: string;
+  label: string;
+}
+
+interface ThemeColors {
+  primary?: string;
+  primaryHover?: string;
+  secondary?: string;
+  accent?: string;
+}
+
+interface BottomTabBarProps {
+  currentPageName: string;
+  themeColors?: ThemeColors | null;
+}
+
+const tabs: Tab[] = [
   { name: 'Home', icon: Home, page: 'Home', label: 'Home' },
   { name: 'AR', icon: Glasses, page: 'ARExperience', label: 'AR' },
   { name: 'Scan', icon: QrCode, page: 'TagScanner', label: 'Scan' },
@@ -13,9 +32,8 @@ const tabs = [
   { name: 'Settings', icon: Settings, page: 'UserSettings', label: 'Settings' },
 ];
 
-export default function BottomTabBar({ currentPageName, themeColors }) {
-  // Wait for theme to load before applying color to avoid flash
-  const primary = themeColors ? (themeColors.primary || '#4f46e5') : '#9ca3af';
+export default function BottomTabBar({ currentPageName, themeColors }: BottomTabBarProps): JSX.Element {
+  const primary = themeColors?.primary || '#4f46e5';
 
   return (
     <nav
@@ -27,8 +45,9 @@ export default function BottomTabBar({ currentPageName, themeColors }) {
       }}
     >
       <div className="flex items-stretch">
-        {tabs.map((tab) => {
+        {tabs.map((tab: Tab) => {
           const isActive = currentPageName === tab.page;
+          const IconComponent = tab.icon;
           return (
             <Link
               key={tab.page}
@@ -44,7 +63,7 @@ export default function BottomTabBar({ currentPageName, themeColors }) {
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
-              <tab.icon
+              <IconComponent
                 className="w-5 h-5"
                 style={{ color: isActive ? primary : '#9ca3af' }}
               />
