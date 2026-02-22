@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PullToRefresh from '../components/ui/PullToRefresh';
 import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
 import HeroSection from '../components/home/HeroSection';
+import OnboardingModal from '../components/home/OnboardingModal';
 import { Compass, Map, Trophy, MapPin, Facebook, Instagram, Twitter, Youtube, Mail, Globe, Search, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,6 +20,18 @@ export default function Home() {
   const [tourCategory, setTourCategory] = useState('all');
   const contentRef = useRef(null);
   const queryClient = useQueryClient();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('onboarding_seen')) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleCloseOnboarding = () => {
+    sessionStorage.setItem('onboarding_seen', '1');
+    setShowOnboarding(false);
+  };
 
   const handleRefresh = async () => {
     await Promise.all([
