@@ -138,20 +138,15 @@ export default function Home() {
       {/* Content */}
       <div ref={contentRef} className="max-w-7xl mx-auto px-6 py-14 dark:text-white">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-4 mb-10">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-10">
             <TabsTrigger value="tours" className="flex items-center gap-1.5">
               <Map className="w-4 h-4" />
-              <span className="hidden sm:inline">Tours</span>
-              <span className="sm:hidden">Tours</span>
+              Tours
             </TabsTrigger>
             <TabsTrigger value="hunts" className="flex items-center gap-1.5">
               <Trophy className="w-4 h-4" />
               <span className="hidden sm:inline">Scavenger Hunts</span>
               <span className="sm:hidden">Hunts</span>
-            </TabsTrigger>
-            <TabsTrigger value="shop" className="flex items-center gap-1.5">
-              <ShoppingBag className="w-4 h-4" />
-              Shop
             </TabsTrigger>
             <TabsTrigger value="map" className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4" />
