@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Menu, X } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 const DETAIL_PAGES = ['HuntDetail', 'TourDetail'];
 
