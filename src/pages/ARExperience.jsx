@@ -308,13 +308,24 @@ export default function ARExperience() {
               </div>
             )}
 
-            <Button
-              onClick={startAR}
-              size="lg"
-              className="bg-white text-indigo-900 hover:bg-white/90 font-bold px-10 rounded-full text-base"
-            >
-              <Camera className="w-5 h-5 mr-2" />Launch AR Camera
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                onClick={() => startAR(false)}
+                size="lg"
+                className="bg-white text-indigo-900 hover:bg-white/90 font-bold px-10 rounded-full text-base"
+              >
+                <Camera className="w-5 h-5 mr-2" />Launch AR Camera
+              </Button>
+              <Button
+                onClick={() => startAR(true)}
+                size="lg"
+                variant="outline"
+                className="border-white/40 text-white hover:bg-white/10 px-8 rounded-full text-base"
+                disabled={sites.length === 0}
+              >
+                ✨ Try Demo Mode
+              </Button>
+            </div>
 
             {!user && (
               <p className="mt-4 text-white/50 text-sm">
