@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Home, Glasses, ShoppingBag, Settings, QrCode } from 'lucide-react';
+import { Home, Glasses, ShoppingBag, Settings, QrCode, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const tabs = [
   { name: 'Home', icon: Home, page: 'Home', label: 'Home' },
   { name: 'AR', icon: Glasses, page: 'ARExperience', label: 'AR' },
   { name: 'Scan', icon: QrCode, page: 'TagScanner', label: 'Scan' },
-  { name: 'Shop', icon: ShoppingBag, page: 'Merchandise', label: 'Shop' },
+  { name: 'Leaderboard', icon: Trophy, page: 'Leaderboard', label: 'Board' },
   { name: 'Settings', icon: Settings, page: 'UserSettings', label: 'Settings' },
 ];
 

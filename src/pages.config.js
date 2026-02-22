@@ -62,6 +62,7 @@ import Merchandise from './pages/Merchandise';
 import TagScanner from './pages/TagScanner';
 import TourDetail from './pages/TourDetail';
 import UserSettings from './pages/UserSettings';
+import Leaderboard from './pages/Leaderboard';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "TagScanner": TagScanner,
     "TourDetail": TourDetail,
     "UserSettings": UserSettings,
+    "Leaderboard": Leaderboard,
 }
 
 export const pagesConfig = {
