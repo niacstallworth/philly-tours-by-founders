@@ -22,6 +22,14 @@ export default function Merchandise() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
+  const { data: settings } = useQuery({
+    queryKey: ['homepage-settings'],
+    queryFn: async () => {
+      const list = await base44.entities.HomePageSettings.list();
+      return list[0] || null;
+    }
+  });
+
   const handleRefresh = async () => {
     await queryClient.invalidateQueries({ queryKey: ['products'] });
   };
