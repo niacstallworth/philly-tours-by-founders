@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import PullToRefresh from '../components/ui/PullToRefresh';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,11 @@ import { motion } from 'framer-motion';
 export default function Merchandise() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const queryClient = useQueryClient();
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ['products'] });
+  };
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
@@ -32,7 +38,8 @@ export default function Merchandise() {
   const regularProducts = filteredProducts.filter(p => !p.featured);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30">
+    <PullToRefresh onRefresh={handleRefresh}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
       {/* Hero Section */}
       <div className="relative h-96 md:h-[500px] overflow-hidden text-white">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" />
@@ -125,11 +132,12 @@ export default function Merchandise() {
         {!isLoading && filteredProducts.length === 0 && (
           <div className="text-center py-20">
             <ShoppingBag className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500 text-lg">No products found</p>
+            <p className="text-gray-500 dark:text-slate-400 text-lg">No products found</p>
           </div>
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }
 
