@@ -77,8 +77,13 @@ export default function UserSettings() {
                   </p>
                 </div>
                 {!(user?.membership === 'elite' || user?.role === 'admin') && (
-                  <a href="mailto:info@foundersthread.org?subject=Elite Membership" className="text-xs bg-amber-500 text-white px-3 py-1.5 rounded-full font-semibold">
-                    Upgrade
+                  <a
+                    href="https://buy.stripe.com/test_28EbJ3bmv9rz59SgWw6sw00"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs bg-amber-500 text-white px-3 py-1.5 rounded-full font-semibold whitespace-nowrap"
+                  >
+                    Upgrade — 90 days free
                   </a>
                 )}
               </div>
