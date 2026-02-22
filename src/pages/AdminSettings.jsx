@@ -24,26 +24,32 @@ export default function AdminSettings() {
   const [form, setForm] = useState(null);
 
   React.useEffect(() => {
-    if (settings && !form) {
-      setForm({
-        hero_title: settings.hero_title || 'Founders Threads',
-        hero_subtitle: settings.hero_subtitle || '',
-        hero_image_url: settings.hero_image_url || '',
-        hero_video_url: settings.hero_video_url || '',
-        hero_video_embed: settings.hero_video_embed || '',
-        primary_color: settings.primary_color || '#4f46e5',
-        primary_hover: settings.primary_hover || '#4338ca',
-        secondary_color: settings.secondary_color || '#7c3aed',
-        accent_color: settings.accent_color || '#6366f1',
-        video_opacity: settings.video_opacity ?? 20,
-        facebook_url: settings.facebook_url || '',
-        instagram_url: settings.instagram_url || '',
-        twitter_url: settings.twitter_url || '',
-        youtube_url: settings.youtube_url || '',
-        tiktok_url: settings.tiktok_url || '',
-        website_url: settings.website_url || 'https://founderstory.square.site/',
-      });
-    }
+   if (settings && !form) {
+     setForm({
+       hero_title: settings.hero_title || 'Founders Threads',
+       hero_subtitle: settings.hero_subtitle || '',
+       hero_image_url: settings.hero_image_url || '',
+       hero_video_url: settings.hero_video_url || '',
+       hero_video_embed: settings.hero_video_embed || '',
+       merchandise_hero_title: settings.merchandise_hero_title || 'Merchandise',
+       merchandise_hero_subtitle: settings.merchandise_hero_subtitle || '',
+       merchandise_hero_image_url: settings.merchandise_hero_image_url || '',
+       merchandise_hero_video_url: settings.merchandise_hero_video_url || '',
+       merchandise_hero_video_embed: settings.merchandise_hero_video_embed || '',
+       primary_color: settings.primary_color || '#4f46e5',
+       primary_hover: settings.primary_hover || '#4338ca',
+       secondary_color: settings.secondary_color || '#7c3aed',
+       accent_color: settings.accent_color || '#6366f1',
+       video_opacity: settings.video_opacity ?? 20,
+       merchandise_video_opacity: settings.merchandise_video_opacity ?? 20,
+       facebook_url: settings.facebook_url || '',
+       instagram_url: settings.instagram_url || '',
+       twitter_url: settings.twitter_url || '',
+       youtube_url: settings.youtube_url || '',
+       tiktok_url: settings.tiktok_url || '',
+       website_url: settings.website_url || 'https://founderstory.square.site/',
+     });
+   }
   }, [settings]);
 
   const saveMutation = useMutation({
