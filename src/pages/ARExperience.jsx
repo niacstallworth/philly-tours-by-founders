@@ -111,6 +111,81 @@ export default function ARExperience() {
     return () => clearInterval(interval);
   }, [mode, isDemoMode, sites]);
 
+  // Canvas AR overlay renderer
+  const drawAROverlay = useCallback(() => {
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    if (!canvas || !video || isDemoMode) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw scanning grid lines (subtle AR effect)
+    ctx.strokeStyle = 'rgba(99,102,241,0.15)';
+    ctx.lineWidth = 1;
+    const gridSize = 60;
+    for (let x = 0; x < canvas.width; x += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += gridSize) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+
+    // Draw corner brackets (AR frame indicator)
+    const bSize = 28;
+    const bGap = 44;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2 - 40;
+    ctx.strokeStyle = nearbySite ? 'rgba(99,255,160,0.85)' : 'rgba(99,102,241,0.6)';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    // TL
+    ctx.beginPath(); ctx.moveTo(cx - bGap, cy - bGap + bSize); ctx.lineTo(cx - bGap, cy - bGap); ctx.lineTo(cx - bGap + bSize, cy - bGap); ctx.stroke();
+    // TR
+    ctx.beginPath(); ctx.moveTo(cx + bGap - bSize, cy - bGap); ctx.lineTo(cx + bGap, cy - bGap); ctx.lineTo(cx + bGap, cy - bGap + bSize); ctx.stroke();
+    // BL
+    ctx.beginPath(); ctx.moveTo(cx - bGap, cy + bGap - bSize); ctx.lineTo(cx - bGap, cy + bGap); ctx.lineTo(cx - bGap + bSize, cy + bGap); ctx.stroke();
+    // BR
+    ctx.beginPath(); ctx.moveTo(cx + bGap - bSize, cy + bGap); ctx.lineTo(cx + bGap, cy + bGap); ctx.lineTo(cx + bGap, cy + bGap - bSize); ctx.stroke();
+
+    // Draw nearest-site direction indicator if outside range
+    if (!nearbySite && nearestSite && heading !== null && userPos) {
+      const dLat = nearestSite.latitude - userPos.lat;
+      const dLng = nearestSite.longitude - userPos.lng;
+      const bearingRad = Math.atan2(dLng, dLat);
+      const bearingDeg = (bearingRad * 180) / Math.PI;
+      const relAngle = ((bearingDeg - heading + 360) % 360) * (Math.PI / 180);
+      const arrowX = cx + Math.sin(relAngle) * 70;
+      const arrowY = cy - Math.cos(relAngle) * 70;
+      ctx.beginPath();
+      ctx.arc(arrowX, arrowY, 14, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(99,102,241,0.4)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(99,102,241,0.9)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(arrowX, arrowY);
+      ctx.rotate(relAngle);
+      ctx.beginPath();
+      ctx.moveTo(0, -8); ctx.lineTo(5, 4); ctx.lineTo(-5, 4);
+      ctx.closePath();
+      ctx.fillStyle = 'white';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    animFrameRef.current = requestAnimationFrame(drawAROverlay);
+  }, [isDemoMode, nearbySite, nearestSite, heading, userPos]);
+
+  useEffect(() => {
+    if (mode !== 'ar') { cancelAnimationFrame(animFrameRef.current); return; }
+    animFrameRef.current = requestAnimationFrame(drawAROverlay);
+    return () => cancelAnimationFrame(animFrameRef.current);
+  }, [mode, drawAROverlay]);
+
   // GPS watch
   useEffect(() => {
     if (mode !== 'ar' || isDemoMode) return;
@@ -118,19 +193,33 @@ export default function ARExperience() {
       pos => {
         const { latitude, longitude } = pos.coords;
         setUserPos({ lat: latitude, lng: longitude });
+
+        // Find site within radius
         const nearby = sites.find(
           site => distance(latitude, longitude, site.latitude, site.longitude) <= (site.radius || 200)
         );
+
+        // Find absolute nearest site for direction arrow
+        let minDist = Infinity, nearest = null;
+        sites.forEach(site => {
+          const d = distance(latitude, longitude, site.latitude, site.longitude);
+          if (d < minDist) { minDist = d; nearest = site; }
+        });
+        setNearestSite(nearest);
+        setNearestDistance(Math.round(minDist));
+
         if (nearby && nearby.id !== nearbySite?.id) {
           setNearbySite(nearby);
           setOverlayVisible(true);
+          setScanPulse(true);
+          setTimeout(() => setScanPulse(false), 1500);
         } else if (!nearby) {
           setNearbySite(null);
           setOverlayVisible(false);
         }
       },
       () => {},
-      { enableHighAccuracy: true, maximumAge: 3000 }
+      { enableHighAccuracy: true, maximumAge: 2000 }
     );
     return () => navigator.geolocation.clearWatch(watchId);
   }, [mode, nearbySite?.id, sites]);
