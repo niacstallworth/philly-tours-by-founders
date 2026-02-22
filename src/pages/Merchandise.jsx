@@ -60,7 +60,7 @@ export default function Merchandise() {
       <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-black">
         <div className="absolute inset-0 w-full h-full">
           <iframe
-            src="https://www.youtube.com/embed/ze-FCaRMC0M?t=119&autoplay=1&mute=1&loop=1&playlist=ze-FCaRMC0M&controls=0&modestbranding=1"
+            src="https://www.youtube.com/embed/TonPbG2M3fU?autoplay=1&mute=1&loop=1&playlist=TonPbG2M3fU&controls=0&modestbranding=1"
             frameBorder="0"
             allow="autoplay; encrypted-media"
             style={{
