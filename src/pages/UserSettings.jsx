@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { User, LogOut, Trash2, ChevronRight, Shield, Mail } from 'lucide-react';
+import { User, LogOut, Trash2, ChevronRight, Shield, Mail, Crown, MapPin, Trophy, ShoppingBag, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
