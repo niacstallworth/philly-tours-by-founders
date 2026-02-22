@@ -20,7 +20,7 @@ export default function OnboardingModal({ onClose }) {
         onClick={onClose}
       />
       <motion.div
-        className="relative w-full sm:max-w-sm mx-auto bg-white dark:bg-slate-800 rounded-t-3xl sm:rounded-3xl shadow-2xl px-6 pt-7 pb-7 z-10"
+        className="relative w-full sm:max-w-sm mx-auto bg-white dark:bg-slate-800 rounded-t-3xl sm:rounded-3xl shadow-2xl px-6 pt-7 pb-7 z-10 max-h-[90dvh] overflow-y-auto"
         initial={{ y: 80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: 'spring', damping: 22, stiffness: 280 }}
