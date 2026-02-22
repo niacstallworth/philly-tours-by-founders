@@ -100,7 +100,7 @@ export default function Layout({ children, currentPageName }) {
         currentPageName={currentPageName}
         themeColors={themeColors}
         menuOpen={menuOpen}
-        onMenuToggle={() => setMenuOpen(v => !v)}
+        onMenuToggle={null}
       />
 
       {/* Admin slide-in drawer (hamburger) */}
