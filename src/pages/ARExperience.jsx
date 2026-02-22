@@ -20,6 +20,7 @@ function distance(lat1, lng1, lat2, lng2) {
 
 export default function ARExperience() {
   const [mode, setMode] = useState('home'); // home | ar
+  const [isDemoMode, setIsDemoMode] = useState(false);
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
