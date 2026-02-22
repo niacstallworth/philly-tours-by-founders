@@ -54,11 +54,6 @@ export default function HeroSection({ settings, onExplore }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm font-medium mb-6">
-            <MapPin className="w-4 h-4" />
-            Philadelphia, PA
-          </div>
-
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight tracking-tight">
             {title}
           </h1>
