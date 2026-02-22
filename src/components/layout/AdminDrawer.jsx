@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Image, Trophy, Upload, MapPin, ShoppingBag, Wrench, LogOut, X, Glasses } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const adminItems = [
   { name: 'Manage Tours', icon: Image, page: 'AdminTours' },
