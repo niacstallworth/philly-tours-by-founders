@@ -6,14 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 
-import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock } from 'lucide-react';
+import { MapPin, Clock, Trophy, CheckCircle2, Circle, Navigation, Lock, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { AnimatePresence } from 'framer-motion';
+import ShareHuntModal from '../components/hunts/ShareHuntModal';
 
 export default function HuntDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const huntId = urlParams.get('id');
   const [user, setUser] = useState(null);
   const [checkingLocation, setCheckingLocation] = useState(null);
+  const [showShare, setShowShare] = useState(false);
   // Optimistic: track locally-completed stops before server confirms
   const [optimisticCompleted, setOptimisticCompleted] = useState([]);
   const queryClient = useQueryClient();
@@ -239,12 +242,21 @@ export default function HuntDetail() {
             <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
               <Trophy className="w-6 h-6 text-green-600" />
             </div>
-            <div>
+            <div className="flex-1">
               <h3 className="font-bold text-green-900 text-lg">Hunt Completed! 🎉</h3>
               <p className="text-sm text-green-700">Congratulations on finishing this scavenger hunt!</p>
             </div>
+            <button
+              onClick={() => setShowShare(true)}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-3 py-2 rounded-xl"
+            >
+              <Share2 className="w-4 h-4" /> Share
+            </button>
           </div>
         )}
+        <AnimatePresence>
+          {showShare && hunt && <ShareHuntModal hunt={hunt} onClose={() => setShowShare(false)} />}
+        </AnimatePresence>
 
         {/* Progress */}
         <Card>

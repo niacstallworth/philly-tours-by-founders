@@ -7,6 +7,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { User, LogOut, Trash2, ChevronRight, Shield, Mail, Crown, MapPin, Trophy, ShoppingBag, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import HuntHistory from '../components/settings/HuntHistory';
 
 export default function UserSettings() {
   const [user, setUser] = useState(null);
@@ -160,6 +161,9 @@ export default function UserSettings() {
               )}
             </CardContent>
           </Card>
+
+          {/* Hunt History */}
+          {user && <HuntHistory user={user} />}
 
           {/* Danger Zone */}
           {user && (
