@@ -12,7 +12,7 @@ const TAB_PAGES = ['Home', 'ARExperience', 'Merchandise', 'UserSettings'];
 // Pages that are detail/deep pages (show Back button)
 const DETAIL_PAGES = ['HuntDetail', 'TourDetail'];
 // Pages that hide the bottom tab bar (admin)
-const ADMIN_PAGES = ['AdminTours', 'AdminHunts', 'AdminImport', 'AdminImportGPS', 'AdminMerchandise', 'AdminSettings'];
+const ADMIN_PAGES = ['AdminTours', 'AdminHunts', 'AdminImport', 'AdminImportGPS', 'AdminMerchandise', 'AdminSettings', 'AdminHeritageSites'];
 
 const pageVariants = {
   initial: { opacity: 0, y: 10 },

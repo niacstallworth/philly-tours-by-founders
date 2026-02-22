@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Image, Trophy, Upload, MapPin, ShoppingBag, Wrench, LogOut, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Image, Trophy, Upload, MapPin, ShoppingBag, Wrench, LogOut, X, Glasses } from 'lucide-react';
 
 const adminItems = [
   { name: 'Manage Tours', icon: Image, page: 'AdminTours' },
   { name: 'Manage Hunts', icon: Trophy, page: 'AdminHunts' },
   { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
   { name: 'Import GPS Tours', icon: MapPin, page: 'AdminImportGPS' },
+  { name: 'Heritage Sites (AR)', icon: Glasses, page: 'AdminHeritageSites' },
   { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
   { name: 'Site Settings', icon: Wrench, page: 'AdminSettings' },
 ];
