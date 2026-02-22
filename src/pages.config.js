@@ -63,6 +63,7 @@ import TagScanner from './pages/TagScanner';
 import TourDetail from './pages/TourDetail';
 import UserSettings from './pages/UserSettings';
 import Leaderboard from './pages/Leaderboard';
+import MultiplayerHunt from './pages/MultiplayerHunt';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +84,7 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "UserSettings": UserSettings,
     "Leaderboard": Leaderboard,
+    "MultiplayerHunt": MultiplayerHunt,
 }
 
 export const pagesConfig = {
