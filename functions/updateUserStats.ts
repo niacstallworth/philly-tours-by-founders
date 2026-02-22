@@ -1,4 +1,26 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { calculateScore, createJsonResponse, createErrorResponse } from './shared/utils.ts';
+import { SCORE_MULTIPLIER, ERROR_MESSAGES, HTTP_STATUS } from './shared/constants.ts';
+
+interface UpdateUserStatsPayload {
+  points_earned?: number;
+  hunt_completed?: boolean;
+}
+
+interface UserProfile {
+  id: string;
+  user_email: string;
+  total_points: number;
+  hunts_completed: number;
+  score: number;
+}
+
+interface Badge {
+  id: string;
+  name: string;
+  requirement_type: string;
+  requirement_value: number;
+}
 
 Deno.serve(async (req) => {
   try {
@@ -6,61 +28,92 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
 
     if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      return createErrorResponse(
+        ERROR_MESSAGES.UNAUTHORIZED,
+        HTTP_STATUS.UNAUTHORIZED
+      );
     }
 
-    const { points_earned, hunt_completed } = await req.json();
+    const payload = (await req.json()) as UpdateUserStatsPayload;
+    const pointsEarned = payload.points_earned || 0;
+    const huntCompleted = payload.hunt_completed || false;
 
     // Get or create user profile
-    let profile = (await base44.entities.UserProfile.filter({ user_email: user.email }))[0];
+    const profiles = await base44.entities.UserProfile.filter({
+      user_email: user.email,
+    });
+    let profile: UserProfile = profiles[0];
 
     if (!profile) {
       profile = await base44.entities.UserProfile.create({
         user_email: user.email,
-        display_name: user.full_name || user.email.split('@')[0],
-        total_points: 0,
-        hunts_completed: 0,
-        score: 0,
+        total_points: pointsEarned,
+        hunts_completed: huntCompleted ? 1 : 0,
+        score: calculateScore(
+          pointsEarned,
+          huntCompleted ? 1 : 0
+        ),
+      });
+    } else {
+      // Update existing profile
+      const newPoints = profile.total_points + pointsEarned;
+      const newHunts = profile.hunts_completed + (huntCompleted ? 1 : 0);
+      const newScore = calculateScore(newPoints, newHunts);
+
+      profile = await base44.entities.UserProfile.update(profile.id, {
+        total_points: newPoints,
+        hunts_completed: newHunts,
+        score: newScore,
       });
     }
 
-    // Update stats
-    const huntBonusPoints = hunt_completed ? 50 : 0;
-    const newPoints = (profile.total_points || 0) + (points_earned || 0) + huntBonusPoints;
-    const newHunts = (profile.hunts_completed || 0) + (hunt_completed ? 1 : 0);
-    const newScore = newPoints + newHunts * 100;
-
-    await base44.entities.UserProfile.update(profile.id, {
-      total_points: newPoints,
-      hunts_completed: newHunts,
-      score: newScore,
+    // Check for new badges
+    const existingBadges = await base44.entities.UserBadge.filter({
+      user_email: user.email,
     });
+    const earnedBadgeIds = new Set(
+      existingBadges.map((b) => b.badge_id)
+    );
 
-    // Check & award badges
     const badges = await base44.entities.Badge.list();
-    const userBadges = await base44.entities.UserBadge.filter({ user_email: user.email });
-    const earnedBadgeIds = new Set(userBadges.map(ub => ub.badge_id));
+    const newBadges: { id: string; name: string }[] = [];
 
     for (const badge of badges) {
       if (earnedBadgeIds.has(badge.id)) continue;
 
-      const qualifies =
-        (badge.requirement_type === 'points_earned' && newPoints >= badge.requirement_value) ||
-        (badge.requirement_type === 'hunts_completed' && newHunts >= badge.requirement_value);
+      let shouldEarn = false;
+      if (
+        badge.requirement_type === 'hunts_completed' &&
+        profile.hunts_completed >= badge.requirement_value
+      ) {
+        shouldEarn = true;
+      } else if (
+        badge.requirement_type === 'points_earned' &&
+        profile.total_points >= badge.requirement_value
+      ) {
+        shouldEarn = true;
+      }
 
-      if (qualifies) {
+      if (shouldEarn) {
         await base44.entities.UserBadge.create({
           user_email: user.email,
           badge_id: badge.id,
           badge_name: badge.name,
           earned_at: new Date().toISOString(),
         });
+        newBadges.push({ id: badge.id, name: badge.name });
       }
     }
 
-    return Response.json({ success: true, profile: { total_points: newPoints, hunts_completed: newHunts, score: newScore } });
+    return createJsonResponse({
+      profile,
+      new_badges: newBadges,
+    });
   } catch (error) {
-    console.error('Stats update error:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('updateUserStats error:', error);
+    return createErrorResponse(
+      'Failed to update stats',
+      HTTP_STATUS.INTERNAL_ERROR
+    );
   }
 });
