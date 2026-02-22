@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { Loader2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ import HuntHistory from '../components/settings/HuntHistory';
 export default function UserSettings() {
   const [user, setUser] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -31,6 +33,25 @@ export default function UserSettings() {
       base44.auth.logout();
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleUpgrade = async () => {
+    setUpgrading(true);
+    try {
+      const response = await base44.functions.invoke('createCheckoutSession', {
+        origin: window.location.origin,
+      });
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        toast.error(response.data.error || 'Failed to start checkout');
+      }
+    } catch (err) {
+      toast.error('Could not start checkout. Please try again.');
+      console.error(err);
+    } finally {
+      setUpgrading(false);
     }
   };
 
@@ -77,14 +98,14 @@ export default function UserSettings() {
                   </p>
                 </div>
                 {!(user?.membership === 'elite' || user?.role === 'admin') && (
-                  <a
-                    href="https://buy.stripe.com/test_28EbJ3bmv9rz59SgWw6sw00"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs bg-amber-500 text-white px-3 py-1.5 rounded-full font-semibold whitespace-nowrap"
+                  <button
+                    onClick={handleUpgrade}
+                    disabled={upgrading}
+                    className="text-xs bg-amber-500 text-white px-3 py-1.5 rounded-full font-semibold whitespace-nowrap flex items-center gap-1 hover:bg-amber-600 disabled:opacity-50"
                   >
+                    {upgrading && <Loader2 className="w-3 h-3 animate-spin" />}
                     Upgrade — 90 days free
-                  </a>
+                  </button>
                 )}
               </div>
             </CardContent>
