@@ -560,8 +560,12 @@ export default function ARExperience() {
           <Glasses className="w-12 h-12 mx-auto mb-4 text-white/60" />
           <h2 className="text-2xl font-bold mb-2">Full AR Glasses Experience</h2>
           <p className="text-white/70 text-sm mb-6 leading-relaxed">
-            A hands-free AR glasses program is coming to Philadelphia heritage sites in 2025. Sign up to get early access.
+            A hands-free AR glasses program is coming to Philadelphia heritage sites. Sign up to get early access.
           </p>
+          <div className="mb-6 text-left bg-white/10 border border-white/20 rounded-xl p-4 text-sm text-white/70">
+            <p className="font-semibold text-white mb-1">📌 Planned Feature Note</p>
+            <p>A dedicated native app for AR glasses (e.g., Meta Ray-Bans, Apple Vision Pro) is on the roadmap. This would enable a true hands-free heritage tour experience with Google Earth–style spatial overlays. Web-based AR cannot run on glasses hardware — a native app per glasses platform would be required.</p>
+          </div>
           {signedUp ? (
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center gap-3">
               <CheckCircle className="w-10 h-10 text-green-400" />
