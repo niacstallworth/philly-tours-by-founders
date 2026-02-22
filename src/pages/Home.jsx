@@ -315,6 +315,31 @@ export default function Home() {
                 loading="lazy"
               />
             </div>
+
+            <div className="mt-12">
+              <div className="w-full rounded-2xl overflow-hidden shadow-xl bg-black">
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src="https://www.youtube.com/embed/HYSAdeAeJ0g?start=165"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%'
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="mt-6 max-w-3xl mx-auto">
+                <p className="text-lg text-gray-700 dark:text-slate-300 leading-relaxed">
+                  It's one of the oldest cities in the United States. Here, the Declaration of Independence was signed and the Constitution adopted. Here, the first U.S. library and hospital opened. Here, ideas were born that changed the course of history.
+                </p>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
