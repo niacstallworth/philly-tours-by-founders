@@ -92,9 +92,23 @@ export default function ARExperience() {
     setIsDemoMode(false);
   };
 
+  // Demo: cycle through sites every 6 seconds
+  useEffect(() => {
+    if (mode !== 'ar' || !isDemoMode || sites.length === 0) return;
+    const demoSites = sites.filter(s => canAccessSite(s));
+    if (demoSites.length === 0) return;
+    let idx = 0;
+    const interval = setInterval(() => {
+      idx = (idx + 1) % demoSites.length;
+      setNearbySite(demoSites[idx]);
+      setOverlayVisible(true);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [mode, isDemoMode, sites]);
+
   // GPS watch
   useEffect(() => {
-    if (mode !== 'ar') return;
+    if (mode !== 'ar' || isDemoMode) return;
     const watchId = navigator.geolocation.watchPosition(
       pos => {
         const { latitude, longitude } = pos.coords;
