@@ -316,61 +316,80 @@ export default function ARExperience() {
           ) : null}
         </div>
 
-        {/* AR Overlay */}
+        {/* AR Overlay Card */}
         <AnimatePresence>
           {overlayVisible && nearbySite && (
             <motion.div
               key={nearbySite.id}
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              initial={{ opacity: 0, y: 50, scale: 0.93 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 40, scale: 0.95 }}
-              transition={{ type: 'spring', damping: 20 }}
+              exit={{ opacity: 0, y: 50, scale: 0.93 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 300 }}
               className="absolute bottom-28 left-4 right-4 z-20"
             >
               {canAccessSite(nearbySite) ? (
                 <div
-                  className="rounded-2xl p-5 backdrop-blur-md border border-white/20 shadow-2xl"
-                  style={{ backgroundColor: (nearbySite.color || '#4f46e5') + 'cc' }}
+                  className="rounded-2xl overflow-hidden shadow-2xl"
+                  style={{ border: `1.5px solid ${nearbySite.color || '#4f46e5'}80` }}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <div className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">
-                        📍 You're here · Est. {nearbySite.year_established}
+                  {/* Top accent bar */}
+                  <div className="h-1 w-full" style={{ backgroundColor: nearbySite.color || '#4f46e5' }} />
+                  <div className="p-5 backdrop-blur-xl" style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}>
+                    {/* Site image */}
+                    {nearbySite.image_url && (
+                      <div className="w-full h-28 rounded-xl overflow-hidden mb-4">
+                        <img src={nearbySite.image_url} alt={nearbySite.name} className="w-full h-full object-cover" />
                       </div>
-                      <h2 className="text-white text-xl font-bold mb-2">{nearbySite.name}</h2>
-                      <p className="text-white/85 text-sm leading-relaxed">{nearbySite.ar_fact}</p>
-                      <div className="text-white/60 text-xs mt-2">{nearbySite.address}</div>
-                      {nearbySite.is_free && (
-                        <div className="mt-2 inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-0.5 rounded-full text-white/80">
-                          ✓ Free Experience
+                    )}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: nearbySite.color || '#4f46e5' }} />
+                          <div className="text-white/60 text-xs font-semibold uppercase tracking-widest">
+                            SITE DETECTED · Est. {nearbySite.year_established}
+                          </div>
                         </div>
-                      )}
+                        <h2 className="text-white text-xl font-bold mb-2 leading-tight">{nearbySite.name}</h2>
+                        <p className="text-white/85 text-sm leading-relaxed">{nearbySite.ar_fact}</p>
+                        <div className="flex items-center gap-2 mt-3">
+                          <MapPin className="w-3.5 h-3.5 text-white/40" />
+                          <div className="text-white/50 text-xs truncate">{nearbySite.address}</div>
+                          {nearbySite.is_free && (
+                            <span className="ml-auto text-xs bg-green-500/30 border border-green-400/30 px-2 py-0.5 rounded-full text-green-300 font-medium whitespace-nowrap">
+                              ✓ Free
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <button onClick={() => setOverlayVisible(false)} className="text-white/40 hover:text-white mt-1 flex-shrink-0">
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
-                    <button onClick={() => setOverlayVisible(false)} className="text-white/60 hover:text-white mt-1">
-                      <X className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               ) : (
-                <div className="rounded-2xl p-5 backdrop-blur-md border border-white/20 shadow-2xl bg-black/70">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                      <Lock className="w-5 h-5 text-amber-400" />
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-white text-lg font-bold mb-1">{nearbySite.name}</h2>
-                      <p className="text-white/70 text-sm mb-3">This AR experience requires an Elite membership.</p>
-                      <button
-                        onClick={() => { stopAR(); base44.auth.redirectToLogin(window.location.href); }}
-                        className="inline-flex items-center gap-2 bg-amber-500 text-white text-sm font-semibold px-4 py-2 rounded-full"
-                      >
-                        <Crown className="w-4 h-4" />
-                        Upgrade to Elite
+                <div className="rounded-2xl overflow-hidden shadow-2xl border border-amber-400/30">
+                  <div className="h-1 w-full bg-amber-500" />
+                  <div className="p-5 backdrop-blur-xl bg-black/80">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                        <Lock className="w-5 h-5 text-amber-400" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-white/50 text-xs uppercase tracking-widest mb-1">Site Detected</div>
+                        <h2 className="text-white text-lg font-bold mb-1">{nearbySite.name}</h2>
+                        <p className="text-white/60 text-sm mb-3">Elite membership required to unlock this site's history.</p>
+                        <button
+                          onClick={() => { stopAR(); base44.auth.redirectToLogin(window.location.href); }}
+                          className="inline-flex items-center gap-2 bg-amber-500 text-white text-sm font-semibold px-4 py-2 rounded-full"
+                        >
+                          <Crown className="w-4 h-4" />Upgrade to Elite
+                        </button>
+                      </div>
+                      <button onClick={() => setOverlayVisible(false)} className="text-white/40 hover:text-white">
+                        <X className="w-4 h-4" />
                       </button>
                     </div>
-                    <button onClick={() => setOverlayVisible(false)} className="text-white/40 hover:text-white">
-                      <X className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               )}
@@ -378,8 +397,9 @@ export default function ARExperience() {
           )}
         </AnimatePresence>
 
+        {/* Mode badge */}
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-white/80 text-xs font-semibold">
-          <Glasses className="w-3.5 h-3.5" />{isDemoMode ? 'Demo Mode' : 'AR Mode'}
+          <Scan className="w-3.5 h-3.5 text-indigo-300" />{isDemoMode ? 'Demo Mode' : 'AR Live'}
         </div>
 
         {/* Demo mode banner */}
