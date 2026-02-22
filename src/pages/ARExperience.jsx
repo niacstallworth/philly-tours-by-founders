@@ -89,6 +89,7 @@ export default function ARExperience() {
     setMode('home');
     setNearbySite(null);
     setOverlayVisible(false);
+    setIsDemoMode(false);
   };
 
   // GPS watch
