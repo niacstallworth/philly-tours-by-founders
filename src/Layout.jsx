@@ -59,11 +59,15 @@ export default function Layout({ children, currentPageName }) {
     const el = mainRef.current;
     if (!el) return;
     // Restore scroll position for tab pages, otherwise scroll to top
-    if (TAB_PAGES.includes(currentPageName) && scrollPositions.current[currentPageName] != null) {
-      el.scrollTop = scrollPositions.current[currentPageName];
-    } else {
-      el.scrollTop = 0;
-    }
+    const scrollTo = () => {
+      if (TAB_PAGES.includes(currentPageName) && scrollPositions.current[currentPageName] != null) {
+        el.scrollTop = scrollPositions.current[currentPageName];
+      } else {
+        el.scrollTop = 0;
+      }
+    };
+    // Use requestAnimationFrame to ensure scroll happens after render
+    requestAnimationFrame(scrollTo);
   }, [currentPageName]);
 
   const isAdmin = user?.role === 'admin';
