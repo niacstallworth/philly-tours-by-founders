@@ -10,6 +10,7 @@ const adminItems = [
   { name: 'Import Tours', icon: Upload, page: 'AdminImport' },
   { name: 'Import GPS Tours', icon: MapPin, page: 'AdminImportGPS' },
   { name: 'Heritage Sites (AR)', icon: Glasses, page: 'AdminHeritageSites' },
+  { name: 'Tags & Barcodes', icon: Tag, page: 'AdminTags' },
   { name: 'Merchandise', icon: ShoppingBag, page: 'AdminMerchandise' },
   { name: 'Site Settings', icon: Wrench, page: 'AdminSettings' },
 ];
