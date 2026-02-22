@@ -12,7 +12,8 @@ const tabs = [
 ];
 
 export default function BottomTabBar({ currentPageName, themeColors }) {
-  const primary = themeColors?.primary || '#4f46e5';
+  // Wait for theme to load before applying color to avoid flash
+  const primary = themeColors ? (themeColors.primary || '#4f46e5') : '#9ca3af';
 
   return (
     <nav

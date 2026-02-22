@@ -8,13 +8,15 @@ const DETAIL_PAGES = ['HuntDetail', 'TourDetail'];
 export default function AppHeader({ currentPageName, themeColors, menuOpen, onMenuToggle, title }) {
   const navigate = useNavigate();
   const isDetailPage = DETAIL_PAGES.includes(currentPageName);
-  const primary = themeColors?.primary || '#4f46e5';
+  // Use transparent until theme loads to avoid purple flash
+  const primary = themeColors ? (themeColors.primary || '#4f46e5') : 'transparent';
 
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 flex items-center h-14 px-4 gap-3"
       style={{
         backgroundColor: primary,
+        transition: themeColors ? 'none' : undefined,
         paddingTop: 'env(safe-area-inset-top)',
         WebkitUserSelect: 'none',
         userSelect: 'none',
