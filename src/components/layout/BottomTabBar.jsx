@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Home, Glasses, ShoppingBag, Settings, QrCode } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const tabs = [
   { name: 'Home', icon: Home, page: 'Home', label: 'Home' },
