@@ -14,6 +14,8 @@ export default function HuntDetail() {
   const huntId = urlParams.get('id');
   const [user, setUser] = useState(null);
   const [checkingLocation, setCheckingLocation] = useState(null);
+  // Optimistic: track locally-completed stops before server confirms
+  const [optimisticCompleted, setOptimisticCompleted] = useState([]);
   const queryClient = useQueryClient();
 
   const { data: hunt, isLoading } = useQuery({
@@ -60,16 +62,23 @@ export default function HuntDetail() {
     mutationFn: async ({ stopNumber }) => {
       const newCompletedStops = [...(progress.completed_stops || []), stopNumber];
       const isComplete = newCompletedStops.length === hunt.stops.length;
-      
       return await base44.entities.HuntProgress.update(progress.id, {
         completed_stops: newCompletedStops,
         ...(isComplete && { completed_at: new Date().toISOString() })
       });
     },
-    onSuccess: () => {
+    onSuccess: (_, { stopNumber }) => {
       queryClient.invalidateQueries({ queryKey: ['hunt-progress', huntId] });
       setCheckingLocation(null);
+      // Remove from optimistic once server confirms (server state takes over)
+      setOptimisticCompleted(prev => prev.filter(n => n !== stopNumber));
       toast.success('Stop verified!');
+    },
+    onError: (_, { stopNumber }) => {
+      // Roll back optimistic update on failure
+      setOptimisticCompleted(prev => prev.filter(n => n !== stopNumber));
+      setCheckingLocation(null);
+      toast.error('Check-in failed. Please try again.');
     }
   });
 
@@ -136,8 +145,11 @@ export default function HuntDetail() {
       const distanceInMiles = (distance * 0.000621371).toFixed(2);
       
       if (distance <= radius) {
-        await updateProgressMutation.mutateAsync({ stopNumber: stop.stop_number });
+        // Optimistic update — instantly mark as complete in UI
+        setOptimisticCompleted(prev => [...prev, stop.stop_number]);
         toast.success('🎉 Success! You found the location!');
+        updateProgressMutation.mutate({ stopNumber: stop.stop_number });
+        setCheckingLocation(null);
       } else {
         toast.error(`You're ${distanceInMiles} miles away from this location. Get closer to check in!`);
         setCheckingLocation(null);
@@ -149,13 +161,14 @@ export default function HuntDetail() {
   };
 
   const isStopCompleted = (stopNumber) => {
-    return progress?.completed_stops?.includes(stopNumber);
+    return progress?.completed_stops?.includes(stopNumber) || optimisticCompleted.includes(stopNumber);
   };
 
   const isStopUnlocked = (stopNumber) => {
-    if (!progress) return stopNumber <= 2;
+    const allCompleted = [...(progress?.completed_stops || []), ...optimisticCompleted];
+    if (!progress && optimisticCompleted.length === 0) return stopNumber <= 2;
     if (stopNumber <= 2) return true;
-    return progress.completed_stops?.includes(stopNumber - 1);
+    return allCompleted.includes(stopNumber - 1);
   };
 
   if (isLoading) {
@@ -181,7 +194,8 @@ export default function HuntDetail() {
     );
   }
 
-  const completedCount = progress?.completed_stops?.length || 0;
+  const allCompleted = [...new Set([...(progress?.completed_stops || []), ...optimisticCompleted])];
+  const completedCount = allCompleted.length;
   const totalStops = hunt.stops?.length || 0;
   const isComplete = completedCount === totalStops && totalStops > 0;
 
