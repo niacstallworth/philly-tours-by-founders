@@ -132,7 +132,7 @@ export default function ARExperience() {
 
   // Compass heading
   useEffect(() => {
-    if (mode !== 'ar') return;
+    if (mode !== 'ar' || isDemoMode) return;
     const handler = e => setHeading(Math.round(e.alpha || 0));
     window.addEventListener('deviceorientationabsolute', handler, true);
     window.addEventListener('deviceorientation', handler, true);
