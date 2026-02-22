@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import PullToRefresh from '../components/ui/PullToRefresh';
 import TourCard from '../components/tours/TourCard';
 import HuntCard from '../components/hunts/HuntCard';
 import HeroSection from '../components/home/HeroSection';
@@ -17,6 +18,15 @@ export default function Home() {
   const [huntDifficulty, setHuntDifficulty] = useState('all');
   const [tourCategory, setTourCategory] = useState('all');
   const contentRef = useRef(null);
+  const queryClient = useQueryClient();
+
+  const handleRefresh = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['tours'] }),
+      queryClient.invalidateQueries({ queryKey: ['hunts'] }),
+      queryClient.invalidateQueries({ queryKey: ['homepage-settings'] }),
+    ]);
+  };
 
   const { data: tours, isLoading: toursLoading } = useQuery({
     queryKey: ['tours'],
@@ -64,13 +74,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <PullToRefresh onRefresh={handleRefresh}>
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Hero */}
       <HeroSection settings={settings} onExplore={handleExplore} />
 
       {/* Social Links */}
       {settings && (
-        <div className="flex justify-center gap-5 py-5 bg-gray-50 border-b border-gray-100">
+        <div className="flex justify-center gap-5 py-5 bg-gray-50 dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700">
           <a href="mailto:info@foundersthread.org" className="text-gray-500 hover:text-red-600 transition-colors">
             <Mail className="w-5 h-5" />
           </a>
@@ -110,7 +121,7 @@ export default function Home() {
       )}
 
       {/* Content */}
-      <div ref={contentRef} className="max-w-7xl mx-auto px-6 py-14">
+      <div ref={contentRef} className="max-w-7xl mx-auto px-6 py-14 dark:text-white">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-10">
             <TabsTrigger value="tours" className="flex items-center gap-2">
@@ -129,8 +140,8 @@ export default function Home() {
 
           <TabsContent value="tours">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Available Tours</h2>
-              <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 text-center">Available Tours</h2>
+              <p className="text-gray-500 dark:text-slate-400 text-center mb-8 max-w-2xl mx-auto">
                 Choose from our carefully crafted tours that bring Philadelphia's stories to life
               </p>
               <div className="flex flex-col sm:flex-row gap-3 mb-10 max-w-2xl mx-auto">
@@ -183,8 +194,8 @@ export default function Home() {
 
           <TabsContent value="hunts">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">GPS Scavenger Hunts</h2>
-              <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 text-center">GPS Scavenger Hunts</h2>
+              <p className="text-gray-500 dark:text-slate-400 text-center mb-8 max-w-2xl mx-auto">
                 Explore Philadelphia through GPS-verified scavenger hunts — track your progress and discover hidden gems!
               </p>
               <div className="flex flex-col sm:flex-row gap-3 mb-10 max-w-2xl mx-auto">
@@ -236,8 +247,8 @@ export default function Home() {
 
           <TabsContent value="map">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Interactive Tour Map</h2>
-              <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 text-center">Interactive Tour Map</h2>
+              <p className="text-gray-500 dark:text-slate-400 text-center mb-8 max-w-2xl mx-auto">
                 Explore all tour locations on our interactive map
               </p>
             </motion.div>
@@ -256,5 +267,6 @@ export default function Home() {
         </Tabs>
       </div>
     </div>
+    </PullToRefresh>
   );
 }
