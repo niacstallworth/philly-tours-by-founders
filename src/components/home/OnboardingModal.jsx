@@ -12,7 +12,7 @@ const features = [
 
 export default function OnboardingModal({ onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-safe">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <motion.div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         initial={{ opacity: 0 }}
