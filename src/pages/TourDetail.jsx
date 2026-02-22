@@ -7,6 +7,7 @@ import DaySchedule from '../components/tours/DaySchedule';
 import { Calendar, MapPin, Info } from 'lucide-react';
 
 export default function TourDetail() {
+  React.useEffect(() => { window.scrollTo(0, 0); }, []);
   const urlParams = new URLSearchParams(window.location.search);
   const tourId = urlParams.get('id');
 
