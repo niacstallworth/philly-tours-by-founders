@@ -30,8 +30,13 @@ export default function ARExperience() {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [heading, setHeading] = useState(null);
   const [user, setUser] = useState(undefined);
+  const [scanPulse, setScanPulse] = useState(false);
+  const [nearestSite, setNearestSite] = useState(null); // closest site even if not in range
+  const [nearestDistance, setNearestDistance] = useState(null);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const canvasRef = useRef(null);
+  const animFrameRef = useRef(null);
 
   const { data: sites = [] } = useQuery({
     queryKey: ['heritage-sites'],
