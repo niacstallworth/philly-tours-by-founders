@@ -77,14 +77,6 @@ export default function Merchandise() {
         <div className="absolute inset-0 bg-black/40" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center mb-6"
-          >
-            <ShoppingBag className="w-16 h-16" />
-          </motion.div>
-
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Merchandise</h1>
            <p className="text-xl text-purple-200 max-w-2xl mx-auto">
              Explore our collection of exclusive Philadelphia-inspired products
