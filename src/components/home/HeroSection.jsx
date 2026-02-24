@@ -13,7 +13,7 @@ export default function HeroSection({ settings, onExplore }) {
   const primaryColor = settings ? (settings.primary_color || '#4f46e5') : null;
 
   return (
-    <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <div className="relative flex items-center justify-center overflow-hidden py-16 md:min-h-[85vh]">
       {/* Background video */}
       {videoUrl && (
         <video
