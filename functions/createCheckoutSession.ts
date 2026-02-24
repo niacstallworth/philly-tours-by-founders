@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
       payment_method_types: ['card'],
       line_items: [
         {
-          price: 'price_1R5yx8Lks8X7dZmzZDKHQWfn', // Your Elite Membership price ID from Stripe
+          price: 'price_1T4BJB7nHeqKFwKm4wR4iEix', // Elite Membership $9.99/month
           quantity: 1,
         },
       ],
