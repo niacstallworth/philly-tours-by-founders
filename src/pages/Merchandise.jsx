@@ -65,8 +65,11 @@ export default function Merchandise() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
     {/* Hero Section */}
-        <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900">
-          <div className="absolute inset-0 bg-black/30" />
+        <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-gradient-to-br from-indigo-950 via-indigo-900 to-purple-900">
+          <div className="absolute inset-0 opacity-10"
+            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1569761316261-9a8696fa2ca3?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/50" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
         <h1 className="text-5xl md:text-6xl font-bold mb-4">{settings?.merchandise_hero_title || 'Merchandise'}</h1>
