@@ -29,7 +29,7 @@ export default function HeroSection({ settings, onExplore }) {
       {bgImage && (
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${bgImage})`, opacity: videoUrl ? 0.3 : 0.6 }}
+          style={{ backgroundImage: `url(${bgImage})`, opacity: videoUrl ? 0.4 : 1.0 }}
         />
       )}
 
