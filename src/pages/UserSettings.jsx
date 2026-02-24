@@ -81,36 +81,52 @@ export default function UserSettings() {
           </Card>
 
           {/* Membership Status */}
-          <Card className="mb-4 overflow-hidden">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Membership</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
-                <Crown className={`w-5 h-5 ${user?.membership === 'elite' || user?.role === 'admin' ? 'text-amber-500' : 'text-gray-300'}`} />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user?.membership === 'elite' || user?.role === 'admin' ? 'Elite Member' : 'Free Member'}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {user?.membership === 'elite' || user?.role === 'admin'
-                      ? 'All AR heritage sites unlocked'
-                      : 'Upgrade for full AR access'}
-                  </p>
+          {user?.membership === 'elite' || user?.role === 'admin' ? (
+            <Card className="mb-4 overflow-hidden border-amber-200">
+              <div className="bg-gradient-to-br from-amber-500 to-orange-500 px-5 py-4 flex items-center gap-3 text-white">
+                <Crown className="w-6 h-6 text-white" />
+                <div>
+                  <p className="font-bold">Elite Member</p>
+                  <p className="text-white/80 text-xs">All AR heritage sites unlocked</p>
                 </div>
-                {!(user?.membership === 'elite' || user?.role === 'admin') && (
+              </div>
+            </Card>
+          ) : (
+            <Card className="mb-4 overflow-hidden border-amber-200 shadow-lg">
+              <div className="bg-gradient-to-br from-indigo-950 via-indigo-900 to-purple-900 px-6 py-6 text-white">
+                <div className="flex items-center gap-2 mb-3">
+                  <Crown className="w-5 h-5 text-amber-400" />
+                  <span className="font-bold text-lg">Upgrade to Elite</span>
+                </div>
+                <ul className="text-sm text-white/80 space-y-1.5 mb-5">
+                  <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Unlock all AR heritage sites</li>
+                  <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Access exclusive Philadelphia history</li>
+                  <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Priority access to new features</li>
+                </ul>
+                <Button
+                  onClick={handleUpgrade}
+                  disabled={upgrading || !user}
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-5 text-base rounded-xl"
+                >
+                  {upgrading ? (
+                    <><Loader2 className="w-4 h-4 animate-spin mr-2" />Processing...</>
+                  ) : !user ? (
+                    'Sign in to upgrade'
+                  ) : (
+                    <><Crown className="w-4 h-4 mr-2" />Subscribe — Elite Membership</>
+                  )}
+                </Button>
+                {!user && (
                   <button
-                    onClick={handleUpgrade}
-                    disabled={upgrading}
-                    className="text-xs bg-amber-500 text-white px-3 py-1.5 rounded-full font-semibold whitespace-nowrap flex items-center gap-1 hover:bg-amber-600 disabled:opacity-50"
+                    onClick={() => base44.auth.redirectToLogin(window.location.href)}
+                    className="w-full mt-2 text-sm text-white/60 underline"
                   >
-                    {upgrading && <Loader2 className="w-3 h-3 animate-spin" />}
-                    Upgrade — 90 days free
+                    Sign in first
                   </button>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </Card>
+          )}
 
           {/* Quick Nav */}
           <Card className="mb-4">
