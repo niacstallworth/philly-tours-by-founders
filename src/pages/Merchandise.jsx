@@ -87,9 +87,9 @@ export default function Merchandise() {
           />
         ) : (
           <iframe
-            src="https://www.youtube.com/embed/2eQ6dcX3ql4?autoplay=1&loop=1&playlist=2eQ6dcX3ql4&controls=0&modestbranding=1"
+            src="https://www.youtube.com/embed/2eQ6dcX3ql4?autoplay=1&loop=1&playlist=2eQ6dcX3ql4&controls=0&modestbranding=1&mute=1&playsinline=1"
             frameBorder="0"
-            allow="autoplay; encrypted-media"
+            allow="autoplay; encrypted-media; picture-in-picture"
             style={{
               position: 'absolute',
               top: '50%',
