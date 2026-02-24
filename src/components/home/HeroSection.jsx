@@ -33,19 +33,13 @@ export default function HeroSection({ settings, onExplore }) {
         />
       )}
 
-      {/* Gradient overlay — only render once we have the real color */}
-      {primaryColor && (
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(135deg, ${primaryColor}ee 0%, #1e1b4b 100%)`
-          }}
-        />
-      )}
-      {/* Dark fallback overlay while loading */}
-      {!primaryColor && (
-        <div className="absolute inset-0 bg-slate-900/80" />
-      )}
+      {/* Dark gradient overlay — heavier at bottom for text legibility */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%)'
+        }}
+      />
 
       {/* Content */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
