@@ -64,45 +64,9 @@ export default function Merchandise() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
-    {/* Hero Section with Video */}
-    <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-black">
-      <div className="absolute inset-0 w-full h-full">
-        {settings?.merchandise_hero_video_embed ? (
-          <div dangerouslySetInnerHTML={{ __html: settings.merchandise_hero_video_embed }} style={{ width: '100%', height: '100%' }} />
-        ) : settings?.merchandise_hero_video_url ? (
-          <video
-            src={settings.merchandise_hero_video_url}
-            autoPlay
-            loop
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '120%',
-              height: '120%',
-              objectFit: 'cover',
-              pointerEvents: 'none'
-            }}
-          />
-        ) : (
-          <iframe
-            src="https://www.youtube.com/embed/2eQ6dcX3ql4?autoplay=1&loop=1&playlist=2eQ6dcX3ql4&controls=0&modestbranding=1&mute=1&playsinline=1"
-            frameBorder="0"
-            allow="autoplay; encrypted-media; picture-in-picture"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '120%',
-              height: '120%',
-              pointerEvents: 'none'
-            }}
-          />
-        )}
-      </div>
-      <div className="absolute inset-0 bg-black/40" />
+    {/* Hero Section */}
+        <div className="relative h-96 md:h-[500px] overflow-hidden text-white bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900">
+          <div className="absolute inset-0 bg-black/30" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
         <h1 className="text-5xl md:text-6xl font-bold mb-4">{settings?.merchandise_hero_title || 'Merchandise'}</h1>
