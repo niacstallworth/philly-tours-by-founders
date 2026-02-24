@@ -13,7 +13,7 @@ export default function HeroSection({ settings, onExplore }) {
   const primaryColor = settings ? (settings.primary_color || '#4f46e5') : null;
 
   return (
-    <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-950 via-indigo-900 to-purple-900">
       {/* Background video */}
       {videoUrl && (
         <video
@@ -28,18 +28,13 @@ export default function HeroSection({ settings, onExplore }) {
       {/* Background image */}
       {bgImage && (
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${bgImage})`, opacity: videoUrl ? 0.4 : 1.0 }}
+          className="absolute inset-0 bg-cover bg-center opacity-10"
+          style={{ backgroundImage: `url(${bgImage})` }}
         />
       )}
 
-      {/* Dark gradient overlay — heavier at bottom for text legibility */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%)'
-        }}
-      />
+      {/* Subtle dark overlay for text legibility */}
+      <div className="absolute inset-0 bg-black/20" />
 
       {/* Content */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
