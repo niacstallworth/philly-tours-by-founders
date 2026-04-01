@@ -36,9 +36,14 @@ export default function ComingSoon() {
           ))}
         </div>
 
-        <a href="https://www.philly-tours.com/" target="_blank" rel="noopener noreferrer" className="block w-full">
+        <a href="https://www.philly-tours.com/" target="_blank" rel="noopener noreferrer" className="block w-full mb-3">
           <Button className="w-full h-11 rounded-2xl text-base font-semibold bg-indigo-600 hover:bg-indigo-700">
             Get Started
+          </Button>
+        </a>
+        <a href="https://github.com/niacstallworth/philly-tours" target="_blank" rel="noopener noreferrer" className="block w-full">
+          <Button variant="outline" className="w-full h-11 rounded-2xl text-base font-semibold">
+            View our GitHub
           </Button>
         </a>
       </motion.div>
