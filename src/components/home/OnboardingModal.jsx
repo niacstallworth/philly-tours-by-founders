@@ -46,9 +46,11 @@ export default function OnboardingModal({ onClose }) {
           ))}
         </div>
 
-        <Button onClick={onClose} className="w-full h-11 rounded-2xl text-base font-semibold bg-indigo-600 hover:bg-indigo-700">
-          Get Started
-        </Button>
+        <a href="https://www.philly-tours.com/" target="_blank" rel="noopener noreferrer" className="block w-full">
+          <Button onClick={onClose} className="w-full h-11 rounded-2xl text-base font-semibold bg-indigo-600 hover:bg-indigo-700">
+            Get Started
+          </Button>
+        </a>
       </motion.div>
     </div>
   );
